@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Sonnarr</title>
+    <style>
+      body {
+        min-width: 357px;
+        overflow-x: hidden;
+      }
+
+      img {
+        margin: 5px;
+        border: 2px solid black;
+        vertical-align: middle;
+        width: 75px;
+        height: 75px;
+      }
+      .date { 
+        border-left: .2rem solid #07abc9;
+      } 
+      .missed { 
+        border-bottom: .1rem solid #a39090;
+        margin-bottom: 1rem!important;
+      }
+    </style>
+    <link rel="stylesheet" href="css/foundation.min.css"> 
+    <script src="js/vendor/jquery.js"></script>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <div class="templates" style="display:none;">
+      <div class="row missed" id="missed">
+        <div class="small-2 columns date">
+          <h1 id="day"></h1>
+          <h3 id="month"></h3>
+        </div>
+        <div class="small-10 columns">
+          <h2 id="title"></h2>
+          <h4 class="small-8 columns" id="episodeName"></h4>
+          <h5 class="small-4 columns" id="episodeNum"></h5>
+        </div>
+      </div>
+    </div>
+    <div class="list">
+
+    </div>
+
+  </body>
+</html>
+

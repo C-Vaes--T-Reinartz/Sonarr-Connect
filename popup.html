@@ -18,9 +18,16 @@
       .date { 
         border-left: .2rem solid #07abc9;
       } 
-      .missed { 
+      .row { 
         border-bottom: .1rem solid #a39090;
         margin-bottom: 1rem!important;
+      }
+      .wanted .button { 
+         padding: .5rem .2rem; 
+      }
+      
+      #episodeName { 
+         padding-left: 0; 
       }
     </style>
     <link rel="stylesheet" href="css/foundation.min.css"> 
@@ -37,9 +44,9 @@
           <h3 id="month"></h3>
         </div>
         <div class="small-10 columns">
-          <h2 id="title"></h2>
-          <h4 class="small-8 columns" id="episodeName"></h4>
-          <h5 class="small-4 columns" id="episodeNum"></h5>
+          <h3 id="title"></h3>
+          <h5 class="small-8 columns" id="episodeName"></h5>
+          <h5 class="small-4 columns button" id="episodeNum"></h5>
         </div>
       </div>
       <!--       history episode-->
@@ -48,8 +55,8 @@
           <p id="event"></p>
         </div>
         <div class="small-9 columns">
-          <h2 id="title"></h2>
-          <h4 class="small-8 columns" id="episodeName"></h4>
+          <h3 id="title"></h3>
+          <h5 class="small-8 columns" id="episodeName"></h5>
           <h5 class="small-4 columns" id="episodeNum"></h5>
           <h6 class="small-4 columns" id="quality"></h6>
         </div>

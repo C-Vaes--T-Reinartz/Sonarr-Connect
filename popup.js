@@ -2,6 +2,34 @@
 ** Sonnarr Extention
 ** Shows upcomming and missed episodes.
 */
+
+var sonarr = {
+  settings: { 
+    wantedCall : "api/wanted/missing?page=1&pageSize=30&sortKey=airDateUtc&sortDir=desc&apikey=", 
+    historyCall : "api/history?page=1&pageSize=15&sortKey=date&sortDir=desc&apikey=" 
+  },
+  getData : function (mode, callback) { 
+    var url = "";
+    if (mode === "wanted")
+    { 
+      url = app.settings.url + sonarr.settings.wantedCall + app.settings.apiKey;
+      console.log('get wanted data');
+    } 
+    else if (mode === "history") 
+    { 
+      url = app.settings.url + sonarr.settings.historyCall + app.settings.apiKey;
+      console.log('get history data');
+    }
+    $.getJSON( url , function( data ) {
+      console.log(data);
+      if (callback && typeof(callback) == "function") 
+      { 
+        callback(data); 
+      }
+    });
+  }
+}
+
 var getUpcommingEpisodes = {
   connect: function(){
 
@@ -11,24 +39,50 @@ var getUpcommingEpisodes = {
   } 
 }
 
-var getMissedEpisodes = { 
+var getHistory = {
   connect: function(){
-    var url = app.settings.url + "api/wanted/missing?page=1&pageSize=30&sortKey=airDateUtc&sortDir=desc&apikey=" + app.settings.apiKey;
-    console.log(url);
-    $.getJSON( url , function( data ) {
-      console.log(data);
-      getMissedEpisodes.generate(data);
-    });
+    sonarr.getData("history", getHistory.generate);
+    console.log('connecting to sonarr and get latest history');
   },
   generate: function(data){
     data = data.records;
     $.each(data, function (index, value) {
-      getMissedEpisodes.add(value);
+      getHistory.add(value);
     });
-    getMissedEpisodes.click();
+  },
+  add : function (episode) {  
+    var template = $('.templates #history');
+    var event = { 
+      "downloadFolderImported" : 'Imported',
+      "grabbed" : 'grabbed',
+      "episodeFileDeleted" : 'deleted file',
+    }
+    template.find('#title').html(episode.series.title);
+    template.find('#episodeName').html(episode.episode.title);
+    template.find('#episodeNum').html(episode.episode.seasonNumber + " - "  + episode.episode.episodeNumber);
+    
+    template.find('#event').html(event[episode.eventType]);
+    
+    template.attr("data-episodeId", episode.episode.id);
+    template.clone().appendTo( ".list" );
+  }
+}
+
+
+
+var getWantedEpisodes = { 
+  connect: function(){
+    sonarr.getData("wanted", getWantedEpisodes.generate);
+  },
+  generate: function(data){
+    data = data.records;
+    $.each(data, function (index, value) {
+      getWantedEpisodes.add(value);
+    });
+    getWantedEpisodes.click();
   },
   add : function(episode){
-    var template = $('.templates #missed');
+    var template = $('.templates #wanted');
     var date = { 
       day : episode.airDate.substring(8, 10),
       month : episode.airDate.substring(5, 7)
@@ -76,48 +130,74 @@ var getMissedEpisodes = {
     $( ".missed" ).click(function() {
       console.log(this);
       var episodeId = $(this).attr("data-episodeId");
-      getMissedEpisodes.searchEpisode(episodeId);
+      getWantedEpisodes.searchEpisode(episodeId);
     });
   }
 }
 
-	//set variable from chrome storage option fields
-	// stored in chrome.storage.
+//set variable from chrome storage option fields
+// stored in chrome.storage.
 function getOptions() {
-	chrome.storage.sync.get({
+  chrome.storage.sync.get({
     apiKey: app.settings.apiKey,
     url: app.settings.url
   }, function(items){
-	app.settings.apiKey = items.apiKey;
-	app.settings.url = items.url;
-	app.settings.mode = 'missing'
-	app.run();
-	console.log(items);
+    app.settings.apiKey = items.apiKey;
+    app.settings.url = items.url;
+    app.settings.mode = "wanted";
+    app.run();
+    console.log('get options from chrome storage');
+    console.log(items);
   });
-  }
+}
 
-var app = {
-  settings : {
-	apiKey : '',
-	url: '',
-    mode : 'getOptions'
-  },
-  run : function(){ 
-
-  if(app.settings.mode == 'getOptions')
-  {
-	getOptions();
-	return false;
-	}
-    //clean list
-    $( ".list > div" ).remove();
-    if (app.settings.mode === "upcomming"){
-      getUpcommingEpisodes.connect(); 
-    } else { 
-      getMissedEpisodes.connect(); 
-    }
+var menu =  {
+  bind : function (){ 
+    $('.menu .item').unbind( "click" ).click(function(){
+      var mode = $(this).attr('data-mode');
+      if(app.settings.mode !== mode){
+        //change active item
+        $('.menu .item').removeClass('active');
+        $(this).addClass('active');
+        //change mode
+        app.settings.mode = mode;
+        console.log(mode);
+        //rerun app
+        app.run();
+      }
+    });
   }
 }
 
+var app = {
+  settings : {
+    apiKey : '',
+    url: '',
+    mode : 'getOptions'
+  },
+  run : function(){ 
+    if(app.settings.mode == 'getOptions' || app.settings.apiKey === '' || app.settings.url === '')
+    {
+      getOptions();
+      return false;
+    }
+    //clean list
+    $( ".list > div" ).remove();
+    if (app.settings.mode === "upcomming")
+    {
+      getUpcommingEpisodes.connect(); 
+    } 
+    else if (app.settings.mode === "wanted") 
+    { 
+      getWantedEpisodes.connect(); 
+    }
+    else if (app.settings.mode === "history") 
+    { 
+      getHistory.connect();
+    }
+    //bind actions to the menu
+    menu.bind();
+  }
+}
 
 app.run();

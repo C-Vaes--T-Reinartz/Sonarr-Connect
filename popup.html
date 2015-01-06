@@ -29,7 +29,9 @@
   </head>
   <body>
     <div class="templates" style="display:none;">
-      <div class="row missed" id="missed">
+
+      <!--       wanted episode-->
+      <div class="row wanted" id="wanted">
         <div class="small-2 columns date">
           <h1 id="day"></h1>
           <h3 id="month"></h3>
@@ -40,7 +42,29 @@
           <h5 class="small-4 columns" id="episodeNum"></h5>
         </div>
       </div>
+      <!--       history episode-->
+      <div class="row history" id="history">
+        <div class="small-3 columns status">
+          <p id="event"></p>
+        </div>
+        <div class="small-9 columns">
+          <h2 id="title"></h2>
+          <h4 class="small-8 columns" id="episodeName"></h4>
+          <h5 class="small-4 columns" id="episodeNum"></h5>
+          <h6 class="small-4 columns" id="quality"></h6>
+        </div>
+
+      </div>
     </div>
+    <div class="icon-bar two-up menu">
+      <a class="item wanted active" data-mode="wanted">
+        <label>Wanted</label>
+      </a>
+      <a class="item history" data-mode="history">
+        <label>History</label>
+      </a>
+    </div>
+
     <div class="list">
 
     </div>

@@ -103,7 +103,7 @@ var getWantedEpisodes = {
     }
     template.find('#title').html(episode.series.title);
     template.find('#episodeName').html(episode.title);
-    template.find('#episodeNum').html(episode.seasonNumber + " - "  + episode.episodeNumber);
+    template.find('#episodeNum').html("download <br/>" + "S" + episode.seasonNumber + " E"  + episode.episodeNumber );
 
     template.attr("data-episodeId", episode.id);
 

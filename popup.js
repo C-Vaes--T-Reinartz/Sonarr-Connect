@@ -5,26 +5,24 @@
 
 var sonarr = {
   settings: { 
-    wantedCall : "api/wanted/missing?page=1&pageSize=30&sortKey=airDateUtc&sortDir=desc&apikey=", 
-    historyCall : "api/history?page=1&pageSize=15&sortKey=date&sortDir=desc&apikey=" 
+    wanted : "api/wanted/missing?page=1&pageSize=30&sortKey=airDateUtc&sortDir=desc&apikey=", 
+    history : "api/history?page=1&pageSize=15&sortKey=date&sortDir=desc&apikey=" 
   },
   getData : function (mode, callback) { 
     var url = "";
-    if (mode === "wanted")
-    { 
-      url = app.settings.url + sonarr.settings.wantedCall + app.settings.apiKey;
-      console.log('get wanted data');
-    } 
-    else if (mode === "history") 
-    { 
-      url = app.settings.url + sonarr.settings.historyCall + app.settings.apiKey;
-      console.log('get history data');
-    }
+    url = app.settings.url + sonarr.settings[mode] + app.settings.apiKey;
+
     $.getJSON( url , function( data ) {
-      console.log(data);
-      if (callback && typeof(callback) == "function") 
+      if (callback && typeof(callback) === "function") 
       { 
-        callback(data); 
+        callback(data);
+        //store data
+        if(mode === "wanted"){ 
+          localStorage.setItem("wanted", JSON.stringify(data));
+        }        
+        if(mode === "history"){ 
+          localStorage.setItem("history", JSON.stringify(data));
+        }
       }
     });
   }
@@ -41,8 +39,11 @@ var getUpcommingEpisodes = {
 
 var getHistory = {
   connect: function(){
+    if(localStorage.getItem("history") !== 'undefined'){
+      var historyData = $.parseJSON(localStorage.getItem("history"));
+      getHistory.generate(historyData);
+    }
     sonarr.getData("history", getHistory.generate);
-    console.log('connecting to sonarr and get latest history');
   },
   generate: function(data){
     data = data.records;
@@ -60,9 +61,9 @@ var getHistory = {
     template.find('#title').html(episode.series.title);
     template.find('#episodeName').html(episode.episode.title);
     template.find('#episodeNum').html(episode.episode.seasonNumber + " - "  + episode.episode.episodeNumber);
-    
+
     template.find('#event').html(event[episode.eventType]);
-    
+
     template.attr("data-episodeId", episode.episode.id);
     template.clone().appendTo( ".list" );
   }
@@ -72,6 +73,10 @@ var getHistory = {
 
 var getWantedEpisodes = { 
   connect: function(){
+    if(localStorage.getItem("wanted") !== 'undefined'){
+      var wantedData = $.parseJSON(localStorage.getItem('wanted'));
+      getWantedEpisodes.generate(wantedData);
+    }
     sonarr.getData("wanted", getWantedEpisodes.generate);
   },
   generate: function(data){
@@ -169,13 +174,25 @@ var menu =  {
   }
 }
 
+function setLocalStorage () { 
+  if (localStorage.getItem('wanted') === null) {
+    localStorage.setItem('wanted', undefined);
+  }
+  if (localStorage.getItem('history') === null) {
+    localStorage.setItem('history', undefined);
+  }
+}
+
 var app = {
   settings : {
     apiKey : '',
     url: '',
-    mode : 'getOptions'
+    mode : 'getOptions', 
   },
-  run : function(){ 
+  run : function(){
+    //prepare local storage
+    setLocalStorage();
+
     if(app.settings.mode == 'getOptions' || app.settings.apiKey === '' || app.settings.url === '')
     {
       getOptions();

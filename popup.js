@@ -81,14 +81,35 @@ var getMissedEpisodes = {
   }
 }
 
+	//set variable from chrome storage option fields
+	// stored in chrome.storage.
+function getOptions() {
+	chrome.storage.sync.get({
+    apiKey: app.settings.apiKey,
+    url: app.settings.url
+  }, function(items){
+	app.settings.apiKey = items.apiKey;
+	app.settings.url = items.url;
+	app.settings.mode = 'missing'
+	app.run();
+	console.log(items);
+  });
+  }
+
 var app = {
   settings : {
-    apiKey : '',
-    url : '',
-    mode : 'missing'
+	apiKey : '',
+	url: '',
+    mode : 'getOptions'
   },
   run : function(){ 
-    //clean list 
+
+  if(app.settings.mode == 'getOptions')
+  {
+	getOptions();
+	return false;
+	}
+    //clean list
     $( ".list > div" ).remove();
     if (app.settings.mode === "upcomming"){
       getUpcommingEpisodes.connect(); 

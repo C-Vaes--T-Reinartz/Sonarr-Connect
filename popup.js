@@ -5,12 +5,13 @@
 
 var sonarr = {
   settings: { 
-    wanted : "api/wanted/missing?page=1&pageSize=30&sortKey=airDateUtc&sortDir=desc&apikey=", 
-    history : "api/history?page=1&pageSize=15&sortKey=date&sortDir=desc&apikey=" 
+    wanted : "api/wanted/missing?page=1&pageSize={historyItems}&sortKey=airDateUtc&sortDir=desc&apikey=", 
+    history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey=" 
   },
   getData : function (mode, callback) { 
     var url = "";
     url = app.settings.url + sonarr.settings[mode] + app.settings.apiKey;
+    url = url.replace("{historyItems}", app.settings.historyItems);
 
     $.getJSON( url , function( data ) {
       if (callback && typeof(callback) === "function") 
@@ -47,6 +48,7 @@ var getHistory = {
   },
   generate: function(data){
     data = data.records;
+    app.cleanList();
     $.each(data, function (index, value) {
       getHistory.add(value);
     });
@@ -81,6 +83,7 @@ var getWantedEpisodes = {
   },
   generate: function(data){
     data = data.records;
+    app.cleanList();
     $.each(data, function (index, value) {
       getWantedEpisodes.add(value);
     });
@@ -145,14 +148,15 @@ var getWantedEpisodes = {
 function getOptions() {
   chrome.storage.sync.get({
     apiKey: app.settings.apiKey,
-    url: app.settings.url
+    url: app.settings.url,
+    historyItems: app.settings.historyItems,
   }, function(items){
     app.settings.apiKey = items.apiKey;
     app.settings.url = items.url;
     app.settings.mode = "wanted";
+    app.settings.historyItems = items.historyItems;
     app.run();
     console.log('get options from chrome storage');
-    console.log(items);
   });
 }
 
@@ -188,6 +192,7 @@ var app = {
     apiKey : '',
     url: '',
     mode : 'getOptions', 
+    historyItems: 15
   },
   run : function(){
     //prepare local storage
@@ -198,9 +203,7 @@ var app = {
       getOptions();
       return false;
     }
-    //clean list
-    $( ".list > div" ).remove();
-    if (app.settings.mode === "upcomming")
+    if (app.settings.mode === "upcoming")
     {
       getUpcommingEpisodes.connect(); 
     } 
@@ -214,6 +217,10 @@ var app = {
     }
     //bind actions to the menu
     menu.bind();
+  },
+  cleanList : function() { 
+    //clean list
+    $( ".list > div" ).remove(); 
   }
 }
 

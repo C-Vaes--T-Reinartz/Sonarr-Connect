@@ -1,26 +1,46 @@
 <!DOCTYPE html>
 <html>
-<head><title>Sonarr Options</title>
+<head>
+<title>Sonarr Options</title>
 <script src="js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="css/foundation.min.css">
 </head>
 <body>
+	<div class="row">
+		<h1>Sonarr Configuration</h1>
+		<div>
+			Url: <input type="text" id="url">
+		</div>
+		<div>
+			Api key: <input type="text" id="apiKey">
+		</div>
+		<div>
+			History Items: <input id="historyItems" type="number"></input>
+		</div>
+		<div>
 
-<div>
-Api key:
-<input type="text" id="apiKey">
-<div>
-<div>
-Url:
-<input type="text" id="url">
-<div>
 
-<button id="testConnection">Test connection</button><div id="connectionStatus"></div>
-<button id="save">Save</button><div id="status"></div>
+			<div id="connectionStatus"></div>
+			<div>
+				Version: <span id="version"></span>
+			</div>
+			<div>
+				Branch: <span id="branch"></span>
+			</div>
+
+			<button class="button" id="testConnection">Test connection</button>
+			<button class="button" id="save">Save</button>
+			<span id="status"></span>
 
 
-<div>Sonarr chrome extension is created by T. Reinartz and C. Vaes<br/>
 
-Copyright 2015</div>
-<script src="options.js"></script>
+			<div>
+				Sonarr chrome extension is created by T. Reinartz and C. Vaes<br />
+
+				Copyright 2015
+			</div>
+		</div>
+		<script src="options.js"></script>
+	</div>
 </body>
 </html>

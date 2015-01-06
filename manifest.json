@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Sonarr",
-  "description": "Show upcomming and missing epsisodes in Sonarr",
+  "description": "Show upcoming and missing epsisodes in Sonarr",
   "version": "1.0",
   
   "options_page": "options.html",
@@ -14,7 +14,6 @@
           "128": "128.png" },
 
   "permissions": [
-    "storage",
-    "localStorage"
+    "storage"
   ]
 }

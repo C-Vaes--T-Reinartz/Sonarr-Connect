@@ -13,17 +13,24 @@ var status = document.getElementById('connectionStatus');
         $.ajax({
         	url: url + 'api/system/status?apiKey=' + apiKey,
          statusCode: {
-         200: function() {
-            status.textContent = 'Connected!';
-         },
 		 401: function() {
 			status.textContent = 'Credentials or url are not correct';
 			},
 		404: function() {
-		status.textContent = 'Sonarr is not running on this address';
+			status.textContent = 'Sonarr is not running on this address';
 		}
-      }
+         },
+		complete : function(data){
+            status.textContent = 'Connected!';
+            getInstallationInformation(data.responseJSON);
+		}
+      
 	  });	  
+}
+
+function getInstallationInformation(data) {
+	document.getElementById('version').textContent = data.version;
+	document.getElementById('branch').textContent = data.branch;
 }
 
 /**
@@ -58,7 +65,7 @@ function restore_options() {
     document.getElementById('url').value = items.url;
   });
 }
-//add listeners to buttons
+// add listeners to buttons
 document.addEventListener('DOMContentLoaded', restore_options);
 document.getElementById('save').addEventListener('click',save_options);
 document.getElementById('testConnection').addEventListener('click',test_connection);

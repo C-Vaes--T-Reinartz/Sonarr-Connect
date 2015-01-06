@@ -1,6 +1,6 @@
 /*
 ** Sonnarr Extention
-** Shows upcomming and missed episodes.
+** Shows upcoming and missed episodes.
 */
 
 var sonarr = {

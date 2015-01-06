@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head><title>Sonarr Options</title></head>
+<head><title>Sonarr Options</title>
+<script src="js/jquery-2.1.3.min.js"></script>
+</head>
 <body>
 
 <div>
@@ -11,8 +13,9 @@ Api key:
 Url:
 <input type="text" id="url">
 <div>
-<div id="status"></div>
-<button id="save">Save</button>
+
+<button id="testConnection">Test connection</button><div id="connectionStatus"></div>
+<button id="save">Save</button><div id="status"></div>
 
 <script src="options.js"></script>
 </body>

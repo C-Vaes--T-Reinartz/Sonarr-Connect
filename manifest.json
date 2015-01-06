@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-
   "name": "Sonarr",
   "description": "Show upcomming and missing epsisodes in Sonarr",
   "version": "1.0",
+  
   "options_page": "options.html",
   "browser_action": {
     "default_icon": "72.png",

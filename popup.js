@@ -5,13 +5,15 @@
 
 var sonarr = {
   settings: { 
-    wanted : "api/wanted/missing?page=1&pageSize={historyItems}&sortKey=airDateUtc&sortDir=desc&apikey=", 
-    history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey=" 
+    wanted : "api/wanted/missing?page=1&pageSize={historyItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}", 
+    history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}" 
   },
   getData : function (mode, callback) { 
     var url = "";
-    url = app.settings.url + sonarr.settings[mode] + app.settings.apiKey;
+    url = app.settings.url + sonarr.settings[mode];
+    
     url = url.replace("{historyItems}", app.settings.historyItems);
+    url = url.replace("{apikey}", app.settings.apiKey);
 
     $.getJSON( url , function( data ) {
       if (callback && typeof(callback) === "function") 
@@ -29,7 +31,7 @@ var sonarr = {
   }
 }
 
-var getUpcommingEpisodes = {
+var getupcomingEpisodes = {
   connect: function(){
 
   },
@@ -61,7 +63,6 @@ var getHistory = {
       "episodeFileDeleted" : 'deleted file',
     }
     template.find('#title').html(episode.series.title);
-    template.find('#episodeName').html(episode.episode.title);
     template.find('#episodeNum').html(episode.episode.seasonNumber + " - "  + episode.episode.episodeNumber);
 
     template.find('#event').html(event[episode.eventType]);
@@ -205,7 +206,7 @@ var app = {
     }
     if (app.settings.mode === "upcoming")
     {
-      getUpcommingEpisodes.connect(); 
+      getupcomingEpisodes.connect(); 
     } 
     else if (app.settings.mode === "wanted") 
     { 
@@ -223,5 +224,4 @@ var app = {
     $( ".list > div" ).remove(); 
   }
 }
-
 app.run();

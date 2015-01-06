@@ -9,12 +9,15 @@
     "default_icon": "72.png",
     "default_popup": "popup.html"
   },
+  "background": {
+    "scripts": ["js/vendor/jquery.js","popup.js","background.js"]
+  },
   "icons": { "16": "16.png",
            "48": "48.png",
           "128": "128.png" },
 
   "permissions": [
     "storage",
-    "localStorage"
+    "alarms" 
   ]
 }

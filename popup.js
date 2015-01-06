@@ -1,12 +1,12 @@
 /*
 ** Sonnarr Extention
-** Shows upcomming and missed episodes.
+** Shows upcoming and missed episodes.
 */
 
 var sonarr = {
   settings: { 
     wantedCall : "api/wanted/missing?page=1&pageSize=30&sortKey=airDateUtc&sortDir=desc&apikey=", 
-    historyCall : "api/history?page=1&pageSize=15&sortKey=date&sortDir=desc&apikey=" 
+    historyCall : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey=" 
   },
   getData : function (mode, callback) { 
     var url = "";
@@ -17,11 +17,12 @@ var sonarr = {
     } 
     else if (mode === "history") 
     { 
-      url = app.settings.url + sonarr.settings.historyCall + app.settings.apiKey;
+      var call = sonarr.settings.historyCall;
+      call = call.replace("{historyItems}", app.settings.historyItems);
+      url = app.settings.url + call + app.settings.apiKey;
       console.log('get history data');
     }
     $.getJSON( url , function( data ) {
-      console.log(data);
       if (callback && typeof(callback) == "function") 
       { 
         callback(data); 
@@ -140,10 +141,12 @@ var getWantedEpisodes = {
 function getOptions() {
   chrome.storage.sync.get({
     apiKey: app.settings.apiKey,
+    historyItems: app.settings.historyItems,
     url: app.settings.url
   }, function(items){
     app.settings.apiKey = items.apiKey;
     app.settings.url = items.url;
+    app.settings.historyItems = items.historyItems;
     app.settings.mode = "wanted";
     app.run();
     console.log('get options from chrome storage');
@@ -173,6 +176,7 @@ var app = {
   settings : {
     apiKey : '',
     url: '',
+    historyItems: 15,
     mode : 'getOptions'
   },
   run : function(){ 
@@ -183,7 +187,7 @@ var app = {
     }
     //clean list
     $( ".list > div" ).remove();
-    if (app.settings.mode === "upcomming")
+    if (app.settings.mode === "upcoming")
     {
       getUpcommingEpisodes.connect(); 
     } 

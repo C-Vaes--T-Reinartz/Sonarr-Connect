@@ -63,7 +63,7 @@ var getHistory = {
       "episodeFileDeleted" : 'deleted file',
     }
     template.find('#title').html(episode.series.title);
-    template.find('#episodeNum').html(episode.episode.seasonNumber + " - "  + episode.episode.episodeNumber);
+    template.find('#episodeNum').html(episode.episode.seasonNumber + "x"  + episode.episode.episodeNumber);
 
     template.find('#event').html(event[episode.eventType]);
 
@@ -112,7 +112,7 @@ var getWantedEpisodes = {
     }
     template.find('#title').html(episode.series.title);
     template.find('#episodeName').html(episode.title);
-    template.find('#episodeNum').html("download <br/>" + "S" + episode.seasonNumber + " E"  + episode.episodeNumber );
+    template.find('#episodeNum').html("download <br/>" + episode.seasonNumber + "x"  + episode.episodeNumber );
 
     template.attr("data-episodeId", episode.id);
 

@@ -139,9 +139,9 @@ var getWantedEpisodes = {
     });
   },
   click : function() { 
-    $( ".missed" ).click(function() {
-      console.log(this);
-      var episodeId = $(this).attr("data-episodeId");
+    $( ".wanted .button" ).click(function() {
+      var episodeId = $(this).parentsUntil('.wanted').attr("data-episodeId");
+      $(this).parentsUntil('.wanted').animate({'opacity': '0.5'});
       getWantedEpisodes.searchEpisode(episodeId);
     });
   }

@@ -219,7 +219,7 @@ function setLocalStorage () {
 
 
 var formatEpisodeNumer = function(seasonNumber, episodeNumber) { 
-  var episodeNum = "s"+ seasonNumber + "e"  + episodeNumber;
+  var episodeNum = "S"+ (seasonNumber.toString().length === 1 ? '0' : '') + seasonNumber + "E" + (episodeNumber.toString().length === 1 ? '0' : '') + episodeNumber;
   return episodeNum;
 }
 

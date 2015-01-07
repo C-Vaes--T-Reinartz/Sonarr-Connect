@@ -167,6 +167,24 @@ function getOptions() {
   });
 }
 
+var bottomMenu = {
+	bind : function(){
+		$('.bottom-menu a').unbind( "click" );
+		$('#sonarr-url-link').click(bottomMenu.openSonarrUrl);
+		$('#options-link').click(bottomMenu.openOptions);
+		$('#refresh-link').click(bottomMenu.refreshList);
+	},
+	openOptions : function() {
+		chrome.tabs.create({url: "options.html"});
+	},
+	openSonarrUrl : function() {
+		chrome.tabs.create({url: app.settings.url});
+	},
+	refreshList : function() {
+		app.run();
+	}
+}
+
 var menu =  {
   bind : function (){ 
     $('.menu .item').unbind( "click" ).click(function(){
@@ -225,6 +243,8 @@ var app = {
     }
     //bind actions to the menu
     menu.bind();
+	//bind bottom menu
+	bottomMenu.bind();
   },
   cleanList : function() { 
     //clean list
@@ -232,3 +252,4 @@ var app = {
   }
 }
 app.run();
+

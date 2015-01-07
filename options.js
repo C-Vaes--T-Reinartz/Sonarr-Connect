@@ -3,12 +3,24 @@
  * @author C.Vaes
  */
 
+ 
+/**
+* Check if url ends with a /
+*/
+function checkUrl(url) {
+
+  if(url.substr(-1) !== '/')
+	url = url + '/';
+
+return url;
+}
+ 
 /**
  * Test connection to sonarr server with api key. api/system/status call is used
  */
 function test_connection() {
 var apiKey = document.getElementById('apiKey').value;
-var url = document.getElementById('url').value;
+var url = checkUrl(document.getElementById('url').value);
 var status = document.getElementById('connectionStatus');
         $.ajax({
         	url: url + 'api/system/status?apiKey=' + apiKey,
@@ -33,12 +45,13 @@ function getInstallationInformation(data) {
 	document.getElementById('branch').textContent = data.branch;
 }
 
+
 /**
  * Save settings to chrome storage
  */
 function save_options() {
   var apiKey = document.getElementById('apiKey').value;
-  var url = document.getElementById('url').value;
+  var url = checkUrl(document.getElementById('url').value);
   var wantedItems = document.getElementById('wantedItems').value;
   var historyItems = document.getElementById('historyItems').value;
   chrome.storage.sync.set({

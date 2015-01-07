@@ -23,11 +23,14 @@
         margin-bottom: 1rem!important;
       }
       .wanted .button { 
-         padding: .5rem .2rem; 
+        padding: .5rem .2rem; 
       }
-      
+
       #episodeName { 
-         padding-left: 0; 
+        padding-left: 0; 
+      }
+      label .num {
+        margin-left: .5rem;
       }
     </style>
     <link rel="stylesheet" href="css/foundation.min.css"> 
@@ -51,20 +54,21 @@
       </div>
       <!--       history episode-->
       <div class="row history" id="history">
-        <div class="small-3 columns status">
-          <p id="event"></p>
-        </div>
-        <div class="small-9 columns">
-          <h5 id="title" class="small-8 columns"></h5>
-          <h5 class="small-4 columns" id="episodeNum"></h5>
+
+        <div class="small-8 columns">
+          <h5 id="title" class="small-9 columns"></h5>
+          <h5 class="small-3 columns" id="episodeNum"></h5>
           <h6 class="small-12 columns" id="quality"></h6>
+        </div>
+        <div class="small-4 columns status">
+          <p id="event"></p>
         </div>
 
       </div>
     </div>
     <div class="icon-bar two-up menu">
       <a class="item wanted active" data-mode="wanted">
-        <label>Wanted</label>
+        <label>Wanted<span class="num label alert round"></span></label>
       </a>
       <a class="item history" data-mode="history">
         <label>History</label>

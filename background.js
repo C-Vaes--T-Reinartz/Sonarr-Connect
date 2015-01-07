@@ -2,7 +2,7 @@ var background = {
   getItemsInHistory : function () { 
     app.run();
     data = $.parseJSON(localStorage.getItem('wanted'));
-    var num = data.records.length.toString();
+    var num = data.totalRecords.toString();
     background.setBadge(num);
   },
   setBadge : function (num) {

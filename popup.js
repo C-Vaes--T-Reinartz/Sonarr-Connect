@@ -11,7 +11,7 @@ var sonarr = {
   getData : function (mode, callback) { 
     var url = "";
     url = app.settings.url + sonarr.settings[mode];
-    
+
     url = url.replace("{historyItems}", app.settings.historyItems);
     url = url.replace("{apikey}", app.settings.apiKey);
 
@@ -83,11 +83,14 @@ var getWantedEpisodes = {
     sonarr.getData("wanted", getWantedEpisodes.generate);
   },
   generate: function(data){
+    var totalRecords = data.totalRecords;
     data = data.records;
     app.cleanList();
     $.each(data, function (index, value) {
       getWantedEpisodes.add(value);
     });
+    //set num items in button
+    $('.menu .wanted .num').html(totalRecords.toString());
     getWantedEpisodes.click();
   },
   add : function(episode){

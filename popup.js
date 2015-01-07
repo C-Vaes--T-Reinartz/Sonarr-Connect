@@ -66,7 +66,7 @@ var getHistory = {
     var classe = { 
       "downloadFolderImported" : 'label success',
       "grabbed" : 'label secondary',
-      "episodeFileDeleted" : 'label',
+      "episodeFileDeleted" : 'label alert',
     }
     template.find('#title').html(episode.series.title);
     template.find('#episodeNum').html(formatEpisodeNumer(episode.episode.seasonNumber,episode.episode.episodeNumber));
@@ -75,7 +75,7 @@ var getHistory = {
     
     template.find('#event').html(event[episode.eventType]).attr('class', classe[episode.eventType]);
 
-    template.find('#date').html(jQuery.format.prettyDate(new Date(episode.date))).attr('class', 'label');
+    template.find('#date').html(jQuery.format.prettyDate(new Date(episode.date))).attr('class', 'label info');
 	
     template.attr("data-episodeId", episode.episode.id);
     template.clone().appendTo( ".list" );

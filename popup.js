@@ -13,7 +13,7 @@ var sonarr = {
     url = app.settings.url + sonarr.settings[mode];
 
     url = url.replace("{wantedItems}", app.settings.wantedItems);
-	url = url.replace("{historyItems}", app.settings.historyItems);
+    url = url.replace("{historyItems}", app.settings.historyItems);
     url = url.replace("{apikey}", app.settings.apiKey);
 
     $.getJSON( url , function( data ) {
@@ -63,10 +63,15 @@ var getHistory = {
       "grabbed" : 'grabbed',
       "episodeFileDeleted" : 'deleted file',
     }
+    var classe = { 
+      "downloadFolderImported" : 'label success',
+      "grabbed" : 'label secondary',
+      "episodeFileDeleted" : 'label',
+    }
     template.find('#title').html(episode.series.title);
-    template.find('#episodeNum').html(episode.episode.seasonNumber + "x"  + episode.episode.episodeNumber);
+    template.find('#episodeNum').html(formatEpisodeNumer(episode.episode.seasonNumber,episode.episode.episodeNumber));
 
-    template.find('#event').html(event[episode.eventType]);
+    template.find('#event').html(event[episode.eventType]).attr('class', classe[episode.eventType]);
 
     template.attr("data-episodeId", episode.episode.id);
     template.clone().appendTo( ".list" );
@@ -116,7 +121,7 @@ var getWantedEpisodes = {
     }
     template.find('#title').html(episode.series.title);
     template.find('#episodeName').html(episode.title);
-    template.find('#episodeNum').html("download <br/>" + episode.seasonNumber + "x"  + episode.episodeNumber );
+    template.find('#episodeNum').html("download <br/>" + formatEpisodeNumer(episode.seasonNumber,episode.episodeNumber));
 
     template.attr("data-episodeId", episode.id);
 
@@ -154,13 +159,13 @@ function getOptions() {
   chrome.storage.sync.get({
     apiKey: app.settings.apiKey,
     url: app.settings.url,
-	wantedItems : app.settings.wantedItems,
+    wantedItems : app.settings.wantedItems,
     historyItems: app.settings.historyItems,
   }, function(items){
     app.settings.apiKey = items.apiKey;
     app.settings.url = items.url;
     app.settings.mode = "wanted";
-	app.settings.wantedItems = items.wantedItems;
+    app.settings.wantedItems = items.wantedItems;
     app.settings.historyItems = items.historyItems;
     app.run();
     console.log('get options from chrome storage');
@@ -168,21 +173,21 @@ function getOptions() {
 }
 
 var bottomMenu = {
-	bind : function(){
-		$('.bottom-menu a').unbind( "click" );
-		$('#sonarr-url-link').click(bottomMenu.openSonarrUrl);
-		$('#options-link').click(bottomMenu.openOptions);
-		$('#refresh-link').click(bottomMenu.refreshList);
-	},
-	openOptions : function() {
-		chrome.tabs.create({url: "options.html"});
-	},
-	openSonarrUrl : function() {
-		chrome.tabs.create({url: app.settings.url});
-	},
-	refreshList : function() {
-		app.run();
-	}
+  bind : function(){
+    $('.bottom-menu a').unbind( "click" );
+    $('#sonarr-url-link').click(bottomMenu.openSonarrUrl);
+    $('#options-link').click(bottomMenu.openOptions);
+    $('#refresh-link').click(bottomMenu.refreshList);
+  },
+  openOptions : function() {
+    chrome.tabs.create({url: "options.html"});
+  },
+  openSonarrUrl : function() {
+    chrome.tabs.create({url: app.settings.url});
+  },
+  refreshList : function() {
+    app.run();
+  }
 }
 
 var menu =  {
@@ -212,12 +217,20 @@ function setLocalStorage () {
   }
 }
 
+
+var formatEpisodeNumer = function(seasonNumber, episodeNumber) { 
+  var episodeNum = "s"+ seasonNumber + "e"  + episodeNumber;
+  return episodeNum;
+}
+
+
+
 var app = {
   settings : {
     apiKey : '',
     url: '',
     mode : 'getOptions', 
-	wantedItems: 15,
+    wantedItems: 15,
     historyItems: 15
   },
   run : function(){
@@ -243,8 +256,8 @@ var app = {
     }
     //bind actions to the menu
     menu.bind();
-	//bind bottom menu
-	bottomMenu.bind();
+    //bind bottom menu
+    bottomMenu.bind();
   },
   cleanList : function() { 
     //clean list

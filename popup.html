@@ -3,91 +3,10 @@
   <head>
     <title>Sonnarr</title>
     <style>
-	@-moz-keyframes spin {
-    from { -moz-transform: rotate(0deg); }
-    to { -moz-transform: rotate(360deg); }
-}
-@-webkit-keyframes spin {
-    from { -webkit-transform: rotate(0deg); }
-    to { -webkit-transform: rotate(360deg); }
-}
-@keyframes spin {
-    from {transform:rotate(0deg);}
-    to {transform:rotate(360deg);}
-}
-	
-      body,html {
-        min-width: 357px;
-		min-height: 600px;
-        overflow-x: hidden;
-      }
-	  .load { 
-			margin: auto auto;
-vertical-align: middle;
-position: absolute;
-top: 0;
-bottom: 0;
-left: 0;
-right: 0;
-width: 2rem;
-height: 2rem;
-margin: auto;
-display: block;
-width: 1.5rem;
-height: 1.5rem;
-border-radius: 20000px;
-border-top: 0.2rem solid #666;
-border-left: 0.2rem solid #666;
-border-right: 0.2rem solid #F5F5F5;
-border-bottom: 0.2rem solid #F5F5F5;
--webkit-animation: spin .6s linear infinite;
--moz-animation: spin .6s linear infinite;
--o-animation: spin .6s linear infinite;
-animation: spin .6s linear infinite;
-      }
-      img {
-        margin: 5px;
-        border: 2px solid black;
-        vertical-align: middle;
-        width: 75px;
-        height: 75px;
-      }
-      .date { 
-        border-left: .2rem solid #07abc9;
-      } 
-      .row { 
-        border-bottom: .1rem solid #a39090;
-        margin-bottom: 1rem!important;
-      }
-      .wanted .button { 
-        padding: .5rem .2rem; 
-      }
 
-      #episodeName { 
-        padding-left: 0; 
-      }
-      label .num {
-        margin-left: .5rem;
-      }
-	  
-	  .menu {
-	  position: fixed;
-	  top: 0;
-	  z-index: 20;
-	  }
-	  
-	  .bottom-menu {
-	  position: fixed;
-	  bottom: 0;
-	  z-index: 20;
-	  }
-	  
-	  .list {
-	  margin: 4rem 0;
-	  z-index: 10;
-	  }
     </style>
     <link rel="stylesheet" href="css/foundation.min.css"> 
+    <link rel="stylesheet" href="css/custom.css"> 
     <script src="js/vendor/jquery.js"></script>
     <script src="popup.js"></script>
   </head>
@@ -110,8 +29,8 @@ animation: spin .6s linear infinite;
       <div class="row history" id="history">
 
         <div class="small-8 columns">
-          <h5 id="title" class="small-9 columns"></h5>
-          <h5 class="small-3 columns" id="episodeNum"></h5>
+          <h5 id="title" class="small-7 columns"></h5>
+          <h5 class="small-5 columns" id="episodeNum"></h5>
           <h6 class="small-12 columns" id="quality"></h6>
         </div>
         <div class="small-4 columns status">

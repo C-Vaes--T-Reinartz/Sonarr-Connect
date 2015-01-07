@@ -5,14 +5,15 @@
 
 var sonarr = {
   settings: { 
-    wanted : "api/wanted/missing?page=1&pageSize={historyItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}", 
+    wanted : "api/wanted/missing?page=1&pageSize={wantedItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}", 
     history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}" 
   },
   getData : function (mode, callback) { 
     var url = "";
     url = app.settings.url + sonarr.settings[mode];
 
-    url = url.replace("{historyItems}", app.settings.historyItems);
+    url = url.replace("{wantedItems}", app.settings.wantedItems);
+	url = url.replace("{historyItems}", app.settings.historyItems);
     url = url.replace("{apikey}", app.settings.apiKey);
 
     $.getJSON( url , function( data ) {

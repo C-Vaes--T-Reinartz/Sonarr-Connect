@@ -73,6 +73,8 @@ var getHistory = {
 
     template.find('#event').html(event[episode.eventType]).attr('class', classe[episode.eventType]);
 
+    template.find('#date').html(jQuery.format.prettyDate(new Date(episode.date))).attr('class', 'label');
+	
     template.attr("data-episodeId", episode.episode.id);
     template.clone().appendTo( ".list" );
   }
@@ -265,4 +267,3 @@ var app = {
   }
 }
 app.run();
-

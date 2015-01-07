@@ -154,13 +154,13 @@ function getOptions() {
   chrome.storage.sync.get({
     apiKey: app.settings.apiKey,
     url: app.settings.url,
-	wantedItems : app.settings.wantedItems
+	wantedItems : app.settings.wantedItems,
     historyItems: app.settings.historyItems,
   }, function(items){
     app.settings.apiKey = items.apiKey;
     app.settings.url = items.url;
     app.settings.mode = "wanted";
-	app.settings.wantedItems = "historyItems";
+	app.settings.wantedItems = items.wantedItems;
     app.settings.historyItems = items.historyItems;
     app.run();
     console.log('get options from chrome storage');
@@ -199,6 +199,7 @@ var app = {
     apiKey : '',
     url: '',
     mode : 'getOptions', 
+	wantedItems: 15,
     historyItems: 15
   },
   run : function(){

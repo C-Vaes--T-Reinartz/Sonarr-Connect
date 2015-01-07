@@ -71,11 +71,11 @@ var getHistory = {
     template.find('#title').html(episode.series.title);
     template.find('#episodeNum').html(formatEpisodeNumer(episode.episode.seasonNumber,episode.episode.episodeNumber));
 
-    template.find('#quality').html(episode.quality.quality.name).attr('class', 'label');
+    template.find('#quality').html(episode.quality.quality.name);
     
     template.find('#event').html(event[episode.eventType]).attr('class', classe[episode.eventType]);
 
-    template.find('#date').html(jQuery.format.prettyDate(new Date(episode.date))).attr('class', 'label info');
+    template.find('#date').html(jQuery.format.prettyDate(new Date(episode.date)));
 	
     template.attr("data-episodeId", episode.episode.id);
     template.clone().appendTo( ".list" );

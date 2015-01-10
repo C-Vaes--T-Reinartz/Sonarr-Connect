@@ -125,7 +125,7 @@ var getWantedEpisodes = {
     }
     template.find('#title').html(episode.series.title);
     template.find('#episodeName').html(episode.title);
-    template.find('#episodeNum').html("download <br/>" + formatEpisodeNumer(episode.seasonNumber,episode.episodeNumber));
+    template.find('#episodeNum').html("Search <br/>" + formatEpisodeNumer(episode.seasonNumber,episode.episodeNumber));
 
     template.attr("data-episodeId", episode.id);
 
@@ -176,6 +176,7 @@ function getOptions() {
   });
 }
 
+//buttons on menu at the bottom of the extension
 var bottomMenu = {
   bind : function(){
     $('.bottom-menu a').unbind( "click" );
@@ -191,9 +192,11 @@ var bottomMenu = {
   },
   refreshList : function() {
     app.run();
+	background.getItemsInHistory();
   }
 }
 
+//buttons on menu at the top of the extension
 var menu =  {
   bind : function (){ 
     $('.menu .item').unbind( "click" ).click(function(){
@@ -212,6 +215,7 @@ var menu =  {
   }
 }
 
+//save tabs to localstorage for caching
 function setLocalStorage () { 
   if (localStorage.getItem('wanted') === null) {
     localStorage.setItem('wanted', undefined);
@@ -221,7 +225,7 @@ function setLocalStorage () {
   }
 }
 
-
+//format episodenumbers to match scene formatting
 var formatEpisodeNumer = function(seasonNumber, episodeNumber) { 
   var episodeNum = "S"+ (seasonNumber.toString().length === 1 ? '0' : '') + seasonNumber + "E" + (episodeNumber.toString().length === 1 ? '0' : '') + episodeNumber;
   return episodeNum;
@@ -268,4 +272,6 @@ var app = {
     $( ".list > div" ).remove(); 
   }
 }
+
+//run app when extension is opened
 app.run();

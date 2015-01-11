@@ -6,6 +6,7 @@
 var sonarr = {
   settings: { 
     wanted : "api/wanted/missing?page=1&pageSize={wantedItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}", 
+    series : "api/series?page=1&sortKey=title&sortDir=desc&apikey={apikey}", 	
     history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}" 
   },
   getData : function (mode, callback) { 
@@ -32,7 +33,10 @@ var sonarr = {
       //store data
       if(mode === "wanted"){ 
         localStorage.setItem("wanted", JSON.stringify(data));
-      }        
+      }     
+      if(mode === "series"){ 
+        localStorage.setItem("series", JSON.stringify(data));
+      }    	  
       if(mode === "history"){ 
         localStorage.setItem("history", JSON.stringify(data));
       }
@@ -94,6 +98,32 @@ var getHistory = {
   }
 }
 
+//get list of all series
+var getSeries = {
+  connect: function(){
+    //check if we have local data
+    if(localStorage.getItem("series") !== 'undefined'){
+      var seriesData = $.parseJSON(localStorage.getItem("series"));
+      getSeries.generate(seriesData);
+    }
+    sonarr.getData("series", getSeries.generate);
+  },
+  generate: function(data){
+    if(app.settings.mode !== "series"){
+      return; 
+    }
+    app.cleanList();
+    $.each(data, function (index, value) {
+      getSeries.add(value);
+    });
+  },
+  add : function (serie) {  
+    var template = $('.templates #series');
+    template.find('#title').html(serie.title);
+    template.find('#status').html(serie.status);
+    template.clone().appendTo( ".list" );
+  }
+}
 
 
 var getWantedEpisodes = { 
@@ -235,6 +265,9 @@ function setLocalStorage () {
   if (localStorage.getItem('wanted') === null) {
     localStorage.setItem('wanted', undefined);
   }
+    if (localStorage.getItem('series') === null) {
+    localStorage.setItem('series', undefined);
+  }
   if (localStorage.getItem('history') === null) {
     localStorage.setItem('history', undefined);
   }
@@ -272,6 +305,10 @@ var app = {
     else if (app.settings.mode === "wanted") 
     { 
       getWantedEpisodes.connect(); 
+    }
+	else if (app.settings.mode === "series") 
+    { 
+      getSeries.connect(); 
     }
     else if (app.settings.mode === "history") 
     { 

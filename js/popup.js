@@ -9,6 +9,17 @@ var sonarr = {
     history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}" 
   },
   getData : function (mode, callback) { 
+
+    //check input in function
+    if (sonarr.settings[mode] === undefined){
+      console.error("sonarr.getData mode requires a mode that has been defined in sonarr.settings");
+      return false;
+    }
+    if (callback === undefined || typeof(callback) !== "function") {
+      console.error("sonarr.getData callback requires a type of function to be defined");
+      return false;    
+    }
+
     var url = "";
     url = app.settings.url + sonarr.settings[mode];
 
@@ -17,16 +28,13 @@ var sonarr = {
     url = url.replace("{apikey}", app.settings.apiKey);
 
     $.getJSON( url , function( data ) {
-      if (callback && typeof(callback) === "function") 
-      { 
-        callback(data);
-        //store data
-        if(mode === "wanted"){ 
-          localStorage.setItem("wanted", JSON.stringify(data));
-        }        
-        if(mode === "history"){ 
-          localStorage.setItem("history", JSON.stringify(data));
-        }
+      callback(data);
+      //store data
+      if(mode === "wanted"){ 
+        localStorage.setItem("wanted", JSON.stringify(data));
+      }        
+      if(mode === "history"){ 
+        localStorage.setItem("history", JSON.stringify(data));
       }
     });
   }
@@ -43,6 +51,7 @@ var getupcomingEpisodes = {
 
 var getHistory = {
   connect: function(){
+    //check if we have local data
     if(localStorage.getItem("history") !== 'undefined'){
       var historyData = $.parseJSON(localStorage.getItem("history"));
       getHistory.generate(historyData);
@@ -50,6 +59,9 @@ var getHistory = {
     sonarr.getData("history", getHistory.generate);
   },
   generate: function(data){
+    if(app.settings.mode !== "history"){
+      return; 
+    }
     data = data.records;
     app.cleanList();
     $.each(data, function (index, value) {
@@ -72,11 +84,11 @@ var getHistory = {
     template.find('#episodeNum').html(formatEpisodeNumer(episode.episode.seasonNumber,episode.episode.episodeNumber));
 
     template.find('#quality').html(episode.quality.quality.name);
-    
+
     template.find('#event').html(event[episode.eventType]).attr('class', classe[episode.eventType]);
 
     template.find('#date').html(jQuery.format.prettyDate(new Date(episode.date)));
-	
+
     template.attr("data-episodeId", episode.episode.id);
     template.clone().appendTo( ".list" );
   }
@@ -93,6 +105,9 @@ var getWantedEpisodes = {
     sonarr.getData("wanted", getWantedEpisodes.generate);
   },
   generate: function(data){
+    if(app.settings.mode !== "wanted"){
+      return; 
+    }
     var totalRecords = data.totalRecords;
     data = data.records;
     app.cleanList();
@@ -192,7 +207,7 @@ var bottomMenu = {
   },
   refreshList : function() {
     app.run();
-	background.getItemsInHistory();
+    background.getItemsInHistory();
   }
 }
 

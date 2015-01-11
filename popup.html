@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="css/foundation.min.css"> 
     <link rel="stylesheet" href="css/custom.css"> 
     <script src="js/vendor/jquery.js"></script>
-	<script src="js/jquery-dateFormat.min.js"></script>
-    <script src="popup.js"></script>
-	<script src="background.js"></script>
+    <script src="js/jquery-dateFormat.min.js"></script>
+    <script src="js/popup.js"></script>
+    <script src="js/background.js"></script>
   </head>
   <body>
     <div class="templates" style="display:none;">
@@ -31,19 +31,17 @@
       <div class="row history" id="history">
 
         <div class="small-8 columns">
-          <h5 id="title" class="small-7 columns"></h5>
-          <h5 class="small-5 columns" id="episodeNum"></h5>
-          <h5 class="small-12 columns label" id="quality"></h5>
+          <h6 id="title" class="small-12 columns"></h6>
         </div>
-		<div>
-			<div class="small-4 columns status">
-			  <p id="event"></p>
-			</div>
-			<div class="small-4 columns">
-			  <p class="label info" id="date"></p>
-			</div>
-		</div>
-		
+        <div class="small-4 columns status">
+          <h6 id="episodeNum"></h6>
+        </div>
+        <div class="small-12 label info" style="text-align: left;"> 
+          <span id="event"></span>
+          <p class="label info" id="quality"></p>
+          <span class="label info" id="date"></span>
+        </div>
+
       </div>
     </div>
     <div class="icon-bar two-up menu">
@@ -55,20 +53,20 @@
       </a>
     </div>
 
-	<!-- content of list will be cleared upon run-->
+    <!-- content of list will be cleared upon run-->
     <div class="list"><div class="load"></div></div>
-		
-	<!-- bottom menu --->
+
+    <!-- bottom menu --->
     <div class="icon-bar three-up bottom-menu">
       <a id="sonarr-url-link" class="item">
         <label>Sonarr Url</span></label>
       </a>
-      <a id="options-link" class="item">
-        <label>Options</label>
-      </a>
-	  <a id="refresh-link" class="item">
-        <label>Refresh</label>
-      </a>
+    <a id="options-link" class="item">
+      <label>Options</label>
+    </a>
+    <a id="refresh-link" class="item">
+      <label>Refresh</label>
+    </a>
     </div>
   </body>
 </html>

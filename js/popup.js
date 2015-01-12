@@ -98,7 +98,7 @@ var getHistory = {
   }
 }
 
-//get list of all series
+//get list of all series and seasons
 var getSeries = {
   connect: function(){
     //check if we have local data
@@ -115,15 +115,61 @@ var getSeries = {
     app.cleanList();
     $.each(data, function (index, value) {
       getSeries.add(value);
+      getSeries.bind(value);
     });
   },
+  
   add : function (serie) {  
-    var template = $('.templates #series');
-    template.find('#title').html(serie.title);
-    template.find('#status').html(serie.status);
-    template.clone().appendTo( ".list" );
+	  //serie status
+    var status = { 
+    	      "continuing" : 'label success',
+    	      "ended" : 'label alert'
+    	    }
+    //monitor status
+    var monitored = {
+  	      "true" : 'fi-plus',
+	      "false" : 'fi-minus'	
+    }
+    
+    var template = $('.templates #series').clone();
+    template.find('.serie-general #title').html(serie.title);
+    template.find('.serie-general #network').html(serie.network);
+    template.find('.serie-general #status').html(serie.status).attr('class', status[serie.status]);
+    //add identifier to toggle season panel
+    template.attr('serie-id', serie.id);
+    //remove season line to prevent double first line
+    template.find('.serie-seasons').empty();
+    
+    template.appendTo( ".list" );
+
+    //add line per season
+    $.each(serie.seasons.sort(seasonComparator), function (index, value) {
+        var season = $('.templates #series .serie-seasons .season').clone();
+        if(value.seasonNumber == 0)
+        	season.find('#seasonNumber').html('Specials');
+        else
+        	season.find('#seasonNumber').html('Season ' + value.seasonNumber);
+    	season.find('#monitored').attr('class', monitored[value.monitored]).attr('title', 'monitored: ' + value.monitored.toString());
+  		season.appendTo('div[serie-id="'+ serie.id +'"] .serie-seasons');	
+    });
+    
+  },
+  bind : function(value) {
+	    var template = $('div[serie-id="'+ value.id +'"]');
+	    template.find('.serie-general').on('click',function(){
+	    	template.find(".serie-seasons").toggle();
+	    });
   }
 }
+
+//comparator to sort seasons by seasonNumber
+function seasonComparator(a,b) {
+	  if (a.seasonNumber < b.seasonNumber)
+	     return -1;
+	  else if (a.seasonNumber > b.seasonNumber)
+	    return 1;
+	  return 0;
+	}
 
 
 var getWantedEpisodes = { 

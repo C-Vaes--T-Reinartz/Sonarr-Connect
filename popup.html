@@ -30,15 +30,28 @@
       </div>
 	  <!--       series list-->
       <div class="row series" id="series">
-
-        <div class="small-8 columns">
-          <h6 id="title" class="small-12 columns"></h6>
-        </div>
-        <div class="small-4 columns">
-          <span id="status"></span>
-        </div>
-
-      </div>
+      	<div class="row serie-general">
+	        <div class="small-6 columns">
+	          <h6 id="title" ></h6>
+	        </div>
+	        <div class="small-2 columns">
+	          <span id="network" class="label secondary"></span>
+	        </div>
+	        <div class="small-4 columns">
+	          <h6 id="status" ></h6>
+	        </div>
+		</div>
+			<div class="row serie-seasons" style="display: none">
+				<div class="row season">
+					<div class="small-8 columns">
+						<label id="seasonNumber"></label>
+					</div>
+					<div class="small-4 columns">
+						<i id=monitored></i>
+					</div>
+				</div>
+			</div>
+		</div>
       <!--       history episode-->
       <div class="row history" id="history">
 

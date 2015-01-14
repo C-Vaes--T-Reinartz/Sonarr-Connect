@@ -52,11 +52,13 @@ function getInstallationInformation(data) {
 function save_options() {
   var apiKey = document.getElementById('apiKey').value;
   var url = checkUrl(document.getElementById('url').value);
+  var numberOfDaysCalendar = document.getElementById('numberOfDaysCalendar').value;
   var wantedItems = document.getElementById('wantedItems').value;
   var historyItems = document.getElementById('historyItems').value;
   chrome.storage.sync.set({
     apiKey: apiKey,
     url: url,
+    numberOfDaysCalendar : numberOfDaysCalendar,
 	wantedItems : wantedItems,
     historyItems : historyItems
   }, function() {
@@ -77,11 +79,14 @@ function restore_options() {
   chrome.storage.sync.get({
     apiKey: '',
     url: 'http://localhost:8989',
+    numberOfDaysCalendar : 7,
 	wantedItems: 15,
     historyItems: 15,
   }, function(items) {
     document.getElementById('apiKey').value = items.apiKey;
     document.getElementById('url').value = items.url;
+    document.getElementById('numberOfDaysCalendar').value = items.numberOfDaysCalendar;
+
 	document.getElementById('wantedItems').value = items.wantedItems;
     document.getElementById('historyItems').value = items.historyItems;
   });

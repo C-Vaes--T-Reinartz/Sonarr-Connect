@@ -72,10 +72,33 @@ label .num {
   z-index: 20;
 }
 
+.menu .item label { 
+  position: relative;
+}
+.menu .item .num { 
+  padding: 0.3rem;
+  font-size: 0.6rem;
+  position: absolute;
+  right: 0; 
+}
+
 .bottom-menu {
   position: fixed;
   bottom: 0;
   z-index: 20;
+}
+
+.sonarr-url .fi-widget:before { 
+  content: ''!important;
+  background-image: url("../48.png");
+  background-size: 100% 100%;
+  width: .875rem;
+  height: .875rem;
+}
+.bottom-menu i { 
+  font-size: 1rem; 
+  float: left;
+  padding-left: .5rem;
 }
 
 .list {
@@ -84,5 +107,5 @@ label .num {
 }
 
 .icon-bar>* { 
-   padding: .5rem; 
+  padding: .5rem; 
 }

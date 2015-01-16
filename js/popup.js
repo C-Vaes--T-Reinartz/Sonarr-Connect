@@ -116,6 +116,7 @@ var getCalendar = {
     if (app.settings.mode !== "calendar") {
       return;
     }
+    console.log("calender");
     app.cleanList();
 
     // add structure and dates to page
@@ -123,10 +124,9 @@ var getCalendar = {
     getCalendar.addDates();
 
     $.each(data, function(index, value) {
-
       getCalendar.addShows(value)
-      getCalendar.bind(value);
     });
+    //getCalendar.bind();
   },
   addStructure : function() {
     var template = $('.templates #calendar').clone();
@@ -140,43 +140,45 @@ var getCalendar = {
     template.appendTo(".list");
   },
   addDates : function() {
+    console.log('addDates');
     // TODO improve how to show code
     var template = $('.templates #calendar').clone();
     template.attr("class", "today");
     template.find('.calendar-date #title').html('Today');
-    template.appendTo(".list #calendar");
+    template.appendTo(".list");
 
     template = $('.templates #calendar').clone();
     template.attr("class", "tomorrow");
     template.find('.calendar-date #title').html('Tomorrow');
-    template.appendTo(".list #calendar");
+    template.appendTo(".list");
 
     template = $('.templates #calendar').clone();
     template.attr("class", "later");
     template.find('.calendar-date #title').html('Later');
-    template.appendTo(".list #calendar ");
+    template.appendTo(".list");
   },
   addShows : function(serie) {
-
     // create show
     var show = $('.templates #calendar .calendar-show .show').clone();
     show.find("#title").html(serie.series.title);
     show.find("#episodeName").html(serie.title);
     show.find("#episodeNum").html(formatEpisodeNumer(serie.seasonNumber, serie.episodeNumber));
-    //var tomorrow = (new Date().getDate() + 1).setHours(0, 0, 0, 0);
-    tomorrow = tomorrow.setHours(0, 0, 0, 0);
-    if (new Date(serie.airDateUtc).valueOf() == new Date().setHours(0, 0, 0, 0).valueOf())
-      show.appendTo(".list #calendar .today")
-      else if (new Date(serie.airDateUtc).valueOf() == tomorrow.valueOf())
-        show.appendTo(".list #calendar .tomorrow")
-        else
-          show.appendTo(".list #calendar .later")
-          },
+    var tomorrow = new Date();
+    tomorrow.setHours(0, 0, 0, 0);
+    tomorrow.getDate() + 1;
+    
+    console.log(show);
+    
+    if (new Date(serie.airDateUtc).valueOf() == new Date().setHours(0, 0, 0, 0).valueOf()){
+      show.appendTo(".list .today .calendar-show");
+    } else if (new Date(serie.airDateUtc).valueOf() == tomorrow.valueOf()){
+      show.appendTo(".list .tomorrow .calendar-show");
+    } else {
+      show.appendTo(".list .later .calendar-show");
+    }
+  },
   bind : function(value) {
-    // var template = $('div[serie-id="'+ value.id +'"]');
-    // template.find('.serie-general').on('click',function(){
-    // template.find(".serie-seasons").toggle();
-    // });
+
   }
 }
 
@@ -485,7 +487,7 @@ var app = {
   },
   cleanList : function() {
     // clean list
-    $(".list > div").remove();
+    $(".list *").remove();
   }
 }
 

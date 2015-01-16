@@ -8,9 +8,10 @@ var sonarr = {
     wanted    : "api/wanted/missing?page=1&pageSize={wantedItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}",
     calendar  : "api/calendar?page=1&sortKey=airDateUtc&sortDir=desc&start={calendarStartDate}&end={calendarEndDate}&apikey={apikey}",
     series    : "api/series?page=1&sortKey=title&sortDir=desc&apikey={apikey}",
+    episodes  : "api/episode?seriesId={seriesId}&apikey={apikey}",
     history   : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}"
   },
-  getData : function(mode, callback) {
+  getData : function(mode, callback, data) {
 
     // check input in function
     if (sonarr.settings[mode] === undefined) {
@@ -24,10 +25,11 @@ var sonarr = {
 
     //check for local data and return the data when possible. 
     if (localStorage.getItem(mode) !== 'undefined') {
-      var data = $.parseJSON(localStorage.getItem(mode));
-      callback(data);
+      var localData = $.parseJSON(localStorage.getItem(mode));
+      if(localData !== null){
+        callback(localData);
+      }
     }   
-
 
     var url = "";
     url = app.settings.url + sonarr.settings[mode];
@@ -38,10 +40,20 @@ var sonarr = {
     url = url.replace("{calendarStartDate}", formatDate(new Date(), null));
     url = url.replace("{calendarEndDate}", formatDate(new Date(), app.settings.numberOfDaysCalendar));
 
-    $.getJSON(url, function(data) {
-      callback(data);
+    //set seriesID
+    if(mode === "episodes"){
+      if(data === undefined){
+        console.error("Cannot get episodes without a seriesId");
+        return;
+      }
+      console.log(data);
+      url = url.replace("{seriesId}", data);
+    }
+
+    $.getJSON(url, function(remoteData) {
+      callback(remoteData);
       // store data in localstorage
-      localStorage.setItem(mode, JSON.stringify(data));
+      localStorage.setItem(mode, JSON.stringify(remoteData));
     });
   }
 }
@@ -151,7 +163,7 @@ var getCalendar = {
     show.find("#title").html(serie.series.title);
     show.find("#episodeName").html(serie.title);
     show.find("#episodeNum").html(formatEpisodeNumer(serie.seasonNumber, serie.episodeNumber));
-    var tomorrow = (new Date().getDate() + 1).setHours(0, 0, 0, 0);
+    //var tomorrow = (new Date().getDate() + 1).setHours(0, 0, 0, 0);
     tomorrow = tomorrow.setHours(0, 0, 0, 0);
     if (new Date(serie.airDateUtc).valueOf() == new Date().setHours(0, 0, 0, 0).valueOf())
       show.appendTo(".list #calendar .today")
@@ -180,8 +192,8 @@ var getSeries = {
     app.cleanList();
     $.each(data, function(index, value) {
       getSeries.add(value);
-      getSeries.bind(value);
     });
+    getSeries.bind();
   },
 
   add : function(serie) {
@@ -215,15 +227,55 @@ var getSeries = {
       else
         season.find('#seasonNumber').html('Season ' + value.seasonNumber);
       season.find('#monitored').attr('class', monitored[value.monitored]).attr('title', 'monitored: ' + value.monitored.toString());
+      season.addClass("S"+value.seasonNumber);
       season.appendTo('div[serie-id="' + serie.id + '"] .serie-seasons');
     });
 
   },
-  bind : function(value) {
-    var template = $('div[serie-id="' + value.id + '"]');
-    template.find('.serie-general').on('click', function() {
-      template.find(".serie-seasons").toggle();
+  bind : function() {
+    //var template = $('div[serie-id="' + value.id + '"]');
+    //var template = $('.templates #series .serie-general');
+    console.log("bind");
+    $('.series .serie-general').unbind('click').on('click', function() {
+      var seriesId = $(this).parent().attr('serie-id');
+      getEpisodes.forSeries(seriesId);
+      $(this).parent().find(".serie-seasons").toggle();
     });
+    $('.series .season').unbind('click').on('click', function() {
+      if($(this).hasClass('show')){
+        $(this).removeClass('show'); 
+      } else { 
+        $(this).parent().removeClass("show");
+        $(this).addClass('show');
+      }
+    });
+  }
+}
+
+
+// get list of all series and seasons
+var getEpisodes = {
+  forSeries : function(seriesId) {
+    sonarr.getData("episodes", getEpisodes.generate, seriesId);
+  },
+  generate : function(data) {
+    if (app.settings.mode !== "series") {
+      return;
+    }
+    console.log(data);
+    //app.cleanList();
+    $.each(data, function(index, value) {
+      getEpisodes.add(value);
+    });
+  },
+  add : function(data) { 
+    var template = $('.templates #series .episode').clone();
+    template.find('#episode-name').html(data.title);
+    template.find("#episode-num").html(formatEpisodeNumer(data.seasonNumber, data.episodeNumber));
+    template.appendTo('[serie-id="' + data.seriesId + '"] .season.S' + data.seasonNumber);
+  },
+  bind : function(){
+
   }
 }
 

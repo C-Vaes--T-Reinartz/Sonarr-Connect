@@ -109,3 +109,10 @@ label .num {
 .icon-bar>* { 
   padding: .5rem; 
 }
+
+.season .episode { 
+ display: none; 
+}
+.season.show .episode { 
+ display: block;  
+}

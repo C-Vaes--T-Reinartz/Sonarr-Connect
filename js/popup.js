@@ -208,8 +208,8 @@ var getSeries = {
     }
     // monitor status
     var monitored = {
-      "true" : 'fi-plus',
-      "false" : 'fi-minus'
+      "true" : 'fi-bookmark',
+      "false" : 'fi-bookmark icon-negative'
     }
 
     var template = $('.templates #series').clone();
@@ -229,7 +229,7 @@ var getSeries = {
       if (value.seasonNumber == 0)
         season.find('#seasonNumber').html('Specials');
       else
-        season.find('#seasonNumber').html('Season ' + value.seasonNumber);
+      season.find('#seasonNumber').html('Season ' + value.seasonNumber);
       season.find('#monitored').attr('class', monitored[value.monitored]).attr('title', 'monitored: ' + value.monitored.toString());
       season.addClass("S"+value.seasonNumber);
       season.appendTo('div[serie-id="' + serie.id + '"] .serie-seasons');

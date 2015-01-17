@@ -121,3 +121,8 @@ label .num {
 .serie-general { 
  cursor: pointer; 
 }
+
+.icon-negative { 
+  color: white;
+  -webkit-text-stroke: 1px black;
+}

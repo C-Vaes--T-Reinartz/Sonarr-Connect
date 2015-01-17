@@ -163,16 +163,18 @@ var getCalendar = {
     show.find("#title").html(serie.series.title);
     show.find("#episodeName").html(serie.title);
     show.find("#episodeNum").html(formatEpisodeNumer(serie.seasonNumber, serie.episodeNumber));
-    var tomorrow = new Date();
+    var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
     tomorrow.setHours(0, 0, 0, 0);
-    tomorrow.getDate() + 1;
+    tomorrow.getDate();
     
-    console.log(show);
+//    console.log(tomorrow.valueOf());
+//    console.log(new Date(serie.airDateUtc).valueOf());
     
     if (new Date(serie.airDateUtc).valueOf() == new Date().setHours(0, 0, 0, 0).valueOf()){
       show.appendTo(".list .today .calendar-show");
     } else if (new Date(serie.airDateUtc).valueOf() == tomorrow.valueOf()){
       show.appendTo(".list .tomorrow .calendar-show");
+      console.log(serie);
     } else {
       show.appendTo(".list .later .calendar-show");
     }

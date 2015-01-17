@@ -116,3 +116,8 @@ label .num {
 .season.show .episode { 
  display: block;  
 }
+
+/*pointers*/
+.serie-general { 
+ cursor: pointer; 
+}

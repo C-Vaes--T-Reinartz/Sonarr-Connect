@@ -100,7 +100,7 @@ var getHistory = {
 
     template.find('#event').html(event[episode.eventType]).attr('class', classe[episode.eventType]);
 
-    template.find('#date').html(jQuery.format.prettyDate(new Date(episode.date)));
+    template.find('#date').html(moment(new Date(episode.date)).fromNow());
 
     template.attr("data-episodeId", episode.episode.id);
     template.clone().appendTo(".list");
@@ -119,8 +119,6 @@ var getCalendar = {
     console.log("calender");
     app.cleanList();
 
-    // add structure and dates to page
-    getCalendar.addStructure();
     getCalendar.addDates();
 
     $.each(data, function(index, value) {
@@ -128,33 +126,25 @@ var getCalendar = {
     });
     //getCalendar.bind();
   },
-  addStructure : function() {
-    var template = $('.templates #calendar').clone();
-
-    // remove dates and shows
-    template.find('.calendar-date').empty();
-    // remove shows
-    template.find('.calendar-show').empty();
-
-    // add empty calendar to list
-    template.appendTo(".list");
-  },
   addDates : function() {
     console.log('addDates');
     // TODO improve how to show code
     var template = $('.templates #calendar').clone();
     template.attr("class", "today");
     template.find('.calendar-date #title').html('Today');
+    template.find('.calendar-show .show').empty();
     template.appendTo(".list");
 
     template = $('.templates #calendar').clone();
     template.attr("class", "tomorrow");
     template.find('.calendar-date #title').html('Tomorrow');
+    template.find('.calendar-show .show').empty();
     template.appendTo(".list");
 
     template = $('.templates #calendar').clone();
     template.attr("class", "later");
     template.find('.calendar-date #title').html('Later');
+    template.find('.calendar-show .show').empty();
     template.appendTo(".list");
   },
   addShows : function(serie) {
@@ -163,6 +153,7 @@ var getCalendar = {
     show.find("#title").html(serie.series.title);
     show.find("#episodeName").html(serie.title);
     show.find("#episodeNum").html(formatEpisodeNumer(serie.seasonNumber, serie.episodeNumber));
+    show.find("#airDate").html(moment(new Date(serie.airDateUtc)).fromNow());
     var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
     tomorrow.setHours(0, 0, 0, 0);
     tomorrow.getDate();
@@ -174,7 +165,6 @@ var getCalendar = {
       show.appendTo(".list .today .calendar-show");
     } else if (new Date(serie.airDateUtc).valueOf() == tomorrow.valueOf()){
       show.appendTo(".list .tomorrow .calendar-show");
-      console.log(serie);
     } else {
       show.appendTo(".list .later .calendar-show");
     }
@@ -237,9 +227,6 @@ var getSeries = {
 
   },
   bind : function() {
-    //var template = $('div[serie-id="' + value.id + '"]');
-    //var template = $('.templates #series .serie-general');
-    console.log("bind");
     $('.series .serie-general').unbind('click').on('click', function() {
       var seriesId = $(this).parent().attr('serie-id');
       getEpisodes.forSeries(seriesId);
@@ -266,8 +253,6 @@ var getEpisodes = {
     if (app.settings.mode !== "series") {
       return;
     }
-    console.log(data);
-    //app.cleanList();
     $.each(data, function(index, value) {
       getEpisodes.add(value);
     });

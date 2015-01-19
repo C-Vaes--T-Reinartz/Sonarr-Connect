@@ -185,6 +185,7 @@ var getSeries = {
     $.each(data, function(index, value) {
       getSeries.add(value);
     });
+    $('.list .season .episode').remove();
     getSeries.bind();
   },
 
@@ -210,6 +211,7 @@ var getSeries = {
     template.find('.serie-seasons').empty();
 
     template.appendTo(".list");
+    
 
     // add line per season
     $.each(serie.seasons.sort(seasonComparator), function(index, value) {

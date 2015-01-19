@@ -127,6 +127,7 @@ label .num {
   -webkit-text-stroke: 1px black;
 }
 
-#calendar .show {
+#calendar .show, 
+.serie-seasons .episode {
 clear: both;
 }

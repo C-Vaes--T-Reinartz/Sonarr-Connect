@@ -5,11 +5,11 @@
 
 var sonarr = {
   settings : {
-    wanted    : "api/wanted/missing?page=1&pageSize={wantedItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}",
-    calendar  : "api/calendar?page=1&sortKey=airDateUtc&sortDir=desc&start={calendarStartDate}&end={calendarEndDate}&apikey={apikey}",
-    series    : "api/series?page=1&sortKey=title&sortDir=desc&apikey={apikey}",
-    episodes  : "api/episode?seriesId={seriesId}&apikey={apikey}",
-    history   : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}"
+    wanted : "api/wanted/missing?page=1&pageSize={wantedItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}",
+    calendar : "api/calendar?page=1&sortKey=airDateUtc&sortDir=desc&start={calendarStartDate}&end={calendarEndDate}&apikey={apikey}",
+    series : "api/series?page=1&sortKey=title&sortDir=desc&apikey={apikey}",
+    episodes : "api/episode?seriesId={seriesId}&apikey={apikey}",
+    history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}"
   },
   getData : function(mode, callback, data) {
 
@@ -23,13 +23,13 @@ var sonarr = {
       return false;
     }
 
-    //check for local data and return the data when possible. 
+    // check for local data and return the data when possible.
     if (localStorage.getItem(mode) !== 'undefined') {
       var localData = $.parseJSON(localStorage.getItem(mode));
-      if(localData !== null){
+      if (localData !== null) {
         callback(localData);
       }
-    }   
+    }
 
     var url = "";
     url = app.settings.url + sonarr.settings[mode];
@@ -40,9 +40,9 @@ var sonarr = {
     url = url.replace("{calendarStartDate}", formatDate(new Date(), null));
     url = url.replace("{calendarEndDate}", formatDate(new Date(), app.settings.numberOfDaysCalendar));
 
-    //set seriesID
-    if(mode === "episodes"){
-      if(data === undefined){
+    // set seriesID
+    if (mode === "episodes") {
+      if (data === undefined) {
         console.error("Cannot get episodes without a seriesId");
         return;
       }
@@ -124,7 +124,7 @@ var getCalendar = {
     $.each(data, function(index, value) {
       getCalendar.addShows(value)
     });
-    //getCalendar.bind();
+    // getCalendar.bind();
   },
   addDates : function() {
     console.log('addDates');
@@ -156,14 +156,12 @@ var getCalendar = {
     show.find("#airDate").html(moment(new Date(serie.airDateUtc)).fromNow());
     var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
     tomorrow.setHours(0, 0, 0, 0);
-    tomorrow.getDate();
-    
-//    console.log(tomorrow.valueOf());
-//    console.log(new Date(serie.airDateUtc).valueOf());
-    
-    if (new Date(serie.airDateUtc).valueOf() == new Date().setHours(0, 0, 0, 0).valueOf()){
+    var dayAfterTomorrow = new Date(new Date().getTime() + 48 * 60 * 60 * 1000);
+    dayAfterTomorrow.setHours(0, 0, 0, 0);
+
+    if (new Date(serie.airDateUtc).valueOf() >= new Date().setHours(0, 0, 0, 0).valueOf() && new Date(serie.airDateUtc).valueOf() <= tomorrow.valueOf()) {
       show.appendTo(".list .today .calendar-show");
-    } else if (new Date(serie.airDateUtc).valueOf() == tomorrow.valueOf()){
+    } else if (new Date(serie.airDateUtc).valueOf() >= tomorrow.valueOf() && new Date(serie.airDateUtc).valueOf() <= dayAfterTomorrow.valueOf()) {
       show.appendTo(".list .tomorrow .calendar-show");
     } else {
       show.appendTo(".list .later .calendar-show");
@@ -219,9 +217,9 @@ var getSeries = {
       if (value.seasonNumber == 0)
         season.find('#seasonNumber').html('Specials');
       else
-      season.find('#seasonNumber').html('Season ' + value.seasonNumber);
+        season.find('#seasonNumber').html('Season ' + value.seasonNumber);
       season.find('#monitored').attr('class', monitored[value.monitored]).attr('title', 'monitored: ' + value.monitored.toString());
-      season.addClass("S"+value.seasonNumber);
+      season.addClass("S" + value.seasonNumber);
       season.appendTo('div[serie-id="' + serie.id + '"] .serie-seasons');
     });
 
@@ -233,16 +231,15 @@ var getSeries = {
       $(this).parent().find(".serie-seasons").toggle();
     });
     $('.series .season').unbind('click').on('click', function() {
-      if($(this).hasClass('show')){
-        $(this).removeClass('show'); 
-      } else { 
+      if ($(this).hasClass('show')) {
+        $(this).removeClass('show');
+      } else {
         $(this).parent().removeClass("show");
         $(this).addClass('show');
       }
     });
   }
 }
-
 
 // get list of all series and seasons
 var getEpisodes = {
@@ -257,13 +254,13 @@ var getEpisodes = {
       getEpisodes.add(value);
     });
   },
-  add : function(data) { 
+  add : function(data) {
     var template = $('.templates #series .episode').clone();
     template.find('#episode-name').html(data.title);
     template.find("#episode-num").html(formatEpisodeNumer(data.seasonNumber, data.episodeNumber));
     template.appendTo('[serie-id="' + data.seriesId + '"] .season.S' + data.seasonNumber);
   },
-  bind : function(){
+  bind : function() {
 
   }
 }

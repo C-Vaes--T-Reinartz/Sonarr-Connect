@@ -126,3 +126,7 @@ label .num {
   color: white;
   -webkit-text-stroke: 1px black;
 }
+
+#calendar .show {
+clear: both;
+}

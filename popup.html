@@ -16,34 +16,38 @@
     <div class="templates" style="display: none;">
 
       <!-- wanted episode -->
-      <div class="row wanted" id="wanted">
-        <div class="small-2 columns date">
-          <h1 id="day"></h1>
-          <h3 id="month"></h3>
-        </div>
-        <div class="small-10 columns">
-          <h3 id="title"></h3>
-          <h5 class="small-8 columns" id="episodeName"></h5>
-          <h5 class="small-4 columns button" id="episodeNum"></h5>
+      <div id="wanted">
+        <div class="wanted">
+          <div class="small-2 columns date">
+            <h1 id="day"></h1>
+            <h3 id="month"></h3>
+          </div>
+          <div class="small-10 columns">
+            <h3 id="title"></h3>
+            <h5 class="small-8 columns" id="episodeName"></h5>
+            <h5 class="small-4 columns button" id="episodeNum"></h5>
+          </div>
         </div>
       </div>
       <!-- calendar episode -->
-      <div class="row calendar" id="calendar">
-        <div class="calendar-date">
-          <div class="small-12 columns">
-            <h3 id="title"></h3>
+      <div id="calendar">
+        <div class="row calendar" >
+          <div class="calendar-date">
+            <div class="small-12 columns">
+              <h3 id="title"></h3>
+            </div>
           </div>
-        </div>
-        <div class="row calendar-show">
-          <div class="show">
-            <div class="small-6 columns">
-              <h6 id="title" class="small-12 columns"></h6>
-            </div>
-            <div class="small-3 columns status">
-              <h6 class="round label" id="episodeNum"></h6>
-            </div>
-            <div class="small-3 columns airDate">
-              <h6 class="label secondary" id="airDate"></h6>
+          <div class="row calendar-show">
+            <div class="show">
+              <div class="small-6 columns">
+                <h6 id="title" class="small-12 columns"></h6>
+              </div>
+              <div class="small-3 columns status">
+                <h6 class="round label" id="episodeNum"></h6>
+              </div>
+              <div class="small-3 columns airDate">
+                <h6 class="label secondary" id="airDate"></h6>
+              </div>
             </div>
           </div>
         </div>
@@ -98,13 +102,16 @@
     </div>
 
     <!--  end of templates-->
-    <div class="icon-bar four-up menu">
-      <a class="item wanted active" data-mode="wanted"> <label>Wanted
-        <span class="num label alert round"></span>
-        </label>
-      </a> <a class="item calendar" data-mode="calendar"> <label>Calendar</label>
-      </a> <a class="item series" data-mode="series"> <label>Series</label>
-      </a> <a class="item history" data-mode="history"> <label>History</label>
+    <div class="icon-bar three-up menu">
+      <!--      <a class="item wanted active" data-mode="wanted"> <label>Wanted
+<span class="num label alert round"></span>
+</label>
+</a> -->
+      <a class="item calendar active" data-mode="calendar"> <label>Calendar</label>
+      </a> 
+      <a class="item series" data-mode="series"> <label>Series</label>
+      </a> 
+      <a class="item history" data-mode="history"> <label>History</label>
       </a>
     </div>
 

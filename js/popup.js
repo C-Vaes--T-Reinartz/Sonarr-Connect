@@ -119,33 +119,45 @@ var getCalendar = {
     console.log("calender");
     app.cleanList();
 
+    //add wanted list.
+    getWantedEpisodes.connect();
+    //calendar list
     getCalendar.addDates();
 
     $.each(data, function(index, value) {
       getCalendar.addShows(value)
     });
-    // getCalendar.bind();
+    getCalendar.bind();
   },
   addDates : function() {
     console.log('addDates');
+    var dates = '';
     // TODO improve how to show code
-    var template = $('.templates #calendar').clone();
-    template.attr("class", "today");
+    var template = $('.templates #calendar');
+    template.find('.calendar').attr("class", "wanted row calendar");
+    template.find('.calendar-date #title').html('Wanted');
+    template.find('.calendar-show .show');
+    dates += template.html();
+
+    template.find('.calendar').attr("class", "today row calendar");
     template.find('.calendar-date #title').html('Today');
-    template.find('.calendar-show .show').empty();
-    template.appendTo(".list");
+    template.find('.calendar-show .show');
+    dates += template.html();
 
-    template = $('.templates #calendar').clone();
-    template.attr("class", "tomorrow");
+    template.find('.calendar').attr("class", "tomorrow row calendar");
     template.find('.calendar-date #title').html('Tomorrow');
-    template.find('.calendar-show .show').empty();
-    template.appendTo(".list");
+    template.find('.calendar-show .show');
+    dates += template.html();
 
-    template = $('.templates #calendar').clone();
-    template.attr("class", "later");
+    template.find('.calendar').attr("class", "later row calendar");
     template.find('.calendar-date #title').html('Later');
-    template.find('.calendar-show .show').empty();
-    template.appendTo(".list");
+    template.find('.calendar-show .show');
+    dates += template.html();
+
+    $('.list').prepend(dates);
+    $('.list .show').remove();
+    $('.wanted .calendar-show').hide();
+
   },
   addShows : function(serie) {
     // create show
@@ -168,7 +180,9 @@ var getCalendar = {
     }
   },
   bind : function(value) {
-
+    $('.wanted .calendar-date').click(function(){
+      $('.wanted .calendar-show').toggle();
+    });
   }
 }
 
@@ -211,7 +225,7 @@ var getSeries = {
     template.find('.serie-seasons').empty();
 
     template.appendTo(".list");
-    
+
 
     // add line per season
     $.each(serie.seasons.sort(seasonComparator), function(index, value) {
@@ -277,23 +291,30 @@ function seasonComparator(a, b) {
 }
 
 var getWantedEpisodes = {
+  list : '',
   connect : function() {
     sonarr.getData("wanted", getWantedEpisodes.generate);
   },
   generate : function(data) {
-    if (app.settings.mode !== "wanted") {
-      return;
+    if (app.settings.mode !== "calendar") {
+      //return;
     }
     var totalRecords = data.totalRecords;
     data = data.records;
-    app.cleanList();
 
+    //remove wanted items
+    $('.list .calendar.wanted .calendar-show > .wanted').remove();
+    getWantedEpisodes.list = '';
+
+    //generate list
     $.each(data, function(index, value) {
       getWantedEpisodes.add(value);
     });
+
     // set num items in button
-    $('.menu .wanted .num').html(totalRecords.toString());
+    //$('.menu .wanted .num').html(totalRecords.toString());
     getWantedEpisodes.click();
+    $('.list .calendar.wanted .calendar-show').append(getWantedEpisodes.list);
   },
   add : function(episode) {
     var template = $('.templates #wanted');
@@ -323,7 +344,8 @@ var getWantedEpisodes = {
 
     template.find('#day').html(date.day);
     template.find('#month').html(month[date.month]);
-    template.clone().appendTo(".list");
+
+    getWantedEpisodes.list += template.html();
   },
   searchEpisode : function(episodeId) {
     if (episodeId < 1) {
@@ -364,7 +386,7 @@ function getOptions() {
   }, function(items) {
     app.settings.apiKey = items.apiKey;
     app.settings.url = items.url;
-    app.settings.mode = "wanted";
+    app.settings.mode = "calendar";
     app.settings.numberOfDaysCalendar = items.numberOfDaysCalendar;
     app.settings.wantedItems = items.wantedItems;
     app.settings.historyItems = items.historyItems;

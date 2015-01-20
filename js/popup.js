@@ -326,7 +326,7 @@ var getWantedEpisodes = {
     });
     console.log(totalRecords);
     // set num items in button
-    $('.calendar.wanted  .calendar-date .num').html("<span>" + totalRecords.toString() + "<span>");
+    $('.calendar.wanted  .calendar-date .num').html(totalRecords.toString());
     $('.list .calendar.wanted .calendar-show').append(getWantedEpisodes.list);
     getWantedEpisodes.click();
   },

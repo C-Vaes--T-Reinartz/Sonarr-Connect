@@ -196,6 +196,7 @@ var getSeries = {
       return;
     }
     app.cleanList();
+    console.log(data);
     $.each(data.sort(seriesComparator), function(index, value) {
       getSeries.add(value);
     });
@@ -292,12 +293,16 @@ function seasonComparator(a, b) {
 
 // comparator to sort seasons by seasonNumber
 function seriesComparator(a, b) {
-  if (a.title < b.title)
-    return -1;
-  else if (a.title > b.title)
-    return 1;
+  if (a.status != b.status) {
+    if (a.status < b.status) return -1;
+    if (a.status > b.status) return 1;
+    return 0;
+  }
+  if (a.sortTitle < b.sortTitle) return -1;
+  if (a.sortTitle > b.sortTitle) return 1;
   return 0;
 }
+
 
 var getWantedEpisodes = {
   list : '',

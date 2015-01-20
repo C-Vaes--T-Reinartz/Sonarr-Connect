@@ -118,7 +118,8 @@ label .num {
 }
 
 /*pointers*/
-.serie-general { 
+.serie-general, 
+.wanted .calendar-date { 
  cursor: pointer; 
 }
 
@@ -130,7 +131,7 @@ label .num {
 .list .show, 
 .serie-seasons .episode,
 .calendar-show .wanted {
-clear: both;
+  clear: both;
   border-bottom: 1px solid black;
 }
 .num:empty { 

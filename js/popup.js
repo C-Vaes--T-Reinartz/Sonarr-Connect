@@ -119,8 +119,7 @@ var getCalendar = {
     console.log("calender");
     app.cleanList();
 
-    //add wanted list.
-    getWantedEpisodes.connect();
+
     //calendar list
     getCalendar.addDates();
 
@@ -128,6 +127,10 @@ var getCalendar = {
       getCalendar.addShows(value)
     });
     getCalendar.bind();
+
+
+    //add wanted list.
+    getWantedEpisodes.connect();
   },
   addDates : function() {
     console.log('addDates');
@@ -135,23 +138,20 @@ var getCalendar = {
     // TODO improve how to show code
     var template = $('.templates #calendar');
     template.find('.calendar').attr("class", "wanted row calendar");
-    template.find('.calendar-date #title').html('Wanted');
+    template.find('.calendar-date #title').text('Wanted');
     template.find('.calendar-show .show');
     dates += template.html();
 
     template.find('.calendar').attr("class", "today row calendar");
-    template.find('.calendar-date #title').html('Today');
-    template.find('.calendar-show .show');
+    template.find('.calendar-date #title').text('Today');
     dates += template.html();
 
     template.find('.calendar').attr("class", "tomorrow row calendar");
-    template.find('.calendar-date #title').html('Tomorrow');
-    template.find('.calendar-show .show');
+    template.find('.calendar-date #title').text('Tomorrow');
     dates += template.html();
 
     template.find('.calendar').attr("class", "later row calendar");
-    template.find('.calendar-date #title').html('Later');
-    template.find('.calendar-show .show');
+    template.find('.calendar-date #title').text('Later');
     dates += template.html();
 
     $('.list').prepend(dates);
@@ -324,11 +324,11 @@ var getWantedEpisodes = {
     $.each(data, function(index, value) {
       getWantedEpisodes.add(value);
     });
-
+    console.log(totalRecords);
     // set num items in button
-    //$('.menu .wanted .num').html(totalRecords.toString());
-    getWantedEpisodes.click();
+    $('.calendar.wanted  .calendar-date .num').html("<span>" + totalRecords.toString() + "<span>");
     $('.list .calendar.wanted .calendar-show').append(getWantedEpisodes.list);
+    getWantedEpisodes.click();
   },
   add : function(episode) {
     var template = $('.templates #wanted');

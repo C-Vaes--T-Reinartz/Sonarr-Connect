@@ -133,3 +133,6 @@ label .num {
 clear: both;
   border-bottom: 1px solid black;
 }
+.num:empty { 
+   display: none; 
+}

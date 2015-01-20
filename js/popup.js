@@ -196,7 +196,7 @@ var getSeries = {
       return;
     }
     app.cleanList();
-    $.each(data, function(index, value) {
+    $.each(data.sort(seriesComparator), function(index, value) {
       getSeries.add(value);
     });
     $('.list .season .episode').remove();
@@ -286,6 +286,15 @@ function seasonComparator(a, b) {
   if (a.seasonNumber < b.seasonNumber)
     return -1;
   else if (a.seasonNumber > b.seasonNumber)
+    return 1;
+  return 0;
+}
+
+// comparator to sort seasons by seasonNumber
+function seriesComparator(a, b) {
+  if (a.title < b.title)
+    return -1;
+  else if (a.title > b.title)
     return 1;
   return 0;
 }

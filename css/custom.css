@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
 @-moz-keyframes spin {
   from { -moz-transform: rotate(0deg); }
   to { -moz-transform: rotate(360deg); }
@@ -51,7 +53,7 @@ img {
   border-left: .2rem solid #07abc9;
 } 
 .row { 
-  border-bottom: .1rem solid #a39090;
+  /*  border-bottom: .1rem solid #a39090;*/
   margin-bottom: .1rem!important;
   margin-top: .1rem!important;
 }
@@ -111,16 +113,16 @@ label .num {
 }
 
 .season .episode { 
- display: none; 
+  display: none; 
 }
 .season.show .episode { 
- display: block;  
+  display: block;  
 }
 
 /*pointers*/
 .serie-general, 
 .wanted .calendar-date { 
- cursor: pointer; 
+  cursor: pointer; 
 }
 
 .icon-negative { 
@@ -135,5 +137,57 @@ label .num {
   border-bottom: 1px solid black;
 }
 .num:empty { 
-   display: none; 
+  display: none; 
+}
+
+
+
+body { 
+  background-color: #1a1a1a;
+  color: #b4b4b4;
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1, h2, h3, h4 { 
+  color: #ffffff; 
+  font-weight: bold;
+}
+
+h5, h6 { 
+  color: #b4b4b4;
+}
+
+p { 
+  padding: 0 1rem;
+  font-size: .9rem;
+}
+
+.show .banner { 
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: url("http://nas.tomreinartz.com:8989/MediaCover/1/fanart.jpg?lastWrite=635556457970000000");
+  background-size: 100%;
+  background-position: center center;
+  height: 8rem;
+}
+
+.show .poster { 
+  position: relative;
+  height:5rem;
+  margin-left: 1rem;
+  margin-top: 4rem;
+}
+
+.show .summary { 
+ margin-top: 2rem; 
+}
+
+.label { 
+  margin-left: .4rem; 
+  margin-right: .4rem; 
+  vertical-align: middle;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 3px!important;
 }

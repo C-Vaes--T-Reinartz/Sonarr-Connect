@@ -136,6 +136,13 @@ label .num {
   clear: both;
   border-bottom: 1px solid black;
 }
+
+.num{
+   display: inline-block;
+   width: auto;
+   margin-top: 0.5rem;
+   margin-bottom: 0.5rem;
+}
 .num:empty { 
   display: none; 
 }

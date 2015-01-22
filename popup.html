@@ -15,6 +15,21 @@
   <body>
     <div class="templates" style="display: none;">
 
+      <!--- general episode temlate --->
+      <div id="episode">
+        <div class="episode" >
+          <div class="small-10 columns episode-info"> 
+            <div class="series-title"></div>
+            <div class="episode-title"><span class="episodenum">x01</span><span class="episodename">The Calm</span></div>
+            <div class="episode-info "><span class="status label">downloaded 720p</span><span class="date">1 week ago</span></div>
+          </div>
+          <div class="small-2 columns watched-indicator fi-bookmark">
+
+          </div> 
+        </div>
+      </div>
+
+
       <!-- wanted episode -->
       <div id="wanted">
         <div class="wanted">
@@ -34,21 +49,11 @@
         <div class="row calendar" >
           <div class="calendar-date">
             <div class="small-12 columns">
-              <h3 class="small-8 columns" id="title"></h3><div class="small-4 columns num label alert round"></div>
+              <h3 class="title" id="title"></h3><span class="num label alert round"></span>
             </div>
           </div>
-          <div class="row calendar-show">
-            <div class="show">
-              <div class="small-6 columns">
-                <h6 id="title" class="small-12 columns"></h6>
-              </div>
-              <div class="small-3 columns status">
-                <h6 class="round label" id="episodeNum"></h6>
-              </div>
-              <div class="small-3 columns airDate">
-                <h6 class="label secondary" id="airDate"></h6>
-              </div>
-            </div>
+          <div class="episodes row calendar-show">
+            <!-- episodes will come here -->
           </div>
         </div>
       </div>

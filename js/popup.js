@@ -73,7 +73,7 @@ var create = {
       "hide" : '',
       "missing" : 'Aired ',
       "toBeAired" : 'Airs '
-      
+
     }
     //add class depening on current status
     var classes = {
@@ -93,6 +93,7 @@ var create = {
     } else { 
       episode.find(".episode-show-title").addClass(classes['hide']);
     }
+    console.log(data);
 
     //episode title
     episode.find(".episodenum").html(formatEpisodeNumer(data.seasonNumber, data.episodeNumber));
@@ -105,11 +106,11 @@ var create = {
     //episode info
     episode.find(".episode-info .date").html(moment(new Date(data.airDateUtc)).fromNow());
     episode.find(".episode-info .status").html(event[data.status]);
+    //quality
+    episode.find(".episode-info .status").append(" " + data.episodeQuality);
+    //change classes
     episode.find(".episode-info .status").attr('class', classes[data.status]);
 
-    if(data.episodeQuality !== undefined){
-      episode.find(".episode-info .status").append(" " + data.episodeQuality);
-    }
     //monitored status
     if(data.monitored){
       episode.find('.watched-indicator').addClass('');
@@ -154,7 +155,6 @@ var getHistory = {
     var historyList = '';
     $.each(data, function(index, value) {
       //create data for episode
-      console.log(value);
       data  = {
         episodeNumber: value.episode.episodeNumber, 
         seasonNumber: value.episode.seasonNumber, 
@@ -165,7 +165,6 @@ var getHistory = {
         episodeQuality : value.quality.quality.name,
         id : value.episode.id
       }
-
       //getHistory.add(data);
       historyList += create.episode(data, history);
     });
@@ -417,7 +416,7 @@ var getWantedEpisodes = {
     console.log(totalRecords);
     // set num items in button
     $('.calendar.wanted  .calendar-date .num').html("<span>" + totalRecords.toString() + "<span>");
-    
+
     $('.list .calendar.wanted .calendar-show').html('').append(wantedList);
     getWantedEpisodes.click();
   },

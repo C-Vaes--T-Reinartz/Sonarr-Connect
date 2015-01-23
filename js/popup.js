@@ -334,9 +334,10 @@ var getSeries = {
     template.attr('serie-id', serie.id);
     // remove season line to prevent double first line
     template.find('.serie-seasons').empty();
-
+    if($('.row.series').length === 0){
+      $(".list").scrollTop(0);
+    }
     template.appendTo(".list");
-    $(".list").scrollTop(0);
   },
   makeShow : function (seriesId) {
     var showData = {};

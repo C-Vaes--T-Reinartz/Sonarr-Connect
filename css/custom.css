@@ -138,6 +138,9 @@ label .num {
   display: block;  
 }
 
+.serie-general{ 
+  padding: .5rem 0;
+} 
 /*pointers*/
 .serie-general, 
 .calendar-date { 

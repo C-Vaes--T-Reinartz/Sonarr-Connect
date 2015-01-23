@@ -58,6 +58,80 @@ var sonarr = {
   }
 }
 
+var create = { 
+  /*
+  ** @param data: json {episodeNumber, seasonNumber, title, airDateUtc, monitored, status, episodeQuality, seriesTitle}
+  ** @param mode: string 'app-mode'
+  */
+  episode : function (data, mode) { 
+    var html = '';
+    //short copy
+    var event = {
+      "downloadFolderImported" : 'Imported',
+      "grabbed" : 'Grabbed',
+      "episodeFileDeleted" : 'Deleted',
+      "hide" : '',
+      "missing" : 'Aired ',
+      "toBeAired" : 'Airs '
+      
+    }
+    //add class depening on current status
+    var classes = {
+      "downloadFolderImported" : 'label success',
+      "grabbed" : 'label secondary',
+      "episodeFileDeleted" : 'label alert',
+      "hide" : 'hide',
+      "missing" : 'missing',
+      "toBeAired" : 'tba'
+    }
+
+    var episode = $('.templates #episode').clone();
+
+    //episodeShowTitle
+    if(data.seriesTitle !== null){
+      episode.find(".series-title").html(data.seriesTitle);
+    } else { 
+      episode.find(".episode-show-title").addClass(classes['hide']);
+    }
+
+    //episode title
+    episode.find(".episodenum").html(formatEpisodeNumer(data.seasonNumber, data.episodeNumber));
+    episode.find(".episodename").html(data.title);
+    //change font size to fit
+    if(data.title.length > 20){
+      episode.find(".episodename").css({'font-size': '.9rem'});
+    }
+
+    //episode info
+    episode.find(".episode-info .date").html(moment(new Date(data.airDateUtc)).fromNow());
+    episode.find(".episode-info .status").html(event[data.status]);
+    episode.find(".episode-info .status").attr('class', classes[data.status]);
+
+    if(data.episodeQuality !== undefined){
+      episode.find(".episode-info .status").append(" " + data.episodeQuality);
+    }
+    //monitored status
+    if(data.monitored){
+      episode.find('.watched-indicator').addClass('');
+    } else { 
+      episode.find('.watched-indicator').addClass('icon-negative');
+    }
+
+    //change html to string and return it.
+    html = episode.html();
+    episode.remove();
+    return html;
+  },
+  season : function (data) { 
+    var html = '';
+    return html;
+  }
+
+}
+
+
+
+
 // format date to be used in api
 // TODO improve
 function formatDate(date, positiveOffset) {
@@ -77,33 +151,26 @@ var getHistory = {
     }
     data = data.records;
     app.cleanList();
+    var historyList = '';
     $.each(data, function(index, value) {
-      getHistory.add(value);
+      //create data for episode
+      console.log(value);
+      data  = {
+        episodeNumber: value.episode.episodeNumber, 
+        seasonNumber: value.episode.seasonNumber, 
+        title: value.episode.title,
+        airDateUtc: value.date,
+        monitored: value.episode.monitored,
+        status: value.eventType,
+        episodeQuality : value.quality.quality.name,
+        id : value.episode.id
+      }
+
+      //getHistory.add(data);
+      historyList += create.episode(data, history);
     });
-  },
-  add : function(episode) {
-    var template = $('.templates #history');
-    var event = {
-      "downloadFolderImported" : 'Imported',
-      "grabbed" : 'grabbed',
-      "episodeFileDeleted" : 'deleted file',
-    }
-    var classe = {
-      "downloadFolderImported" : 'label success',
-      "grabbed" : 'label secondary',
-      "episodeFileDeleted" : 'label alert',
-    }
-    template.find('#title').html(episode.series.title);
-    template.find('#episodeNum').html(formatEpisodeNumer(episode.episode.seasonNumber, episode.episode.episodeNumber));
-
-    template.find('#quality').html(episode.quality.quality.name);
-
-    template.find('#event').html(event[episode.eventType]).attr('class', classe[episode.eventType]);
-
-    template.find('#date').html(moment(new Date(episode.date)).fromNow());
-
-    template.attr("data-episodeId", episode.episode.id);
-    template.clone().appendTo(".list");
+    $('.list').html('<div class="episodes row"></div>')
+    $('.list .episodes').append(historyList);
   }
 }
 
@@ -119,15 +186,46 @@ var getCalendar = {
     console.log("calender");
     app.cleanList();
 
+    var todayList = '', tomorrowList = '', laterList = '';
 
     //calendar list
     getCalendar.addDates();
+    var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+    tomorrow.setHours(0, 0, 0, 0);
+    var dayAfterTomorrow = new Date(new Date().getTime() + 48 * 60 * 60 * 1000);
+    dayAfterTomorrow.setHours(0, 0, 0, 0);
 
-    $.each(data, function(index, value) {
-      getCalendar.addShows(value)
+
+    //generate lists
+    $.each(data, function(index, episode) {
+      console.log(episode);
+      data  = {
+        episodeNumber: episode.episodeNumber, 
+        seasonNumber: episode.seasonNumber, 
+        title: episode.title,
+        airDateUtc: episode.airDateUtc,
+        monitored: episode.monitored,
+        status: 'toBeAired',
+        seriesTitle: episode.series.title,
+        id : episode.id
+      }
+
+      if (new Date(episode.airDateUtc).valueOf() >= new Date().setHours(0, 0, 0, 0).valueOf() && new Date(episode.airDateUtc).valueOf() <= tomorrow.valueOf()) {
+        todayList += create.episode(data, history);
+      } else if (new Date(episode.airDateUtc).valueOf() >= tomorrow.valueOf() && new Date(episode.airDateUtc).valueOf() <= dayAfterTomorrow.valueOf()) {
+        tomorrowList += create.episode(data, history);
+      } else {
+        laterList += create.episode(data, history);
+      }
+
     });
-    getCalendar.bind();
 
+    //add episodes to calender
+    $(".list .today .calendar-show").append(todayList);
+    $(".list .tomorrow .calendar-show").append(tomorrowList);
+    $(".list .later .calendar-show").append(laterList);
+
+    getCalendar.bind();
 
     //add wanted list.
     getWantedEpisodes.connect();
@@ -137,51 +235,30 @@ var getCalendar = {
     var dates = '';
     // TODO improve how to show code
     var template = $('.templates #calendar');
-    template.find('.calendar').attr("class", "wanted row calendar");
+    template.find('.calendar').attr("class", "wanted calendar");
     template.find('.calendar-date #title').text('Wanted');
-    template.find('.calendar-show .show');
     dates += template.html();
 
-    template.find('.calendar').attr("class", "today row calendar");
+    template.find('.calendar').attr("class", "today calendar");
     template.find('.calendar-date #title').text('Today');
     dates += template.html();
 
-    template.find('.calendar').attr("class", "tomorrow row calendar");
+    template.find('.calendar').attr("class", "tomorrow calendar");
     template.find('.calendar-date #title').text('Tomorrow');
     dates += template.html();
 
-    template.find('.calendar').attr("class", "later row calendar");
+    template.find('.calendar').attr("class", "later calendar");
     template.find('.calendar-date #title').text('Later');
     dates += template.html();
 
     $('.list').prepend(dates);
-    $('.list .show').remove();
+    //$('.list .show').remove();
     $('.wanted .calendar-show').hide();
 
   },
-  addShows : function(serie) {
-    // create show
-    var show = $('.templates #calendar .calendar-show .show').clone();
-    show.find("#title").html(serie.series.title);
-    show.find("#episodeName").html(serie.title);
-    show.find("#episodeNum").html(formatEpisodeNumer(serie.seasonNumber, serie.episodeNumber));
-    show.find("#airDate").html(moment(new Date(serie.airDateUtc)).fromNow());
-    var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-    tomorrow.setHours(0, 0, 0, 0);
-    var dayAfterTomorrow = new Date(new Date().getTime() + 48 * 60 * 60 * 1000);
-    dayAfterTomorrow.setHours(0, 0, 0, 0);
-
-    if (new Date(serie.airDateUtc).valueOf() >= new Date().setHours(0, 0, 0, 0).valueOf() && new Date(serie.airDateUtc).valueOf() <= tomorrow.valueOf()) {
-      show.appendTo(".list .today .calendar-show");
-    } else if (new Date(serie.airDateUtc).valueOf() >= tomorrow.valueOf() && new Date(serie.airDateUtc).valueOf() <= dayAfterTomorrow.valueOf()) {
-      show.appendTo(".list .tomorrow .calendar-show");
-    } else {
-      show.appendTo(".list .later .calendar-show");
-    }
-  },
   bind : function(value) {
-    $('.wanted .calendar-date').click(function(){
-      $('.wanted .calendar-show').toggle();
+    $('.calendar-date').unbind('click').click(function(){
+      $(this).parent().find('.calendar-show').toggle();
     });
   }
 }
@@ -304,6 +381,8 @@ function seriesComparator(a, b) {
 }
 
 
+
+
 var getWantedEpisodes = {
   list : '',
   connect : function() {
@@ -319,47 +398,28 @@ var getWantedEpisodes = {
     //remove wanted items
     $('.list .calendar.wanted .calendar-show > .wanted').remove();
     getWantedEpisodes.list = '';
-
+    var wantedList = '';
     //generate list
-    $.each(data, function(index, value) {
-      getWantedEpisodes.add(value);
+    $.each(data, function(index, episode) {
+      data  = {
+        episodeNumber: episode.episodeNumber, 
+        seasonNumber: episode.seasonNumber, 
+        title: episode.title,
+        airDateUtc: episode.airDateUtc,
+        monitored: episode.monitored,
+        status: 'missing',
+        seriesTitle: episode.series.title,
+        id : episode.id
+      }
+      console.log(data);
+      wantedList += create.episode(data)
     });
     console.log(totalRecords);
     // set num items in button
-    $('.calendar.wanted  .calendar-date .num').html(totalRecords.toString());
-    $('.list .calendar.wanted .calendar-show').append(getWantedEpisodes.list);
+    $('.calendar.wanted  .calendar-date .num').html("<span>" + totalRecords.toString() + "<span>");
+    
+    $('.list .calendar.wanted .calendar-show').html('').append(wantedList);
     getWantedEpisodes.click();
-  },
-  add : function(episode) {
-    var template = $('.templates #wanted');
-    var date = {
-      day : episode.airDate.substring(8, 10),
-      month : episode.airDate.substring(5, 7)
-    }
-    var month = {
-      '01' : 'jan',
-      '02' : 'feb',
-      '03' : 'mar',
-      '04' : 'apr',
-      '05' : 'may',
-      '06' : 'jun',
-      '07' : 'jul',
-      '08' : 'aug',
-      '09' : 'sep',
-      '10' : 'okt',
-      '11' : 'nov',
-      '12' : 'dec',
-    }
-    template.find('#title').html(episode.series.title);
-    template.find('#episodeName').html(episode.title);
-    template.find('#episodeNum').html("Search <br/>" + formatEpisodeNumer(episode.seasonNumber, episode.episodeNumber));
-
-    template.attr("data-episodeId", episode.id);
-
-    template.find('#day').html(date.day);
-    template.find('#month').html(month[date.month]);
-
-    getWantedEpisodes.list += template.html();
   },
   searchEpisode : function(episodeId) {
     if (episodeId < 1) {
@@ -471,7 +531,7 @@ function setLocalStorage() {
 
 // format episodenumbers to match scene formatting
 var formatEpisodeNumer = function(seasonNumber, episodeNumber) {
-  var episodeNum = "S" + (seasonNumber.toString().length === 1 ? '0' : '') + seasonNumber + "E" + (episodeNumber.toString().length === 1 ? '0' : '') + episodeNumber;
+  var episodeNum = (seasonNumber.toString().length === 1 ? '0' : '') + seasonNumber + "x" + (episodeNumber.toString().length === 1 ? '0' : '') + episodeNumber;
   return episodeNum;
 }
 

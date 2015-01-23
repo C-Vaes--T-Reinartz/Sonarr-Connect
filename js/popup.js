@@ -74,8 +74,8 @@ var create = {
       "episodeFileDeleted" : 'Deleted',
       "hide" : '',
       "missing" : 'Aired ',
-      "toBeAired" : 'Airs '
-
+      "toBeAired" : 'Airs ',
+      "downloadFailed" : 'Failed'
     }
     //add class depening on current status
     var classes = {
@@ -84,7 +84,8 @@ var create = {
       "episodeFileDeleted" : 'label alert',
       "hide" : 'hide',
       "missing" : 'missing',
-      "toBeAired" : 'tba'
+      "toBeAired" : 'tba',
+      "downloadFailed" : 'label alert'
     }
 
     var episode = $('.templates #episode').clone();
@@ -95,6 +96,7 @@ var create = {
     } else { 
       episode.find(".episode-show-title").addClass(classes['hide']);
     }
+    console.log(data);
 
     episode.find('.episode').addClass('season-'+data.seasonNumber);
     episode.find('.episode').addClass('episode-'+data.episodeNumber);
@@ -110,11 +112,13 @@ var create = {
     //episode info
     episode.find(".episode-info .date").html(moment(new Date(data.airDateUtc)).fromNow());
     episode.find(".episode-info .status").html(event[data.status]);
+    //quality
+    if(data.episodeQuality !== undefined){
+      episode.find(".episode-info .status").append("<span class='label secondary'> " + data.episodeQuality + "</span>");
+    }
+    //change classes
     episode.find(".episode-info .status").attr('class', classes[data.status]);
 
-    if(data.episodeQuality !== undefined){
-      episode.find(".episode-info .status").append(" " + data.episodeQuality);
-    }
     //monitored status
     if(data.monitored){
       episode.find('.watched-indicator').addClass('');
@@ -195,7 +199,6 @@ var getHistory = {
         episodeQuality : value.quality.quality.name,
         id : value.episode.id
       }
-
       //getHistory.add(data);
       historyList += create.episode(data, history);
     });

@@ -49,10 +49,10 @@ var sonarr = {
     }
 
     $.getJSON(url, function(remoteData) {
+      localStorage.setItem(mode, JSON.stringify(remoteData));
 
-      if(app.settings.mode === mode){
+      if(app.settings.mode == mode){
         callback(remoteData);
-
         console.log(app.settings.mode);
         console.log(mode);
       }
@@ -390,7 +390,8 @@ var getEpisodes = {
         id : episode.id
       }
       seasons = episode.series.seasons;
-      episodes += create.episode(data);
+      //reverse order
+      episodes = create.episode(data) + episodes;
     });
 
 

@@ -190,12 +190,11 @@ p {
   font-size: .9rem;
 }
 
-.show .banner { 
-  position: absolute;
+.banner { 
   left: 0;
   top: 0;
   background-image: url("http://nas.tomreinartz.com:8989/MediaCover/1/fanart.jpg?lastWrite=635556457970000000");
-  background-size: 100%;
+  background-size: cover;
   background-position: center center;
   height: 8rem;
   -webkit-box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.75);
@@ -203,20 +202,20 @@ p {
   box-shadow:         0px 0px 16px 0px rgba(50, 50, 50, 0.75);
 }
 
-.show .poster { 
+.poster { 
   position: relative;
   height:5rem;
   margin-left: 1rem;
-  margin-top: 4rem;
+  margin-top: -4.5rem;
   -webkit-box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.75);
   -moz-box-shadow:    0px 0px 16px 0px rgba(50, 50, 50, 0.75);
   box-shadow:         0px 0px 16px 0px rgba(50, 50, 50, 0.75);
 }
-.show .poster img { 
+ .poster img { 
   margin: 0; 
 }
 
-.show .summary { 
+ .summary { 
   margin-top: 2rem; 
 }
 

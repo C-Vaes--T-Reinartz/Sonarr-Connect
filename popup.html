@@ -30,20 +30,6 @@
       </div>
 
 
-      <!-- wanted episode -->
-      <div id="wanted">
-        <div class="wanted">
-          <div class="small-2 columns date">
-            <h1 id="day"></h1>
-            <h3 id="month"></h3>
-          </div>
-          <div class="small-10 columns">
-            <h3 id="title"></h3>
-            <h5 class="small-8 columns" id="episodeName"></h5>
-            <h5 class="small-4 columns button" id="episodeNum"></h5>
-          </div>
-        </div>
-      </div>
       <!-- calendar episode -->
       <div id="calendar">
         <div class="row calendar" >
@@ -89,21 +75,38 @@
           </div>
         </div>
       </div>
-      <!--       history episode-->
-      <div class="row history" id="history">
 
-        <div class="small-8 columns">
-          <h6 id="title" class="small-12 columns"></h6>
+      <!-- show template -->
+
+      <div class="show template"> 
+        <div class="row banner"></div>
+        <div class="row show-information">
+          <div class="small-4 poster"><img src="http://nas.tomreinartz.com:8989/MediaCover/1/poster.jpg?lastWrite=635556457970000000" style="width: 100%; height: auto;"></div>
         </div>
-        <div class="small-4 columns status">
-          <h6 class="round label" id="episodeNum"></h6>
+        <div class="small-7 small-offset-5">
+          <h2><span id="title">Arrow</span><span id="network" class="network label secondary round">The CW</span></h2>
+          <h6 id="start-year">Started 2012</h6>
+          <h6 id="show-status">Continuing</h6>
+          <h6><span id="seasons">3 Seasons</span><span id="episodes"  class="episodes label">40/40</span></h6>
         </div>
-        <div class="small-12 label info" style="text-align: left;">
-          <span id="event"></span>
-          <p class="label info" id="quality"></p>
-          <span class="label info" id="date"></span>
+        <div class="small-12">
+          <p id="summary" class="summary">
+            Oliver Queen and his father are lost at sea when their luxury yacht sinks. His father doesn't survive. Oliver survives on an uncharted island for five years learning to fight, but also learning about his father's corruption and unscrupulous business dealings. He returns to civilization a changed man, determined to put things right. He disguises himself with the hood of one of his mysterious island mentors, arms himself with a bow and sets about hunting down the men and women who have corrupted his city.
+          </p>
+        </div>
+        <div class="row episodes">
+          <div class="season-selector">
+            <div class="small-8 columns">      
+              <select id="selected-season">
+                <option value="season-1">Season 1</option>
+              </select>
+              </label> </div>
+            <div class="small-4 columns" id="watched"> </div>
+          </div>
+        
         </div>
       </div>
+
     </div>
 
     <!--  end of templates-->

@@ -73,7 +73,7 @@ var create = {
       "hide" : '',
       "missing" : 'Aired ',
       "toBeAired" : 'Airs ',
-	  "downloadFailed" : 'Failed'
+      "downloadFailed" : 'Failed'
     }
     //add class depening on current status
     var classes = {
@@ -83,7 +83,7 @@ var create = {
       "hide" : 'hide',
       "missing" : 'missing',
       "toBeAired" : 'tba',
-	  "downloadFailed" : 'label alert'
+      "downloadFailed" : 'label alert'
     }
 
     var episode = $('.templates #episode').clone();
@@ -108,7 +108,9 @@ var create = {
     episode.find(".episode-info .date").html(moment(new Date(data.airDateUtc)).fromNow());
     episode.find(".episode-info .status").html(event[data.status]);
     //quality
-    episode.find(".episode-info .status").append(" " + data.episodeQuality);
+    if(data.episodeQuality !== undefined){
+      episode.find(".episode-info .status").append("<span class='label secondary'> " + data.episodeQuality + "</span>");
+    }
     //change classes
     episode.find(".episode-info .status").attr('class', classes[data.status]);
 

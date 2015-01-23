@@ -157,10 +157,10 @@ label .num {
 }
 
 .num{
-   display: inline-block;
-   width: auto;
-   margin-top: 0.5rem;
-   margin-bottom: 0.5rem;
+  display: inline-block;
+  width: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 .num:empty { 
   display: none; 
@@ -245,6 +245,10 @@ p {
   text-transform: uppercase;
   font-weight: bold;
   border-radius: 3px!important;
+}
+
+.label .label { 
+  margin: -.25rem -.5rem -.25rem 0.8rem!important;
 }
 
 .episodes.row { 

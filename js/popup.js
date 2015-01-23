@@ -72,7 +72,8 @@ var create = {
       "episodeFileDeleted" : 'Deleted',
       "hide" : '',
       "missing" : 'Aired ',
-      "toBeAired" : 'Airs '
+      "toBeAired" : 'Airs ',
+	  "downloadFailed" : 'Failed'
       
     }
     //add class depening on current status
@@ -82,7 +83,8 @@ var create = {
       "episodeFileDeleted" : 'label alert',
       "hide" : 'hide',
       "missing" : 'missing',
-      "toBeAired" : 'tba'
+      "toBeAired" : 'tba',
+	  "downloadFailed" : 'label alert'
     }
 
     var episode = $('.templates #episode').clone();

@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,900);
 
 @-moz-keyframes spin {
   from { -moz-transform: rotate(0deg); }
@@ -13,11 +13,34 @@
   to {transform:rotate(360deg);}
 }
 
-body,html {
-  min-width: 357px;
-  min-height: 600px;
-  overflow-x: hidden;
+::-webkit-scrollbar {
+  display: none;
 }
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+body,html {
+  width: 357px;
+  height: 600px;
+  overflow: hidden;
+}
+.list { 
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 526px;
+  display: block; 
+  margin-top: -.5rem;
+}
+
+
 .load { 
   margin: auto auto;
   vertical-align: middle;
@@ -50,13 +73,8 @@ img {
   height: 75px;
 }
 .date { 
-  border-left: .2rem solid #07abc9;
+  /*  //border-left: .2rem solid #07abc9;*/
 } 
-.row { 
-  /*  border-bottom: .1rem solid #a39090;*/
-  margin-bottom: .1rem!important;
-  margin-top: .1rem!important;
-}
 .wanted .button { 
   padding: .5rem .2rem; 
 }
@@ -69,9 +87,12 @@ label .num {
 }
 
 .menu {
-  position: fixed;
   top: 0;
   z-index: 20;
+
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         0px 0px 16px 0px rgba(50, 50, 50, 0.75);
 }
 
 .menu .item label { 
@@ -85,9 +106,12 @@ label .num {
 }
 
 .bottom-menu {
-  position: fixed;
+  position: relative;
   bottom: 0;
   z-index: 20;
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         0px 0px 16px 0px rgba(50, 50, 50, 0.75);
 }
 
 .sonarr-url .fi-widget:before { 
@@ -103,11 +127,6 @@ label .num {
   padding-left: .5rem;
 }
 
-.list {
-  margin: 2.3125rem 0;
-  z-index: 10;
-}
-
 .icon-bar>* { 
   padding: .5rem; 
 }
@@ -121,7 +140,7 @@ label .num {
 
 /*pointers*/
 .serie-general, 
-.wanted .calendar-date { 
+.calendar-date { 
   cursor: pointer; 
 }
 
@@ -158,6 +177,8 @@ body {
 h1, h2, h3, h4 { 
   color: #ffffff; 
   font-weight: bold;
+  margin: 0;
+  padding: .5rem 0;
 }
 
 h5, h6 { 
@@ -177,6 +198,9 @@ p {
   background-size: 100%;
   background-position: center center;
   height: 8rem;
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         0px 0px 16px 0px rgba(50, 50, 50, 0.75);
 }
 
 .show .poster { 
@@ -184,12 +208,36 @@ p {
   height:5rem;
   margin-left: 1rem;
   margin-top: 4rem;
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+}
+.show .poster img { 
+  margin: 0; 
 }
 
 .show .summary { 
- margin-top: 2rem; 
+  margin-top: 2rem; 
 }
 
+.calendar-date .title { 
+  display: inline-block;
+}
+.calendar-date { 
+  width: 100%; 
+  clear: both;
+  display: inline-block;
+  background-color: #007398;
+  margin-top: 0rem; 
+  margin-bottom: -0.3rem;
+}
+
+.calendar-show { 
+  margin-top: -.4rem; 
+  -webkit-box-shadow: inset 0px 8px 8px 0px rgba(50, 50, 50, 0.4);
+  -moz-box-shadow:    inset 0px 8px 8px 0px rgba(50, 50, 50, 0.4);
+  box-shadow:         inset 0px -4px 4px 0px rgba(50, 50, 50, 0.4);
+}
 .label { 
   margin-left: .4rem; 
   margin-right: .4rem; 
@@ -197,4 +245,60 @@ p {
   text-transform: uppercase;
   font-weight: bold;
   border-radius: 3px!important;
+}
+
+.episodes.row { 
+  background-color: #008CBA;
+  padding: 1rem;
+  color: #1a1a1a;
+}
+
+.episodes .label { 
+  font-size: .7rem;  
+}
+
+.episode { 
+  border-bottom: .125rem solid white; 
+  display: inline-block;
+  margin-bottom: .5rem;
+  width: 100%;
+  clear: both;
+}
+.episode .episode-title { 
+  font-size: 1.2rem;
+}
+.episode .episode-title .episodenum { 
+  font-weight: bold;
+  color: white;
+  padding: 0 .5rem 0 0;
+}
+.episode .episode-title .episodename { 
+  font-weight: bold;
+  color: black;
+  font-size: 1rem;
+} 
+
+.episode .watched-indicator { 
+  font-size: 3.2rem;
+  padding: 0;
+  text-align: center;
+  line-height: 1.4;
+  vertical-align: top;
+}
+
+.episode .episode-info { 
+  padding: 0;
+  margin-bottom: .5rem;
+}
+
+.episode .episode-info .label {
+  font-weight: bold;
+  margin-right: .5rem;
+  margin-left: 0;
+}
+
+
+.episode .series-title {
+  font-size: 1.4rem;
+  line-height: 1.1;
 }

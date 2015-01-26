@@ -177,7 +177,7 @@ function formatDate(date, positiveOffset) {
 
 
 function removeUrlBase(url){ 
-  var newUrl = url.replace(app.settings.sonarrConfig.url,"");;
+  var newUrl = url.replace(app.settings.sonarrConfig.urlBase,"");;
   return newUrl; 
 }
 var getHistory = {

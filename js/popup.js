@@ -96,7 +96,6 @@ var create = {
     } else { 
       episode.find(".episode-show-title").addClass(classes['hide']);
     }
-    console.log(data);
 
     episode.find('.episode').addClass('season-'+data.seasonNumber);
     episode.find('.episode').addClass('episode-'+data.episodeNumber);
@@ -104,6 +103,7 @@ var create = {
     //episode title
     episode.find(".episodenum").html(formatEpisodeNumer(data.seasonNumber, data.episodeNumber));
     episode.find(".episodename").html(data.title);
+
     //change font size to fit
     if(data.title.length > 20){
       episode.find(".episodename").css({'font-size': '.9rem'});
@@ -143,8 +143,8 @@ var create = {
     var html = '';
     var show = $('.templates .show.template').clone();
     //images
-    show.find(".poster img").attr('src', app.settings.url + showdata.images[2].url.substring(1));
-    show.find(".banner").css("background-image" , "url(" + app.settings.url + showdata.images[1].url.substring(1) + ")");
+    show.find(".poster img").attr('src', app.settings.url + removeUrlBase(showdata.images[2].url.substring(1)));
+    show.find(".banner").css("background-image" , "url(" + app.settings.url + removeUrlBase(showdata.images[1].url.substring(1)) + ")");
 
     //texts
     show.find("#title").html(showdata.title);
@@ -175,6 +175,11 @@ function formatDate(date, positiveOffset) {
   return (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + (date.getDate()));
 }
 
+
+function removeUrlBase(url){ 
+  var newUrl = urlreplace(app.settings.sonarrConfig.url,"");;
+  return newUrl; 
+}
 var getHistory = {
   connect : function() {
     // check if we have local data
@@ -515,7 +520,8 @@ function getOptions() {
     numberOfDaysCalendar : app.settings.numberOfDaysCalendar,
     wantedItems : app.settings.wantedItems,
     historyItems : app.settings.historyItems,
-    calendarEndDate : app.settings.calendarEndDate
+    calendarEndDate : app.settings.calendarEndDate,
+    sonarrConfig : app.settings.sonarrConfig
   }, function(items) {
     app.settings.apiKey = items.apiKey;
     app.settings.url = items.url;
@@ -524,6 +530,7 @@ function getOptions() {
     app.settings.wantedItems = items.wantedItems;
     app.settings.historyItems = items.historyItems;
     app.settings.calendarEndDate = items.calendarEndDate;
+    app.settings.sonarrConfig = items.sonarrConfig;
     app.run();
     console.log('get options from chrome storage');
   });
@@ -599,7 +606,8 @@ var app = {
     numberOfDaysCalendar : 7,
     wantedItems : 15,
     historyItems : 15,
-    calendarEndDate : (new Date() + 7)
+    calendarEndDate : (new Date() + 7),
+    sonarrConfig : {}
   },
   run : function() {
     // prepare local storage

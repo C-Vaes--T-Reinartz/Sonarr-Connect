@@ -197,7 +197,9 @@ var getHistory = {
         monitored: value.episode.monitored,
         status: value.eventType,
         episodeQuality : value.quality.quality.name,
-        id : value.episode.id
+        id : value.episode.id,
+        seriesTitle : value.series.title
+        
       }
       //getHistory.add(data);
       historyList += create.episode(data, history);

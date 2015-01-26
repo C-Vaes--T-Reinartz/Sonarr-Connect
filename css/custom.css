@@ -278,6 +278,7 @@ p {
   font-weight: bold;
   color: white;
   padding: 0 .5rem 0 0;
+  font-size: .9rem;
 }
 .episode .episode-title .episodename { 
   font-weight: bold;
@@ -296,6 +297,7 @@ p {
 .episode .episode-info { 
   padding: 0;
   margin-bottom: .5rem;
+  font-size: .8rem;
 }
 
 .episode .episode-info .label {

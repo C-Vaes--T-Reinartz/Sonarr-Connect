@@ -595,7 +595,7 @@ function setLocalStorage() {
 
 // format episodenumbers to match scene formatting
 var formatEpisodeNumer = function(seasonNumber, episodeNumber) {
-  var episodeNum = (seasonNumber.toString().length === 1 ? '0' : '') + seasonNumber + "x" + (episodeNumber.toString().length === 1 ? '0' : '') + episodeNumber;
+  var episodeNum = "S" +  (seasonNumber.toString().length === 1 ? '0' : '') + seasonNumber + "E" + (episodeNumber.toString().length === 1 ? '0' : '') + episodeNumber;
   return episodeNum;
 }
 

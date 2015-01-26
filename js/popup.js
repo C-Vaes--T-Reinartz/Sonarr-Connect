@@ -143,11 +143,14 @@ var create = {
     var html = '';
     var show = $('.templates .show.template').clone();
     //images
-    show.find(".poster img").attr('src', app.settings.url + fixImageUrl(showdata.images[2].url));
-    show.find(".banner").css("background-image" , "url(" + app.settings.url + fixImageUrl(showdata.images[1].url) + ")");
+    show.find(".poster img").attr('src', getImageUrl(showdata.images[2]));
+    show.find(".banner").css("background-image" , "url(" + getImageUrl(showdata.images[1]) + ")");
 
     //texts
     show.find("#title").html(showdata.title);
+    if(showdata.title.length > 25){ 
+      show.find("#title").css({'font-size': '1.3rem'});
+    }
     show.find("#network").html(showdata.network);
     show.find("#start-year").html("Started " + showdata.year);
     show.find("#show-status").html(showdata.status);
@@ -176,11 +179,13 @@ function formatDate(date, positiveOffset) {
 }
 
 
-function fixImageUrl(url){ 
-  var start = url.indexOf('MediaCover')
-  var newUrl = url.substring(start);
+function getImageUrl(url){ 
+  var start = url.url.indexOf('MediaCover')
+  var newUrl = app.settings.url +  url.url.substring(start);
   return newUrl; 
 }
+
+
 var getHistory = {
   connect : function() {
     // check if we have local data
@@ -205,7 +210,7 @@ var getHistory = {
         episodeQuality : value.quality.quality.name,
         id : value.episode.id,
         seriesTitle : value.series.title
-        
+
       }
       //getHistory.add(data);
       historyList += create.episode(data, history);
@@ -341,6 +346,8 @@ var getSeries = {
     template.find('.serie-general #title').html(serie.title);
     template.find('.serie-general #network').html(serie.network);
     template.find('.serie-general #status').html(serie.status).attr('class', status[serie.status]);
+    template.find(".serie-general #poster").attr('src', getImageUrl(serie.images[2]));
+
     // add identifier to toggle season panel
     template.attr('serie-id', serie.id);
     // remove season line to prevent double first line

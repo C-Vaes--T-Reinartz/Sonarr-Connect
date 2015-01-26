@@ -46,13 +46,11 @@
       <!--       series list-->
       <div class="row series" id="series">
         <div class="serie-general">
-          <div class="small-6 columns">
-            <h6 id="title"></h6>
-          </div>
           <div class="small-3 columns">
-            <span id="network" class="label secondary"></span>
+            <img id="poster" src="img">
           </div>
-          <div class="small-3 columns">
+          <div class="small-9 columns">
+            <h6 id="title"></h6><span id="network" class="label secondary"></span><br/>
             <h6 id="status"></h6>
           </div>
         </div>
@@ -83,7 +81,7 @@
         <div class="row show-information">
           <div class="small-4 poster"><img src="http://nas.tomreinartz.com:8989/MediaCover/1/poster.jpg?lastWrite=635556457970000000" style="width: 100%; height: auto;"></div>
         </div>
-        <div class="small-7 small-offset-5">
+        <div class="small-7 small-offset-5 show-info">
           <h2><span id="title">Arrow</span><span id="network" class="network label secondary round">The CW</span></h2>
           <h6 id="start-year">Started 2012</h6>
           <h6 id="show-status">Continuing</h6>
@@ -101,42 +99,42 @@
                 <option value="season-1">loading episodes</option>
               </select>
               </label> </div>
-            <div class="small-4 columns" id="watched"> </div>
-          </div>
-        
+          <div class="small-4 columns" id="watched"> </div>
         </div>
+
       </div>
+    </div>
 
     </div>
 
-    <!--  end of templates-->
-    <div class="icon-bar three-up menu">
-      <!--      <a class="item wanted active" data-mode="wanted"> <label>Wanted
+  <!--  end of templates-->
+  <div class="icon-bar three-up menu">
+    <!--      <a class="item wanted active" data-mode="wanted"> <label>Wanted
 <span class="num label alert round"></span>
 </label>
 </a> -->
-      <a class="item calendar active" data-mode="calendar"> <label>Calendar</label>
-      </a> 
-      <a class="item series" data-mode="series"> <label>Series</label>
-      </a> 
-      <a class="item history" data-mode="history"> <label>History</label>
-      </a>
-    </div>
-
-    <!-- content of list will be cleared upon run-->
-    <div class="list">
-      <div class="load"></div>
-    </div>
-
-    <!-- bottom menu --->
-    <div class="icon-bar three-up bottom-menu">
-      <a id="sonarr-url-link" class="item sonarr-url"> <i class="fi-widget small"></i> <label>Sonarr</span></label>
-      </a> <a id="options-link" class="item"> <i class="fi-widget small"></i>
-    <label>Options</label>
-    </a> <a id="refresh-link" class="item"> <i class="fi-refresh small"></i>
-    <label>Refresh</label>
+    <a class="item calendar active" data-mode="calendar"> <label>Calendar</label>
+    </a> 
+    <a class="item series" data-mode="series"> <label>Series</label>
+    </a> 
+    <a class="item history" data-mode="history"> <label>History</label>
     </a>
-    </div>
-  </body>
+  </div>
+
+  <!-- content of list will be cleared upon run-->
+  <div class="list">
+    <div class="load"></div>
+  </div>
+
+  <!-- bottom menu --->
+  <div class="icon-bar three-up bottom-menu">
+    <a id="sonarr-url-link" class="item sonarr-url"> <i class="fi-widget small"></i> <label>Sonarr</span></label>
+    </a> <a id="options-link" class="item"> <i class="fi-widget small"></i>
+  <label>Options</label>
+  </a> <a id="refresh-link" class="item"> <i class="fi-refresh small"></i>
+  <label>Refresh</label>
+  </a>
+  </div>
+</body>
 </html>
 

@@ -14,7 +14,9 @@
 }
 
 ::-webkit-scrollbar {
-  display: none;
+  display: block;
+  background-color: #eee;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -25,6 +27,7 @@
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+  height: 1rem;
 }
 
 body,html {
@@ -67,7 +70,6 @@ body,html {
 }
 img {
   margin: 5px;
-  border: 2px solid black;
   vertical-align: middle;
   width: 75px;
   height: 75px;
@@ -189,6 +191,10 @@ h5, h6 {
   color: #b4b4b4;
 }
 
+.serie-general h6 { 
+  float: left; 
+}
+
 p { 
   padding: 0 1rem;
   font-size: .9rem;
@@ -210,16 +216,16 @@ p {
   position: relative;
   height:5rem;
   margin-left: 1rem;
-  margin-top: -4.5rem;
-  -webkit-box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.75);
-  -moz-box-shadow:    0px 0px 16px 0px rgba(50, 50, 50, 0.75);
-  box-shadow:         0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+  margin-top: -6rem;
+  -webkit-box-shadow: 0px 0px 8px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    0px 0px 8px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         0px 0px 8px 0px rgba(50, 50, 50, 0.75);
 }
- .poster img { 
+.poster img { 
   margin: 0; 
 }
 
- .summary { 
+.summary { 
   margin-top: 2rem; 
 }
 
@@ -245,7 +251,6 @@ p {
   margin-left: .4rem; 
   margin-right: .4rem; 
   vertical-align: middle;
-  text-transform: uppercase;
   font-weight: bold;
   border-radius: 3px!important;
 }
@@ -264,6 +269,10 @@ p {
   font-size: .7rem;  
 }
 
+#status { 
+  clear: both; 
+}
+
 .episode { 
   border-bottom: .125rem solid white; 
   display: inline-block;
@@ -273,6 +282,7 @@ p {
 }
 .episode .episode-title { 
   font-size: 1.2rem;
+
 }
 .episode .episode-title .episodenum { 
   font-weight: bold;
@@ -311,3 +321,21 @@ p {
   font-size: 1.4rem;
   line-height: 1.1;
 }
+
+
+
+.show-info { 
+  margin-top: -6rem; 
+  padding-right: .5rem;
+}
+
+.show-info #title { 
+  text-shadow:  2px 2px 6px #000;
+}
+
+.show-info h2 { 
+  height: 6.3rem;
+  vertical-align: bottom;
+  display: table-cell;
+}
+

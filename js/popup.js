@@ -143,8 +143,8 @@ var create = {
     var html = '';
     var show = $('.templates .show.template').clone();
     //images
-    show.find(".poster img").attr('src', app.settings.url + removeUrlBase(showdata.images[2].url.substring(1)));
-    show.find(".banner").css("background-image" , "url(" + app.settings.url + removeUrlBase(showdata.images[1].url.substring(1)) + ")");
+    show.find(".poster img").attr('src', app.settings.url + fixImageUrl(showdata.images[2].url));
+    show.find(".banner").css("background-image" , "url(" + app.settings.url + fixImageUrl(showdata.images[1].url) + ")");
 
     //texts
     show.find("#title").html(showdata.title);
@@ -176,8 +176,9 @@ function formatDate(date, positiveOffset) {
 }
 
 
-function removeUrlBase(url){ 
-  var newUrl = url.replace(app.settings.sonarrConfig.urlBase,"");;
+function fixImageUrl(url){ 
+  var start = url.indexOf('MediaCover')
+  var newUrl = url.substring(start);
   return newUrl; 
 }
 var getHistory = {

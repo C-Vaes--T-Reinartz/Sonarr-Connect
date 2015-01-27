@@ -261,6 +261,7 @@ p {
 
 .episodes.row { 
   background-color: #008CBA;
+/*  background-color: #008CBA;*/
   padding: 1rem;
   color: #1a1a1a;
 }

@@ -57,7 +57,14 @@ var sonarr = {
         console.log(mode);
       }
     });
+  },
+   setEpisodeData: function (episodeData, episodeId){ 
+    
+  }, 
+  setSeasonData : function (seasonData, seasonId){
+    
   }
+  
 }
 
 var create = { 

@@ -7,6 +7,7 @@ var sonarr = {
     wanted : "api/wanted/missing?page=1&pageSize={wantedItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}",
     calendar : "api/calendar?page=1&sortKey=airDateUtc&sortDir=desc&start={calendarStartDate}&end={calendarEndDate}&apikey={apikey}",
     series : "api/series?page=1&sortKey=title&sortDir=desc&apikey={apikey}",
+    episode : "api/episode/\{episodeId}?apikey={apikey}",
     episodes : "api/episode?seriesId={seriesId}&apikey={apikey}",
     history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}"
   },
@@ -23,7 +24,7 @@ var sonarr = {
     }
 
     // check for local data and return the data when possible.
-    if (localStorage.getItem(mode) !== 'undefined' && mode != 'episodes') {
+    if (localStorage.getItem(mode) !== 'undefined' && mode != 'episodes' && mode != 'episode') {
       var localData = $.parseJSON(localStorage.getItem(mode));
       if (localData !== null) {
         callback(localData);
@@ -40,13 +41,9 @@ var sonarr = {
     url = url.replace("{calendarEndDate}", formatDate(new Date(), app.settings.numberOfDaysCalendar));
 
     // set seriesID
-    if (mode === "episodes") {
-      if (data === undefined) {
-        console.error("Cannot get episodes without a seriesId");
-        return;
-      }
-      url = url.replace("{seriesId}", data);
-    }
+    url = url.replace("{seriesId}", data);
+    //set episodeId
+    url = url.replace("{episodeId}", data);
 
     $.getJSON(url, function(remoteData) {
       localStorage.setItem(mode, JSON.stringify(remoteData));
@@ -64,7 +61,7 @@ var sonarr = {
     }
 
     // check for local data and return the data when possible.
-    if (localStorage.getItem(mode) !== 'undefined' && mode != 'episodes') {
+    if (localStorage.getItem(mode) !== 'undefined' && mode != 'episodes' && mode != 'episode') {
       var localData = $.parseJSON(localStorage.getItem(mode));
       if (localData !== null) {
         callback(localData);
@@ -99,11 +96,25 @@ var sonarr = {
       }
     });
   },
-  setEpisodeData: function (episodeData, episodeId){ 
+  setData : function (mode, data){ 
+    var url = sonarr.settings[mode];
+    url = url.replace("{seriesId}", data.id);
+    url = url.replace("{episodeId}", data.id);
+    url = url.replace("{apikey}", app.settings.apiKey);
 
+    $.ajax({
+      type: "put",
+      url: url,
+      data: data
+    }).done(function( data ) {
+      console.log(data);
+    });
+  },
+  setEpisodeData: function (episodeData){ 
+    sonarr.setData('episode', episodeData);
   }, 
-  setSeasonData : function (seasonData, seasonId){
-
+  setSeasonData : function (seasonData){
+    sonarr.setData('season', seasonData);
   }
 
 }
@@ -201,7 +212,7 @@ var create = {
     var show = $('.templates .show.template').clone();
     // images
     show.find(".poster img").attr('src', getImageUrl(showdata.images[2]));
-    show.find(".banner").css("background-image", "url(" + getImageUrl(showdata.images[1]) + ")");
+    show.find(".banner").css("background-image", 'url(" '+ getImageUrl(showdata.images[1]) + '")');
 
     // texts
     show.find("#title").html(showdata.title);
@@ -228,8 +239,24 @@ var create = {
 
 
 
-
-
+var episodeMonitored = {
+  set: function (episodeId){
+    episodeMonitored.getData(episodeId);
+  },
+  getData: function (episodeId){
+    console.log('getdata');
+    sonarr.getData('episode', episodeMonitored.setData, episodeId)
+  },
+  setData: function (data){
+    console.log('setdata');
+    if(data.monitored){
+      data.monitored = false;
+    } else { 
+      data.monitored = true;
+    }
+    sonarr.setEpisodeData(data);
+  }
+}
 
 
 var getHistory = {

@@ -191,9 +191,6 @@ h5, h6 {
   color: #b4b4b4;
 }
 
-.serie-general h6 { 
-  float: left; 
-}
 
 p { 
   padding: 0 1rem;
@@ -236,7 +233,7 @@ p {
   width: 100%; 
   clear: both;
   display: inline-block;
-  background-color: #007398;
+  background-color: #008CBA;
   margin-top: 0rem; 
   margin-bottom: -0.3rem;
 }
@@ -259,10 +256,12 @@ p {
   margin: -.25rem -.5rem -.25rem 0.8rem!important;
 }
 
-.episodes.row { 
-  background-color: #008CBA;
-/*  background-color: #008CBA;*/
+ .episodes.row { 
   padding: 1rem;
+}
+
+.show .episodes.row { 
+  background-color: #008CBA;
   color: #1a1a1a;
 }
 
@@ -275,11 +274,14 @@ p {
 }
 
 .episode { 
-  border-bottom: .125rem solid white; 
+  border-bottom: .125rem solid #008CBA; 
   display: inline-block;
   margin-bottom: .5rem;
   width: 100%;
   clear: both;
+}
+.show .episode { 
+   border-color: white; 
 }
 .episode .episode-title { 
   font-size: 1.2rem;
@@ -293,7 +295,7 @@ p {
 }
 .episode .episode-title .episodename { 
   font-weight: bold;
-  color: black;
+  color: white;
   font-size: 1rem;
 } 
 
@@ -303,6 +305,10 @@ p {
   text-align: center;
   line-height: 1.4;
   vertical-align: top;
+  color: #008CBA;
+}
+.show .episode .watched-indicator { 
+   color: black; 
 }
 
 .episode .episode-info { 
@@ -318,7 +324,7 @@ p {
 }
 
 
-.episode .series-title {
+.series-title {
   font-size: 1.4rem;
   line-height: 1.1;
 }

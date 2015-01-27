@@ -51,6 +51,47 @@ var sonarr = {
     $.getJSON(url, function(remoteData) {
       localStorage.setItem(mode, JSON.stringify(remoteData));
 
+      if (app.settings.mode == mode) {
+        callback(remoteData);
+        console.log(app.settings.mode);
+        console.log(mode);
+      }
+    });
+
+    if (callback === undefined || typeof (callback) !== "function") {
+      console.error("sonarr.getData callback requires a type of function to be defined");
+      return false;
+    }
+
+    // check for local data and return the data when possible.
+    if (localStorage.getItem(mode) !== 'undefined' && mode != 'episodes') {
+      var localData = $.parseJSON(localStorage.getItem(mode));
+      if (localData !== null) {
+        callback(localData);
+      }
+    }
+
+    var url = "";
+    url = app.settings.url + sonarr.settings[mode];
+
+    url = url.replace("{wantedItems}", app.settings.wantedItems);
+    url = url.replace("{historyItems}", app.settings.historyItems);
+    url = url.replace("{apikey}", app.settings.apiKey);
+    url = url.replace("{calendarStartDate}", formatDate(new Date(), null));
+    url = url.replace("{calendarEndDate}", formatDate(new Date(), app.settings.numberOfDaysCalendar));
+
+    // set seriesID
+    if (mode === "episodes") {
+      if (data === undefined) {
+        console.error("Cannot get episodes without a seriesId");
+        return;
+      }
+      url = url.replace("{seriesId}", data);
+    }
+
+    $.getJSON(url, function(remoteData) {
+      localStorage.setItem(mode, JSON.stringify(remoteData));
+
       if(app.settings.mode == mode){
         callback(remoteData);
         console.log(app.settings.mode);
@@ -58,23 +99,24 @@ var sonarr = {
       }
     });
   },
-   setEpisodeData: function (episodeData, episodeId){ 
-    
+  setEpisodeData: function (episodeData, episodeId){ 
+
   }, 
   setSeasonData : function (seasonData, seasonId){
-    
+
   }
-  
+
 }
 
-var create = { 
+var create = {
   /*
-  ** @param data: json {episodeNumber, seasonNumber, title, airDateUtc, monitored, status, episodeQuality, seriesTitle}
-  ** @param mode: string 'app-mode'
-  */
-  episode : function (data, mode) { 
+     * * @param data: json {episodeNumber, seasonNumber, title, airDateUtc,
+     * monitored, status, episodeQuality, seriesTitle} * @param mode: string
+     * 'app-mode'
+     */
+  episode : function(data, mode) {
     var html = '';
-    //short copy
+    // short copy
     var event = {
       "downloadFolderImported" : 'Imported',
       "grabbed" : 'Grabbed',
@@ -84,7 +126,7 @@ var create = {
       "toBeAired" : 'Airs ',
       "downloadFailed" : 'Failed'
     }
-    //add class depening on current status
+    // add class depening on current status
     var classes = {
       "downloadFolderImported" : 'label success',
       "grabbed" : 'label secondary',
@@ -97,76 +139,86 @@ var create = {
 
     var episode = $('.templates #episode').clone();
 
-    //episodeShowTitle
-    if(data.seriesTitle !== null){
+    // episodeShowTitle
+    if (data.seriesTitle !== null) {
       episode.find(".series-title").html(data.seriesTitle);
-    } else { 
+    } else {
       episode.find(".episode-show-title").addClass(classes['hide']);
     }
 
-    episode.find('.episode').addClass('season-'+data.seasonNumber);
-    episode.find('.episode').addClass('episode-'+data.episodeNumber);
+    episode.find('.episode').addClass('season-' + data.seasonNumber);
+    episode.find('.episode').addClass('episode-' + data.episodeNumber);
 
-    //episode title
+    // episode title
     episode.find(".episodenum").html(formatEpisodeNumer(data.seasonNumber, data.episodeNumber));
     episode.find(".episodename").html(data.title);
 
-    //change font size to fit
-    if(data.title.length > 20){
-      episode.find(".episodename").css({'font-size': '.9rem'});
-    }    
+    // change font size to fit
+    if (data.title.length > 20) {
+      episode.find(".episodename").css({
+        'font-size' : '.9rem'
+      });
+    }
 
-    //episode info
+    // episode info
     episode.find(".episode-info .date").html(moment(new Date(data.airDateUtc)).fromNow());
     episode.find(".episode-info .status").html(event[data.status]);
-    //quality
-    if(data.episodeQuality !== undefined){
+    // quality
+    if (data.episodeQuality !== undefined) {
       episode.find(".episode-info .status").append("<span class='label secondary'> " + data.episodeQuality + "</span>");
     }
-    //change classes
+    // change classes
     episode.find(".episode-info .status").attr('class', classes[data.status]);
 
-    //monitored status
-    if(data.monitored){
+    // monitored status
+    if (data.monitored) {
       episode.find('.watched-indicator').addClass('');
-    } else { 
+    } else {
       episode.find('.watched-indicator').addClass('icon-negative');
     }
 
-    //change html to string and return it.
+    // change html to string and return it.
     html = episode.html();
     episode.remove();
     return html;
   },
-  season : function (data) { 
+  season : function(data) {
     var html = '';
     return html;
   },
   /*
-  **generate show
-  ** @param showdata json {}
-  */
-  show : function (showdata){
+     * *generate show * @param showdata json {}
+     */
+  show : function(showdata) {
+    // monitor status
+    var episodeQuote = {
+      "continuing" : 'label regular',
+      "ended" : 'label success',
+      "missing-monitored" : 'label alert',
+      'missing-not-monitored' : 'label warning'
+    }
     var html = '';
     var show = $('.templates .show.template').clone();
-    //images
+    // images
     show.find(".poster img").attr('src', getImageUrl(showdata.images[2]));
-    show.find(".banner").css("background-image" , "url(" + getImageUrl(showdata.images[1]) + ")");
+    show.find(".banner").css("background-image", "url(" + getImageUrl(showdata.images[1]) + ")");
 
-    //texts
+    // texts
     show.find("#title").html(showdata.title);
-    if(showdata.title.length > 25){ 
-      show.find("#title").css({'font-size': '1.3rem'});
+    if (showdata.title.length > 25) {
+      show.find("#title").css({
+        'font-size' : '1.3rem'
+      });
     }
     show.find("#network").html(showdata.network);
     show.find("#start-year").html("Started " + showdata.year);
     show.find("#show-status").html(showdata.status);
     show.find("#seasons").html("Seasons " + showdata.seasonCount);
-    show.find("#episodes").html(showdata.episodeFileCount +"/"+ showdata.episodeCount);
+    show.find("#episodes").html(showdata.episodeFileCount + "/" + showdata.episodeCount).attr('class', calculateEpisodeQuoteColor(showdata.episodeFileCount, showdata.episodeCount, showdata.monitored, showdata.status));
+    show.find("#air-time").html(showdata.airTime);
     show.find("#summary").html(showdata.overview);
 
-
-    //change html to string and return it.
+    // change html to string and return it.
     html = show.html();
     show.remove();
     return html;
@@ -177,20 +229,7 @@ var create = {
 
 
 
-// format date to be used in api
-// TODO improve
-function formatDate(date, positiveOffset) {
-  if (positiveOffset != null)
-    date.setDate(date.getDate() + parseInt(positiveOffset));
-  return (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + (date.getDate()));
-}
 
-
-function getImageUrl(url){ 
-  var start = url.url.indexOf('MediaCover')
-  var newUrl = app.settings.url +  url.url.substring(start);
-  return newUrl; 
-}
 
 
 var getHistory = {
@@ -206,20 +245,20 @@ var getHistory = {
     app.cleanList();
     var historyList = '';
     $.each(data, function(index, value) {
-      //create data for episode
-      data  = {
-        episodeNumber: value.episode.episodeNumber, 
-        seasonNumber: value.episode.seasonNumber, 
-        title: value.episode.title,
-        airDateUtc: value.date,
-        monitored: value.episode.monitored,
-        status: value.eventType,
+      // create data for episode
+      data = {
+        episodeNumber : value.episode.episodeNumber,
+        seasonNumber : value.episode.seasonNumber,
+        title : value.episode.title,
+        airDateUtc : value.date,
+        monitored : value.episode.monitored,
+        status : value.eventType,
         episodeQuality : value.quality.quality.name,
         id : value.episode.id,
         seriesTitle : value.series.title
 
       }
-      //getHistory.add(data);
+      // getHistory.add(data);
       historyList += create.episode(data, history);
     });
     $('.list').html('<div class="episodes row"></div>')
@@ -241,24 +280,23 @@ var getCalendar = {
 
     var todayList = '', tomorrowList = '', laterList = '';
 
-    //calendar list
+    // calendar list
     getCalendar.addDates();
     var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
     tomorrow.setHours(0, 0, 0, 0);
     var dayAfterTomorrow = new Date(new Date().getTime() + 48 * 60 * 60 * 1000);
     dayAfterTomorrow.setHours(0, 0, 0, 0);
 
-
-    //generate lists
+    // generate lists
     $.each(data, function(index, episode) {
-      data  = {
-        episodeNumber: episode.episodeNumber, 
-        seasonNumber: episode.seasonNumber, 
-        title: episode.title,
-        airDateUtc: episode.airDateUtc,
-        monitored: episode.monitored,
-        status: 'toBeAired',
-        seriesTitle: episode.series.title,
+      data = {
+        episodeNumber : episode.episodeNumber,
+        seasonNumber : episode.seasonNumber,
+        title : episode.title,
+        airDateUtc : episode.airDateUtc,
+        monitored : episode.monitored,
+        status : 'toBeAired',
+        seriesTitle : episode.series.title,
         id : episode.id
       }
 
@@ -272,14 +310,14 @@ var getCalendar = {
 
     });
 
-    //add episodes to calender
+    // add episodes to calender
     $(".list .today .calendar-show").append(todayList);
     $(".list .tomorrow .calendar-show").append(tomorrowList);
     $(".list .later .calendar-show").append(laterList);
 
     getCalendar.bind();
 
-    //add wanted list.
+    // add wanted list.
     getWantedEpisodes.connect();
   },
   addDates : function() {
@@ -304,12 +342,12 @@ var getCalendar = {
     dates += template.html();
 
     $('.list').prepend(dates);
-    //$('.list .show').remove();
+    // $('.list .show').remove();
     $('.wanted .calendar-show').hide();
 
   },
   bind : function(value) {
-    $('.calendar-date').unbind('click').click(function(){
+    $('.calendar-date').unbind('click').click(function() {
       $(this).parent().find('.calendar-show').toggle();
     });
   }
@@ -327,7 +365,7 @@ var getSeries = {
     }
     app.cleanList();
 
-    //store data in function
+    // store data in function
     getSeries.data = data;
     var episodes = '';
     $.each(data.sort(seriesComparator), function(index, value) {
@@ -354,26 +392,27 @@ var getSeries = {
     template.find('.serie-general #network').html(serie.network);
     template.find('.serie-general #status').html(serie.status).attr('class', status[serie.status]);
     template.find(".serie-general #poster").attr('src', getImageUrl(serie.images[2]));
+    template.find(".serie-general #episodesCount").html(serie.episodeFileCount + "/" + serie.episodeCount).attr('class', calculateEpisodeQuoteColor(serie.episodeFileCount, serie.episodeCount, serie.monitored, serie.status));
 
     // add identifier to toggle season panel
     template.attr('serie-id', serie.id);
     // remove season line to prevent double first line
     template.find('.serie-seasons').empty();
-    if($('.row.series').length === 0){
+    if ($('.row.series').length === 0) {
       $(".list").scrollTop(0);
     }
     template.appendTo(".list");
   },
-  makeShow : function (seriesId) {
+  makeShow : function(seriesId) {
     var showData = {};
     $.each(getSeries.data, function(index, value) {
-      if(value.id == seriesId){
-        showData = value; 
+      if (value.id == seriesId) {
+        showData = value;
       }
     });
 
     html = create.show(showData);
-    //clear list
+    // clear list
     $('.list').html(html);
     $(".list").scrollTop(0);
     getEpisodes.forSeries(seriesId);
@@ -395,74 +434,45 @@ var getEpisodes = {
     sonarr.getData("episodes", getEpisodes.generate, seriesId);
   },
   generate : function(data) {
-    //clear list 
+    // clear list
     $('.list .row.episodes .episode').remove();
     var episodes = '';
     var seasons = {};
 
-    //add episodes
+    // add episodes
     $.each(data, function(index, episode) {
-      data  = {
-        episodeNumber: episode.episodeNumber, 
-        seasonNumber: episode.seasonNumber, 
-        title: episode.title,
-        airDateUtc: episode.airDateUtc,
-        monitored: episode.monitored,
-        status: 'missing',
+      data = {
+        episodeNumber : episode.episodeNumber,
+        seasonNumber : episode.seasonNumber,
+        title : episode.title,
+        airDateUtc : episode.airDateUtc,
+        monitored : episode.monitored,
+        status : 'missing',
         id : episode.id
       }
       seasons = episode.series.seasons;
-      //reverse order
+      // reverse order
       episodes = create.episode(data) + episodes;
     });
 
-
-    //add seasons to selector
+    // add seasons to selector
     $('.list .row.episodes #selected-season option').remove();
     $.each(seasons, function(index, season) {
-      $('.list .row.episodes #selected-season').prepend('<option value="season-'+season.seasonNumber+'">Season '+season.seasonNumber+'</option>');
+      $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Season ' + season.seasonNumber + '</option>');
     });
-
 
     $('.list .row.episodes').append(episodes);
     $('.list .row.episodes .episode').hide();
     getEpisodes.bind();
   },
   bind : function() {
-    $('.list .row.episodes #selected-season').on('change', function(){
+    $('.list .row.episodes #selected-season').on('change', function() {
       $('.list .row.episodes .episode').hide();
       $('.list .row.episodes .episode.' + $(this).val() + '').show();
     });
-    $('.list .row.episodes .episode.'+$('.list .row.episodes #selected-season').val()).show();
+    $('.list .row.episodes .episode.' + $('.list .row.episodes #selected-season').val()).show();
   }
 }
-
-
-
-
-// comparator to sort seasons by seasonNumber
-function seasonComparator(a, b) {
-  if (a.seasonNumber < b.seasonNumber)
-    return -1;
-  else if (a.seasonNumber > b.seasonNumber)
-    return 1;
-  return 0;
-}
-
-// comparator to sort seasons by seasonNumber
-function seriesComparator(a, b) {
-  if (a.status != b.status) {
-    if (a.status < b.status) return -1;
-    if (a.status > b.status) return 1;
-    return 0;
-  }
-  if (a.sortTitle < b.sortTitle) return -1;
-  if (a.sortTitle > b.sortTitle) return 1;
-  return 0;
-}
-
-
-
 
 var getWantedEpisodes = {
   list : '',
@@ -471,25 +481,25 @@ var getWantedEpisodes = {
   },
   generate : function(data) {
     if (app.settings.mode !== "calendar") {
-      //return;
+      // return;
     }
     var totalRecords = data.totalRecords;
     data = data.records;
 
-    //remove wanted items
+    // remove wanted items
     $('.list .calendar.wanted .calendar-show > .wanted').remove();
     getWantedEpisodes.list = '';
     var wantedList = '';
-    //generate list
+    // generate list
     $.each(data, function(index, episode) {
-      data  = {
-        episodeNumber: episode.episodeNumber, 
-        seasonNumber: episode.seasonNumber, 
-        title: episode.title,
-        airDateUtc: episode.airDateUtc,
-        monitored: episode.monitored,
-        status: 'missing',
-        seriesTitle: episode.series.title,
+      data = {
+        episodeNumber : episode.episodeNumber,
+        seasonNumber : episode.seasonNumber,
+        title : episode.title,
+        airDateUtc : episode.airDateUtc,
+        monitored : episode.monitored,
+        status : 'missing',
+        seriesTitle : episode.series.title,
         id : episode.id
       }
       wantedList += create.episode(data)
@@ -605,12 +615,6 @@ function setLocalStorage() {
   if (localStorage.getItem('history') === null) {
     localStorage.setItem('history', undefined);
   }
-}
-
-// format episodenumbers to match scene formatting
-var formatEpisodeNumer = function(seasonNumber, episodeNumber) {
-  var episodeNum = "S" +  (seasonNumber.toString().length === 1 ? '0' : '') + seasonNumber + "E" + (episodeNumber.toString().length === 1 ? '0' : '') + episodeNumber;
-  return episodeNum;
 }
 
 var app = {

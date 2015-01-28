@@ -7,11 +7,11 @@ var sonarr = {
     wanted : "api/wanted/missing?page=1&pageSize={wantedItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}",
     calendar : "api/calendar?page=1&sortKey=airDateUtc&sortDir=desc&start={calendarStartDate}&end={calendarEndDate}&apikey={apikey}",
     series : "api/series?page=1&sortKey=title&sortDir=desc&apikey={apikey}",
-    episode : "api/episode/\{episodeId}?apikey={apikey}",
+    episode : "api/episode\{episodeId\}?apikey={apikey}",
     episodes : "api/episode?seriesId={seriesId}&apikey={apikey}",
     history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}"
   },
-  getData : function(mode, callback, data) {
+  getData : function(mode, callback, id) {
 
     // check input in function
     if (sonarr.settings[mode] === undefined) {
@@ -31,8 +31,7 @@ var sonarr = {
       }
     }
 
-    var url = "";
-    url = app.settings.url + sonarr.settings[mode];
+    var  url = sonarr.settings[mode];
 
     url = url.replace("{wantedItems}", app.settings.wantedItems);
     url = url.replace("{historyItems}", app.settings.historyItems);
@@ -41,73 +40,40 @@ var sonarr = {
     url = url.replace("{calendarEndDate}", formatDate(new Date(), app.settings.numberOfDaysCalendar));
 
     // set seriesID
-    url = url.replace("{seriesId}", data);
+    url = url.replace("{seriesId}", id);
     //set episodeId
-    url = url.replace("{episodeId}", data);
+    url = url.replace("\{episodeId\}", "/" + id);
+
+
+    url = app.settings.url + url;
 
     $.getJSON(url, function(remoteData) {
       localStorage.setItem(mode, JSON.stringify(remoteData));
 
-      if (app.settings.mode == mode) {
+      if(app.settings.mode == mode || mode == 'episode'){
         callback(remoteData);
-        console.log(app.settings.mode);
-        console.log(mode);
-      }
-    });
-
-    if (callback === undefined || typeof (callback) !== "function") {
-      console.error("sonarr.getData callback requires a type of function to be defined");
-      return false;
-    }
-
-    // check for local data and return the data when possible.
-    if (localStorage.getItem(mode) !== 'undefined' && mode != 'episodes' && mode != 'episode') {
-      var localData = $.parseJSON(localStorage.getItem(mode));
-      if (localData !== null) {
-        callback(localData);
-      }
-    }
-
-    var url = "";
-    url = app.settings.url + sonarr.settings[mode];
-
-    url = url.replace("{wantedItems}", app.settings.wantedItems);
-    url = url.replace("{historyItems}", app.settings.historyItems);
-    url = url.replace("{apikey}", app.settings.apiKey);
-    url = url.replace("{calendarStartDate}", formatDate(new Date(), null));
-    url = url.replace("{calendarEndDate}", formatDate(new Date(), app.settings.numberOfDaysCalendar));
-
-    // set seriesID
-    if (mode === "episodes") {
-      if (data === undefined) {
-        console.error("Cannot get episodes without a seriesId");
-        return;
-      }
-      url = url.replace("{seriesId}", data);
-    }
-
-    $.getJSON(url, function(remoteData) {
-      localStorage.setItem(mode, JSON.stringify(remoteData));
-
-      if(app.settings.mode == mode){
-        callback(remoteData);
-        console.log(app.settings.mode);
-        console.log(mode);
       }
     });
   },
-  setData : function (mode, data){ 
+  setData : function (mode, data, callback){ 
     var url = sonarr.settings[mode];
     url = url.replace("{seriesId}", data.id);
-    url = url.replace("{episodeId}", data.id);
+    url = url.replace("{episodeId}", "/" );
     url = url.replace("{apikey}", app.settings.apiKey);
+
+    url = app.settings.url + url;
 
     $.ajax({
       type: "put",
       url: url,
-      data: data
+      data: JSON.stringify(data),
+      processData: true
     }).done(function( data ) {
       console.log(data);
+
+      if (callback !== undefined && typeof (callback) === "function") {
+        callback(localData);
+      }
     });
   },
   setEpisodeData: function (episodeData){ 
@@ -245,7 +211,7 @@ var episodeMonitored = {
   },
   getData: function (episodeId){
     console.log('getdata');
-    sonarr.getData('episode', episodeMonitored.setData, episodeId)
+    sonarr.getData("episode", episodeMonitored.setData, episodeId)
   },
   setData: function (data){
     console.log('setdata');

@@ -305,7 +305,9 @@ p {
   text-align: center;
   line-height: 1.4;
   vertical-align: top;
-  color: #008CBA;
+  color: #000000;
+  cursor: pointer;
+  -webkit-text-stroke: 1px #008CBA
 }
 .show .episode .watched-indicator { 
    color: black; 

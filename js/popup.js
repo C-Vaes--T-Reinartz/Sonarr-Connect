@@ -458,10 +458,13 @@ var getSeries = {
     $('.row.series').show();
     $( "#series-filter" ).focus();
     $( "#series-filter" ).on('input',function(){
-      console.log($(this).val()); 
-      if($('.row.series[serie-title*='+$(this).val()+']').length){
+      var title = $(this).val();
+      if (title == ""){ 
+        title = "undefinedseriestitle";
+      }
+      if($('.row.series[serie-title*='+title+']').length){
         $('.row.series').hide();
-        $('.row.series[serie-title*='+$(this).val()+']').show();
+        $('.row.series[serie-title*='+title+']').show();
       } else { 
         $('.row.series').show();
       }

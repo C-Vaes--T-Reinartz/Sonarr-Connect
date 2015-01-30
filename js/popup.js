@@ -462,6 +462,8 @@ var getSeries = {
       if($('.row.series[serie-title*='+$(this).val()+']').length){
         $('.row.series').hide();
         $('.row.series[serie-title*='+$(this).val()+']').show();
+      } else { 
+        $('.row.series').show();
       }
     });
   }

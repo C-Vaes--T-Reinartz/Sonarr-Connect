@@ -151,7 +151,7 @@ label .num {
 }
 
 .icon-negative { 
-  color: white;
+  color: white!important;
   -webkit-text-stroke: 1px black;
 }
 
@@ -327,9 +327,8 @@ p {
 .series-title {
   font-size: 1.4rem;
   line-height: 1.1;
+  cursor: pointer;
 }
-
-
 
 .show-info { 
   margin-top: -6rem; 

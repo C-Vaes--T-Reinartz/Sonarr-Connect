@@ -1,6 +1,6 @@
 var background = {
   standalone : function() {
-    app.run();
+    //app.run();
   },
   getItemsInHistory : function () { 
     data = $.parseJSON(localStorage.getItem('wanted'));

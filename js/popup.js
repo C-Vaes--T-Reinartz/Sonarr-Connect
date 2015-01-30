@@ -7,9 +7,10 @@ var sonarr = {
     wanted : "api/wanted/missing?page=1&pageSize={wantedItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}",
     calendar : "api/calendar?page=1&sortKey=airDateUtc&sortDir=desc&start={calendarStartDate}&end={calendarEndDate}&apikey={apikey}",
     series : "api/series?page=1&sortKey=title&sortDir=desc&apikey={apikey}",
-    episode : "api/episode\{episodeId\}?apikey={apikey}",
+    episode : "api/episode/\{episodeId}?apikey={apikey}",
     episodes : "api/episode?seriesId={seriesId}&apikey={apikey}",
-    history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}"
+    history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}",
+    manualDownload : "/api/release?episodeId={episodeId}&sort_by=releaseWeight&order=asc&apikey={apikey}"
   },
   getData : function(mode, callback, id) {
 
@@ -24,11 +25,8 @@ var sonarr = {
     }
 
     // check for local data and return the data when possible.
-    if (localStorage.getItem(mode) !== 'undefined' && mode != 'episodes' && mode != 'episode') {
-      var localData = $.parseJSON(localStorage.getItem(mode));
-      if (localData !== null) {
-        callback(localData);
-      }
+    if (localStorage.getItem(mode) != "undefined" && mode != 'episode' && mode != 'episodes') {
+      callback($.parseJSON(localStorage.getItem(mode)));
     }
 
     var  url = sonarr.settings[mode];
@@ -39,18 +37,14 @@ var sonarr = {
     url = url.replace("{calendarStartDate}", formatDate(new Date(), null));
     url = url.replace("{calendarEndDate}", formatDate(new Date(), app.settings.numberOfDaysCalendar));
 
-    // set seriesID
     url = url.replace("{seriesId}", id);
-    //set episodeId
-    url = url.replace("\{episodeId\}", "/" + id);
-
+    url = url.replace("\{episodeId\}", id);
 
     url = app.settings.url + url;
 
     $.getJSON(url, function(remoteData) {
       localStorage.setItem(mode, JSON.stringify(remoteData));
-
-      if(app.settings.mode == mode || mode == 'episode'){
+      if(app.settings.mode == mode || mode == 'episode' || mode == 'episodes'){
         callback(remoteData);
       }
     });
@@ -58,7 +52,7 @@ var sonarr = {
   setData : function (mode, data, callback){ 
     var url = sonarr.settings[mode];
     url = url.replace("{seriesId}", data.id);
-    url = url.replace("{episodeId}", "/" );
+    url = url.replace("{episodeId}", "" );
     url = url.replace("{apikey}", app.settings.apiKey);
 
     url = app.settings.url + url;
@@ -72,15 +66,15 @@ var sonarr = {
       console.log(data);
 
       if (callback !== undefined && typeof (callback) === "function") {
-        callback(localData);
+        callback(data);
       }
     });
   },
-  setEpisodeData: function (episodeData){ 
-    sonarr.setData('episode', episodeData);
+  setEpisodeData: function (episodeData, callback){ 
+    sonarr.setData('episode', episodeData, callback);
   }, 
   setSeasonData : function (seasonData){
-    sonarr.setData('season', seasonData);
+    sonarr.setData('season', seasonData, callback);
   }
 
 }
@@ -88,7 +82,7 @@ var sonarr = {
 var create = {
   /*
      * * @param data: json {episodeNumber, seasonNumber, title, airDateUtc,
-     * monitored, status, episodeQuality, seriesTitle} * @param mode: string
+     * monitored, status, episodeQuality, seriesTitle, episodeId, seriesId} * @param mode: string
      * 'app-mode'
      */
   episode : function(data, mode) {
@@ -119,12 +113,14 @@ var create = {
     // episodeShowTitle
     if (data.seriesTitle !== null) {
       episode.find(".series-title").html(data.seriesTitle);
+      episode.find(".series-title").attr('data-series-id', data.seriesId );;
     } else {
       episode.find(".episode-show-title").addClass(classes['hide']);
     }
 
     episode.find('.episode').addClass('season-' + data.seasonNumber);
     episode.find('.episode').addClass('episode-' + data.episodeNumber);
+    episode.find('.episode, .watched-indicator').attr('data-episode-id', data.id);
 
     // episode title
     episode.find(".episodenum").html(formatEpisodeNumer(data.seasonNumber, data.episodeNumber));
@@ -158,6 +154,16 @@ var create = {
     html = episode.html();
     episode.remove();
     return html;
+  },
+  episodeClicks: function (){
+    $('.series-title').unbind('click').on('click', function(){
+      var seriesId = $(this).data('series-id');
+      getSeries.makeShow(seriesId);
+    });
+    $('.watched-indicator').unbind('click').on('click', function(){
+      var episodeId = $(this).data('episode-id');
+      episodeMonitored.set(episodeId);
+    });
   },
   season : function(data) {
     var html = '';
@@ -208,6 +214,7 @@ var create = {
 var episodeMonitored = {
   set: function (episodeId){
     episodeMonitored.getData(episodeId);
+
   },
   getData: function (episodeId){
     console.log('getdata');
@@ -220,7 +227,15 @@ var episodeMonitored = {
     } else { 
       data.monitored = true;
     }
-    sonarr.setEpisodeData(data);
+    sonarr.setEpisodeData(data, episodeMonitored.updateEpisode);
+  }, 
+  updateEpisode : function(data){ 
+    console.log(data);
+    if(data.monitored == false){
+      $('div.watched-indicator[data-episode-id="'+data.id+'"]').addClass('icon-negative');
+    } else { 
+      $('div.watched-indicator[data-episode-id="'+data.id+'"]').removeClass('icon-negative');
+    }
   }
 }
 
@@ -248,7 +263,8 @@ var getHistory = {
         status : value.eventType,
         episodeQuality : value.quality.quality.name,
         id : value.episode.id,
-        seriesTitle : value.series.title
+        seriesTitle : value.series.title,
+        seriesId : value.series.id
 
       }
       // getHistory.add(data);
@@ -256,6 +272,7 @@ var getHistory = {
     });
     $('.list').html('<div class="episodes row"></div>')
     $('.list .episodes').append(historyList);
+    create.episodeClicks();
   }
 }
 
@@ -290,7 +307,8 @@ var getCalendar = {
         monitored : episode.monitored,
         status : 'toBeAired',
         seriesTitle : episode.series.title,
-        id : episode.id
+        id : episode.id,
+        seriesId : episode.series.id,
       }
 
       if (new Date(episode.airDateUtc).valueOf() >= new Date().setHours(0, 0, 0, 0).valueOf() && new Date(episode.airDateUtc).valueOf() <= tomorrow.valueOf()) {
@@ -309,6 +327,7 @@ var getCalendar = {
     $(".list .later .calendar-show").append(laterList);
 
     getCalendar.bind();
+    create.episodeClicks();
 
     // add wanted list.
     getWantedEpisodes.connect();
@@ -349,6 +368,9 @@ var getCalendar = {
 // get list of all series and seasons
 var getSeries = {
   data : {},
+  setData: function (data) { 
+    getSeries.data = data;
+  },
   connect : function() {
     sonarr.getData("series", getSeries.generate);
   },
@@ -359,7 +381,8 @@ var getSeries = {
     app.cleanList();
 
     // store data in function
-    getSeries.data = data;
+    getSeries.setData(data);
+
     var episodes = '';
     $.each(data.sort(seriesComparator), function(index, value) {
       getSeries.add(value);
@@ -398,6 +421,13 @@ var getSeries = {
   },
   makeShow : function(seriesId) {
     var showData = {};
+    sonarr.getData("series", getSeries.setData);
+
+
+    if(getSeries.data[0] === undefined){
+      return;
+    }
+
     $.each(getSeries.data, function(index, value) {
       if (value.id == seriesId) {
         showData = value;
@@ -464,11 +494,11 @@ var getEpisodes = {
       $('.list .row.episodes .episode.' + $(this).val() + '').show();
     });
     $('.list .row.episodes .episode.' + $('.list .row.episodes #selected-season').val()).show();
+    create.episodeClicks();
   }
 }
 
 var getWantedEpisodes = {
-  list : '',
   connect : function() {
     sonarr.getData("wanted", getWantedEpisodes.generate);
   },
@@ -481,7 +511,6 @@ var getWantedEpisodes = {
 
     // remove wanted items
     $('.list .calendar.wanted .calendar-show > .wanted').remove();
-    getWantedEpisodes.list = '';
     var wantedList = '';
     // generate list
     $.each(data, function(index, episode) {
@@ -493,7 +522,8 @@ var getWantedEpisodes = {
         monitored : episode.monitored,
         status : 'missing',
         seriesTitle : episode.series.title,
-        id : episode.id
+        id : episode.id,
+        seriesId : episode.series.id
       }
       wantedList += create.episode(data)
     });
@@ -501,7 +531,8 @@ var getWantedEpisodes = {
     $('.calendar.wanted  .calendar-date .num').html("<span>" + totalRecords.toString() + "<span>");
 
     $('.list .calendar.wanted .calendar-show').html('').append(wantedList);
-    getWantedEpisodes.click();
+
+    create.episodeClicks();
   },
   searchEpisode : function(episodeId) {
     if (episodeId < 1) {
@@ -516,15 +547,6 @@ var getWantedEpisodes = {
         name : "episodesearch",
         episodeIds : episodeId
       }
-    });
-  },
-  click : function() {
-    $(".wanted .button").click(function() {
-      var episodeId = $(this).parentsUntil('.wanted').attr("data-episodeId");
-      $(this).parentsUntil('.wanted').animate({
-        'opacity' : '0.5'
-      });
-      getWantedEpisodes.searchEpisode(episodeId);
     });
   }
 }
@@ -599,13 +621,13 @@ var menu = {
 
 // save tabs to localstorage for caching
 function setLocalStorage() {
-  if (localStorage.getItem('wanted') === null) {
+  if (localStorage.getItem('wanted') === undefined) {
     localStorage.setItem('wanted', undefined);
   }
-  if (localStorage.getItem('calendar') === null) {
+  if (localStorage.getItem('calendar') === undefined) {
     localStorage.setItem('calendar', undefined);
   }
-  if (localStorage.getItem('history') === null) {
+  if (localStorage.getItem('history') === undefined) {
     localStorage.setItem('history', undefined);
   }
 }

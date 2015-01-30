@@ -93,6 +93,7 @@ var create = {
       "grabbed" : 'Grabbed',
       "episodeFileDeleted" : 'Deleted',
       "hide" : '',
+      "downloaded": "downloaded",
       "missing" : 'Aired ',
       "toBeAired" : 'Airs ',
       "downloadFailed" : 'Failed'
@@ -100,6 +101,7 @@ var create = {
     // add class depening on current status
     var classes = {
       "downloadFolderImported" : 'label success',
+      "downloaded" : 'label success',
       "grabbed" : 'label secondary',
       "episodeFileDeleted" : 'label alert',
       "hide" : 'hide',
@@ -412,6 +414,7 @@ var getSeries = {
 
     // add identifier to toggle season panel
     template.attr('serie-id', serie.id);
+    template.attr('serie-title', serie.sortTitle);
     // remove season line to prevent double first line
     template.find('.serie-seasons').empty();
     if ($('.row.series').length === 0) {
@@ -446,6 +449,21 @@ var getSeries = {
       getSeries.makeShow(seriesId);
       $(this).parent().find(".serie-seasons").toggle();
     });
+    getSeries.filter();
+  }, 
+  filter : function() { 
+    /*add filter option*/
+    var filter = '<input id="series-filter" type="text" placeholder="filter by name">' 
+    $('.list').prepend(filter);
+    $('.row.series').show();
+    $( "#series-filter" ).focus();
+    $( "#series-filter" ).on('input',function(){
+      console.log($(this).val()); 
+      if($('.row.series[serie-title*='+$(this).val()+']').length){
+        $('.row.series').hide();
+        $('.row.series[serie-title*='+$(this).val()+']').show();
+      }
+    });
   }
 }
 
@@ -472,6 +490,9 @@ var getEpisodes = {
         monitored : episode.monitored,
         status : 'missing',
         id : episode.id
+      }
+      if(episode.hasFile){
+        data.status = "downloaded"; 
       }
       seasons = episode.series.seasons;
       // reverse order

@@ -94,8 +94,8 @@ var create = {
       "episodeFileDeleted" : 'Deleted',
       "hide" : '',
       "downloaded": "downloaded",
-      "missing" : 'Aired ',
-      "toBeAired" : 'Airs ',
+      "missing" : 'Missing ',
+      "toBeAired" : '',
       "downloadFailed" : 'Failed'
     }
     // add class depening on current status
@@ -105,7 +105,7 @@ var create = {
       "grabbed" : 'label secondary',
       "episodeFileDeleted" : 'label alert',
       "hide" : 'hide',
-      "missing" : 'missing',
+      "missing" : 'label secondary',
       "toBeAired" : 'tba',
       "downloadFailed" : 'label alert'
     }
@@ -136,11 +136,15 @@ var create = {
     }
 
     // episode info
-    episode.find(".episode-info .date").html(moment(new Date(data.airDateUtc)).fromNow());
     episode.find(".episode-info .status").html(event[data.status]);
+    var aired = moment(new Date(data.airDateUtc)).fromNow();
+    if(data.episodeQuality === undefined){
+      if(aired.indexOf("in") > -1){aired = "Airs " + aired;} else { aired = "Aired " + aired; }
+    }
+    episode.find(".episode-info .date").html(aired);
     // quality
     if (data.episodeQuality !== undefined) {
-      episode.find(".episode-info .status").append("<span class='label secondary'> " + data.episodeQuality + "</span>");
+      episode.find(".episode-info .status").prepend("<span class='label secondary'> " + data.episodeQuality + "</span>");
     }
     // change classes
     episode.find(".episode-info .status").attr('class', classes[data.status]);
@@ -288,7 +292,7 @@ var getCalendar = {
       return;
     }
     console.log("calender");
-    app.cleanList();
+    //    app.cleanList();
 
     var todayList = '', tomorrowList = '', laterList = '';
 
@@ -324,9 +328,9 @@ var getCalendar = {
     });
 
     // add episodes to calender
-    $(".list .today .calendar-show").append(todayList);
-    $(".list .tomorrow .calendar-show").append(tomorrowList);
-    $(".list .later .calendar-show").append(laterList);
+    $(".list .today .calendar-show").html(todayList);
+    $(".list .tomorrow .calendar-show").html(tomorrowList);
+    $(".list .later .calendar-show").html(laterList);
 
     getCalendar.bind();
     create.episodeClicks();
@@ -335,7 +339,6 @@ var getCalendar = {
     getWantedEpisodes.connect();
   },
   addDates : function() {
-    console.log('addDates');
     var dates = '';
     // TODO improve how to show code
     var template = $('.templates #calendar');
@@ -355,10 +358,11 @@ var getCalendar = {
     template.find('.calendar-date #title').text('Later');
     dates += template.html();
 
-    $('.list').prepend(dates);
+    if($('.list .today').length == 0){
+      $('.list').html(dates);
+      $('.wanted .calendar-show').hide();
+    }
     // $('.list .show').remove();
-    $('.wanted .calendar-show').hide();
-
   },
   bind : function(value) {
     $('.calendar-date').unbind('click').click(function() {

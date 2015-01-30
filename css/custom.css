@@ -253,7 +253,7 @@ p {
 }
 
 .label .label { 
-  margin: -.25rem -.5rem -.25rem 0.8rem!important;
+  margin: -.25rem .8rem -.25rem -.5rem!important;
 }
 
  .episodes.row { 
@@ -307,7 +307,7 @@ p {
   vertical-align: top;
   color: #000000;
   cursor: pointer;
-  -webkit-text-stroke: 1px #008CBA
+  -webkit-text-stroke: 1px #008CBA;
 }
 .show .episode .watched-indicator { 
    color: black; 
@@ -323,6 +323,24 @@ p {
   font-weight: bold;
   margin-right: .5rem;
   margin-left: 0;
+}
+
+.list .series { 
+  
+}
+
+.list .series:after { 
+  content: '';
+  display: block;
+  width: 90%;
+  margin-left: 5%;
+  height: .4rem;
+  margin-top: 1rem;
+  border-bottom: .125rem solid #008CBA;
+}
+
+.serie-general .small-9 { 
+  padding-left: 0; 
 }
 
 

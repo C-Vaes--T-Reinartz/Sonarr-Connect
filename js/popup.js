@@ -200,11 +200,11 @@ var create = {
       });
     }
     show.find("#network").html(showdata.network);
-    show.find("#start-year").html("Started " + showdata.year);
-    show.find("#show-status").html(showdata.status);
-    show.find("#seasons").html("Seasons " + showdata.seasonCount);
+    show.find("#start-year").append("Started " + showdata.year);
+    show.find("#show-status").append(showdata.status);
+    show.find("#seasons").append("Seasons " + showdata.seasonCount);
     show.find("#episodes").html(showdata.episodeFileCount + "/" + showdata.episodeCount).attr('class', calculateEpisodeQuoteColor(showdata.episodeFileCount, showdata.episodeCount, showdata.monitored, showdata.status));
-    show.find("#air-time").html(showdata.airTime);
+    show.find("#air-time").append(showdata.airTime);
     show.find("#summary").html(showdata.overview);
 
     // change html to string and return it.
@@ -651,14 +651,17 @@ var menu = {
 
 // save tabs to localstorage for caching
 function setLocalStorage() {
-  if (localStorage.getItem('wanted') === undefined) {
+  if (localStorage.getItem('wanted') === null) {
     localStorage.setItem('wanted', undefined);
   }
-  if (localStorage.getItem('calendar') === undefined) {
+  if (localStorage.getItem('calendar') === null) {
     localStorage.setItem('calendar', undefined);
   }
-  if (localStorage.getItem('history') === undefined) {
+  if (localStorage.getItem('history') === null) {
     localStorage.setItem('history', undefined);
+  }  
+  if (localStorage.getItem('series') === null) {
+    localStorage.setItem('series', undefined);
   }
 }
 

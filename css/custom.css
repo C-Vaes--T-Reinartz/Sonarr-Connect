@@ -223,7 +223,7 @@ p {
 }
 
 .summary { 
-  margin-top: 2rem; 
+  margin-top: 1rem; 
 }
 
 .calendar-date .title { 
@@ -256,7 +256,7 @@ p {
   margin: -.25rem .8rem -.25rem -.5rem!important;
 }
 
- .episodes.row { 
+.episodes.row { 
   padding: 1rem;
 }
 
@@ -281,7 +281,7 @@ p {
   clear: both;
 }
 .show .episode { 
-   border-color: white; 
+  border-color: white; 
 }
 .episode .episode-title { 
   font-size: 1.2rem;
@@ -310,7 +310,7 @@ p {
   -webkit-text-stroke: 1px #008CBA;
 }
 .show .episode .watched-indicator { 
-   color: black; 
+  color: black; 
 }
 
 .episode .episode-info { 
@@ -326,7 +326,7 @@ p {
 }
 
 .list .series { 
-  
+
 }
 
 .list .series:after { 
@@ -357,6 +357,15 @@ p {
 
 .show-info #title { 
   text-shadow:  2px 2px 6px #000;
+}
+
+
+.show-info h6 {
+  margin-bottom: 0;
+}
+.show-info i {
+  display: inline-block;
+  width: 1.2rem;
 }
 
 .show-info h2 { 

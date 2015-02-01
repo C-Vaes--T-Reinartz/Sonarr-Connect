@@ -11,21 +11,19 @@
     <script src="js/moment-with-locales.js"></script>
     <script src="js/popup-util.js"></script>
     <script src="js/popup.js"></script>
-<!--    <script src="js/background.js"></script>-->
   </head>
   <body>
     <div class="templates" style="display: none;">
 
-      <!--- general episode temlate --->
+      <!--- general episode template --->
       <div id="episode">
         <div class="episode" >
           <div class="small-10 columns episode-info"> 
             <div class="series-title"></div>
-            <div class="episode-title"><span class="episodenum">x01</span><span class="episodename">The Calm</span></div>
-            <div class="episode-info "><span class="status label">downloaded 720p</span><span class="date">1 week ago</span></div>
+            <div class="episode-title"><span class="episodenum"></span><span class="episodename"></span></div>
+            <div class="episode-info "><span class="status label"></span><span class="date"></span></div>
           </div>
           <div class="small-2 columns watched-indicator fi-bookmark">
-
           </div> 
         </div>
       </div>
@@ -44,6 +42,7 @@
           </div>
         </div>
       </div>
+      
       <!--       series list-->
       <div class="row series" id="series">
         <div class="serie-general">
@@ -79,12 +78,11 @@
       </div>
 
       <!-- show template -->
-
       <div class="show template"> 
         <div class="show"> 
           <div class="row banner"></div>
           <div class="row show-information">
-            <div class="small-4 poster"><img src="http://nas.tomreinartz.com:8989/MediaCover/1/poster.jpg?lastWrite=635556457970000000" style="width: 100%; height: auto;"></div>
+            <div class="small-4 poster"><img src="" style="width: 100%; height: auto;"></div>
           </div>
           <div class="small-7 small-offset-5 show-info">
             <h2><span id="title"></span></h2>
@@ -115,10 +113,6 @@
 
   <!--  end of templates-->
   <div class="icon-bar three-up menu">
-    <!--      <a class="item wanted active" data-mode="wanted"> <label>Wanted
-<span class="num label alert round"></span>
-</label>
-</a> -->
     <a class="item calendar active" data-mode="calendar"> <label>Calendar</label>
     </a> 
     <a class="item series" data-mode="series"> <label>Series</label>

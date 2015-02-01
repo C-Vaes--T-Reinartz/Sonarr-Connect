@@ -12,6 +12,9 @@ function checkUrl(url) {
   if(url.substr(-1) !== '/')
     url = url + '/';
 
+  if(url.indexOf("http://") == -1 && url.indexOf("https://") == -1)
+    url = "http://" + url;
+
   return url;
 }
 
@@ -24,7 +27,10 @@ var sonarrConfig = {};
 function test_connection() {
   var apiKey = document.getElementById('apiKey').value;
   var url = checkUrl(document.getElementById('url').value);
+  document.getElementById('url').value = url;
   var status = document.getElementById('connectionStatus');
+
+  status.textContent = 'Connecting to ' + url;
   $.ajax({
     url: url + 'api/system/status?apiKey=' + apiKey,
     statusCode: {
@@ -36,9 +42,13 @@ function test_connection() {
       }
     },
     complete : function(data){
-      status.textContent = 'Connected!';
-      getInstallationInformation(data.responseJSON);
-      sonarrConfig = data.responseJSON;
+      if(typeof(data.responseJSON) != "undefined"){
+        status.textContent = 'Connection succesfull!';
+        getInstallationInformation(data.responseJSON);
+        sonarrConfig = data.responseJSON;
+      } else { 
+        status.textContent = 'Credentials or url are not correct';
+      }
     }
 
   });	  

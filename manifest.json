@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Sonarr extension",
-  "description": "Show upcoming and missing epsisodes in Sonarr",
-  "version": "1.1.2",
+  "name": "SonarrConnect",
+  "description": "Show upcoming/missing episodes, your series and history from Sonarr",
+  "version": "1.2.0",
   
   "options_page": "options.html",
   "browser_action": {

@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "SonarrConnect",
+  "name": "Sonarr Connect",
   "description": "Show upcoming/missing episodes, your series and history from Sonarr",
   "version": "1.2.0",
   

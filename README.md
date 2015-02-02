@@ -1,0 +1,1 @@
+# Sonarr-extention-chrome

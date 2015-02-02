@@ -1,9 +1,9 @@
 var background = {
   standalone : function() {
-    //app.run();
+    sonarr.getData("history", background.getItemsInHistory);
   },
-  getItemsInHistory : function () { 
-    data = $.parseJSON(localStorage.getItem('wanted'));
+  getItemsInHistory : function (data) { 
+    //data = $.parseJSON(localStorage.getItem('wanted'));
     var num = data.totalRecords.toString();
     background.setBadge(num);
     console.log(num);
@@ -20,5 +20,4 @@ background.getItemsInHistory();
 chrome.alarms.create("getBackgroundData", {periodInMinutes: 5} );
 chrome.alarms.onAlarm.addListener(function(alarm) {
   background.standalone();
-  background.getItemsInHistory();
 });

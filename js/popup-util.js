@@ -30,7 +30,7 @@ function formatDate(date, positiveOffset) {
 
 function getImageUrl(url) {
     var start = url.url.indexOf('MediaCover')
-    var newUrl = app.settings.url + url.url.substring(start);
+    var newUrl = app.settings.url + "api/" +  url.url.substring(start) + "&apikey=" + app.settings.apiKey;
     return newUrl;
 }
 

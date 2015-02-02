@@ -318,6 +318,12 @@ var getCalendar = {
       }
 
       if (new Date(episode.airDateUtc).valueOf() >= new Date().setHours(0, 0, 0, 0).valueOf() && new Date(episode.airDateUtc).valueOf() <= tomorrow.valueOf()) {
+        if(episode.hasFile){
+          data.status = "downloaded"; 
+        } else { 
+          data.status = "missing"; 
+        }
+
         todayList += create.episode(data, history);
       } else if (new Date(episode.airDateUtc).valueOf() >= tomorrow.valueOf() && new Date(episode.airDateUtc).valueOf() <= dayAfterTomorrow.valueOf()) {
         tomorrowList += create.episode(data, history);
@@ -555,6 +561,11 @@ var getWantedEpisodes = {
         id : episode.id,
         seriesId : episode.series.id
       }
+
+      if(episode.hasFile){
+        data.status = "downloaded"; 
+      }
+
       wantedList += create.episode(data)
     });
     // set num items in button

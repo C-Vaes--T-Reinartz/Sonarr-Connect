@@ -626,7 +626,7 @@ var bottomMenu = {
   },
   refreshList : function() {
     app.run();
-    background.getItemsInHistory();
+    background.standalone();
   }
 }
 
@@ -635,7 +635,7 @@ var menu = {
   bind : function() {
     $('.menu .item').unbind("click").click(function() {
       var mode = $(this).attr('data-mode');
-      if (app.settings.mode !== mode || mode !== 'Series') {
+      if (app.settings.mode !== mode) {
         // change active item
         $('.menu .item').removeClass('active');
         $(this).addClass('active');
@@ -680,29 +680,39 @@ var app = {
     // prepare local storage
     setLocalStorage();
 
-    if (app.settings.mode == 'getOptions' || app.settings.apiKey === '' || app.settings.url === '') {
+    if (app.settings.mode == 'getOptions') {
       getOptions();
       return false;
     }
-    if (app.settings.mode === "wanted") {
-      getWantedEpisodes.connect();
-    } else if (app.settings.mode === "calendar") {
-      getCalendar.connect();
-    } else if (app.settings.mode === "series") {
-      getSeries.connect();
-    } else if (app.settings.mode === "history") {
-      getHistory.connect();
+
+    if(app.settings.apiKey.length < 10 || app.settings.url == ""){
+      $(".list").html("<h1>Missing apikey or url please setup config</h1>");
+      return false;      
     }
-    // bind actions to the menu
-    menu.bind();
-    // bind bottom menu
-    bottomMenu.bind();
+
+    //if we are in the popup view
+    if($(".list").length){
+      if (app.settings.mode === "wanted") {
+        getWantedEpisodes.connect();
+      } else if (app.settings.mode === "calendar") {
+        getCalendar.connect();
+      } else if (app.settings.mode === "series") {
+        getSeries.connect();
+      } else if (app.settings.mode === "history") {
+        getHistory.connect();
+      }
+      // bind actions to the menu
+      menu.bind();
+      // bind bottom menu
+      bottomMenu.bind();
+    }
   },
   cleanList : function() {
     // clean list
     $(".list *").remove();
   }
 }
-
-// run app when extension is opened
-app.run();
+$(document).ready(function(){
+  // run app when extension is opened
+  app.run();
+});

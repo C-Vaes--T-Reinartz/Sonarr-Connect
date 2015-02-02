@@ -1,1 +1,1 @@
-# Sonarr-extention-chrome
+# Sonarr Connect

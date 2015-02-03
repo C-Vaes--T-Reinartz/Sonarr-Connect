@@ -594,16 +594,9 @@ var getWantedEpisodes = {
 
 // set variable from chrome storage option fields
 // stored in chrome.storage.
-function getOptions() {
-  chrome.storage.sync.get({
-    apiKey : app.settings.apiKey,
-    url : app.settings.url,
-    numberOfDaysCalendar : app.settings.numberOfDaysCalendar,
-    wantedItems : app.settings.wantedItems,
-    historyItems : app.settings.historyItems,
-    calendarEndDate : app.settings.calendarEndDate,
-    sonarrConfig : app.settings.sonarrConfig
-  }, function(items) {
+// @param callback : function
+function getOptions(callBack) {
+  chrome.storage.sync.get(function(items) {
     app.settings.apiKey = items.apiKey;
     app.settings.url = items.url;
     app.settings.mode = "calendar";
@@ -612,7 +605,9 @@ function getOptions() {
     app.settings.historyItems = items.historyItems;
     app.settings.calendarEndDate = items.calendarEndDate;
     app.settings.sonarrConfig = items.sonarrConfig;
-    app.run();
+    app.settings.backgroundInterval = items.backgroundInterval;
+
+    callBack(items);
     console.log('get options from chrome storage');
   });
 }
@@ -661,7 +656,7 @@ var menu = {
 }
 
 // save tabs to localstorage for caching
-function setLocalStorage() {
+function prepLocalStorage() {
   if (localStorage.getItem('wanted') === null) {
     localStorage.setItem('wanted', undefined);
   }
@@ -685,14 +680,15 @@ var app = {
     wantedItems : 15,
     historyItems : 15,
     calendarEndDate : (new Date() + 7),
-    sonarrConfig : {}
+    sonarrConfig : {},
+    backgroundInterval: 5
   },
   run : function() {
     // prepare local storage
-    setLocalStorage();
+    prepLocalStorage();
 
     if (app.settings.mode == 'getOptions') {
-      getOptions();
+      getOptions(app.run);
       return false;
     }
 

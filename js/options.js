@@ -69,12 +69,14 @@ function save_options() {
   var numberOfDaysCalendar = document.getElementById('numberOfDaysCalendar').value;
   var wantedItems = document.getElementById('wantedItems').value;
   var historyItems = document.getElementById('historyItems').value;
+  var backgroundInterval = document.getElementById('backgroundInterval').value;
   chrome.storage.sync.set({
     apiKey: apiKey,
     url: url,
     numberOfDaysCalendar : numberOfDaysCalendar,
     wantedItems : wantedItems,
     historyItems : historyItems,
+    backgroundInterval : backgroundInterval,
     sonarrConfig : sonarrConfig,
   }, function() {
     // Update status to let user know options were saved.
@@ -97,6 +99,7 @@ function restore_options() {
     numberOfDaysCalendar : 7,
     wantedItems: 15,
     historyItems: 15,
+    backgroundInterval : 5
   }, function(items) {
     document.getElementById('apiKey').value = items.apiKey;
     document.getElementById('url').value = items.url;
@@ -104,6 +107,7 @@ function restore_options() {
 
     document.getElementById('wantedItems').value = items.wantedItems;
     document.getElementById('historyItems').value = items.historyItems;
+    document.getElementById('backgroundInterval').value = items.backgroundInterval;
   });
 }
 

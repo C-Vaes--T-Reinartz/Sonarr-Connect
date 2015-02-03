@@ -280,6 +280,9 @@ var getHistory = {
     $('.list').html('<div class="episodes row"></div>')
     $('.list .episodes').append(historyList);
     create.episodeClicks();
+    
+    //remove history list
+    delete historyList;
   }
 }
 
@@ -343,10 +346,18 @@ var getCalendar = {
     $(".list .today .calendar-show").html(todayList);
     $(".list .tomorrow .calendar-show").html(tomorrowList);
     $(".list .later .calendar-show").html(laterList);
-
+    
+    
+    
+    
+    
     getCalendar.bind();
     create.episodeClicks();
 
+    delete todayList;
+    delete tomorrowList;
+    delete laterList;
+    
     // add wanted list.
     getWantedEpisodes.connect();
   },
@@ -402,7 +413,8 @@ var getSeries = {
     getSeries.setData(data);
 
     var episodes = '';
-    var shows = '';
+    //create shows variable
+    shows = '';
 
     for (var key in data.sort(seriesComparator)) {
       show = data[key];
@@ -412,6 +424,9 @@ var getSeries = {
     $(".list").append(shows);
 
     getSeries.bind();
+    
+    //remove shows variable
+    delete shows;
   },
 
   add : function(serie) {
@@ -504,7 +519,7 @@ var getEpisodes = {
   generate : function(data) {
     // clear list
     $('.list .row.episodes .episode').remove();
-    var episodes = '';
+    episodes = '';
     var seasons = {};
 
     // add episodes
@@ -547,6 +562,8 @@ var getEpisodes = {
     });
     $('.list .row.episodes .episode.' + $('.list .row.episodes #selected-season').val()).show();
     create.episodeClicks();
+    
+    delete episodes;
   }
 }
 
@@ -564,7 +581,9 @@ var getWantedEpisodes = {
 
     // remove wanted items
     $('.list .calendar.wanted .calendar-show > .wanted').remove();
-    var wantedList = '';
+    
+    //create wantedlist
+    wantedList = '';
     // generate list
     for (var key in data) {
       episode = data[key];
@@ -590,8 +609,10 @@ var getWantedEpisodes = {
     $('.calendar.wanted  .calendar-date .num').html("<span>" + totalRecords.toString() + "<span>");
 
     $('.list .calendar.wanted .calendar-show').html('').append(wantedList);
-
     create.episodeClicks();
+    
+    //delete wantedlist from memory
+    delete wantedList;
   },
   searchEpisode : function(episodeId) {
     if (episodeId < 1) {

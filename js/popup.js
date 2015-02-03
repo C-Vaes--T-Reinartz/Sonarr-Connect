@@ -558,7 +558,8 @@ var getWantedEpisodes = {
     if (app.settings.mode !== "calendar") {
       // return;
     }
-    var totalRecords = data.totalRecords;
+    var totalRecords = data.totalRecords.toString();
+    chrome.browserAction.setBadgeText({text: totalRecords});
     data = data.records;
 
     // remove wanted items
@@ -649,7 +650,6 @@ var bottomMenu = {
   },
   refreshList : function() {
     app.run();
-    background.standalone();
   }
 }
 
@@ -664,7 +664,6 @@ var menu = {
         $(this).addClass('active');
         // change mode
         app.settings.mode = mode;
-        console.log(mode);
         // rerun app
         app.run();
       }

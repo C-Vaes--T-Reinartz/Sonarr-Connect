@@ -258,9 +258,10 @@ var getHistory = {
     data = data.records;
     app.cleanList();
     var historyList = '';
-    $.each(data, function(index, value) {
+    for (var key in data) {
+      value = data[key];
       // create data for episode
-      data = {
+      props = {
         episodeNumber : value.episode.episodeNumber,
         seasonNumber : value.episode.seasonNumber,
         title : value.episode.title,
@@ -274,8 +275,8 @@ var getHistory = {
 
       }
       // getHistory.add(data);
-      historyList += create.episode(data, history);
-    });
+      historyList += create.episode(props, history);
+    }
     $('.list').html('<div class="episodes row"></div>')
     $('.list .episodes').append(historyList);
     create.episodeClicks();
@@ -304,8 +305,9 @@ var getCalendar = {
     dayAfterTomorrow.setHours(0, 0, 0, 0);
 
     // generate lists
-    $.each(data, function(index, episode) {
-      data = {
+    for (var key in data) {
+      episode = data[key];
+      props = {
         episodeNumber : episode.episodeNumber,
         seasonNumber : episode.seasonNumber,
         title : episode.title,
@@ -319,19 +321,19 @@ var getCalendar = {
 
       if (new Date(episode.airDateUtc).valueOf() >= new Date().setHours(0, 0, 0, 0).valueOf() && new Date(episode.airDateUtc).valueOf() <= tomorrow.valueOf()) {
         if(episode.hasFile){
-          data.status = "downloaded"; 
+          props.status = "downloaded"; 
         } else { 
-          data.status = "missing"; 
+          props.status = "missing"; 
         }
 
-        todayList += create.episode(data, history);
+        todayList += create.episode(props, history);
       } else if (new Date(episode.airDateUtc).valueOf() >= tomorrow.valueOf() && new Date(episode.airDateUtc).valueOf() <= dayAfterTomorrow.valueOf()) {
-        tomorrowList += create.episode(data, history);
+        tomorrowList += create.episode(props, history);
       } else {
-        laterList += create.episode(data, history);
+        laterList += create.episode(props, history);
       }
 
-    });
+    }
 
     // add episodes to calender
     $(".list .today .calendar-show").html(todayList);
@@ -396,9 +398,14 @@ var getSeries = {
     getSeries.setData(data);
 
     var episodes = '';
-    $.each(data.sort(seriesComparator), function(index, value) {
-      getSeries.add(value);
-    });
+    var shows = '';
+
+    for (var key in data.sort(seriesComparator)) {
+      show = data[key];
+      shows += getSeries.add(show);
+    }
+
+    $(".list").append(shows);
 
     getSeries.bind();
   },
@@ -423,14 +430,14 @@ var getSeries = {
     template.find(".serie-general #episodesCount").html(serie.episodeFileCount + "/" + serie.episodeCount).attr('class', calculateEpisodeQuoteColor(serie.episodeFileCount, serie.episodeCount, serie.monitored, serie.status));
 
     // add identifier to toggle season panel
-    template.attr('serie-id', serie.id);
-    template.attr('serie-title', serie.sortTitle);
+    template.find('.series').attr('serie-id', serie.id);
+    template.find('.series').attr('serie-title', serie.sortTitle);
     // remove season line to prevent double first line
     template.find('.serie-seasons').empty();
     if ($('.row.series').length === 0) {
       $(".list").scrollTop(0);
     }
-    template.appendTo(".list");
+    return template.html();
   },
   makeShow : function(seriesId) {
     var showData = {};
@@ -441,11 +448,12 @@ var getSeries = {
       return;
     }
 
-    $.each(getSeries.data, function(index, value) {
+    for (var key in getSeries.data) {
+      value = getSeries.data[key];
       if (value.id == seriesId) {
         showData = value;
       }
-    });
+    }
 
     html = create.show(showData);
     // clear list
@@ -496,8 +504,10 @@ var getEpisodes = {
     var seasons = {};
 
     // add episodes
-    $.each(data, function(index, episode) {
-      data = {
+
+    for (var key in data) {
+      episode = data[key];
+      props = {
         episodeNumber : episode.episodeNumber,
         seasonNumber : episode.seasonNumber,
         title : episode.title,
@@ -507,18 +517,20 @@ var getEpisodes = {
         id : episode.id
       }
       if(episode.hasFile){
-        data.status = "downloaded"; 
+        props.status = "downloaded"; 
       }
       seasons = episode.series.seasons;
       // reverse order
-      episodes = create.episode(data) + episodes;
-    });
+      episodes = create.episode(props) + episodes;
+    }
 
     // add seasons to selector
     $('.list .row.episodes #selected-season option').remove();
-    $.each(seasons, function(index, season) {
+
+    for (var key in seasons) {
+      season = seasons[key];
       $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Season ' + season.seasonNumber + '</option>');
-    });
+    }
 
     $('.list .row.episodes').append(episodes);
     $('.list .row.episodes .episode').hide();
@@ -549,8 +561,9 @@ var getWantedEpisodes = {
     $('.list .calendar.wanted .calendar-show > .wanted').remove();
     var wantedList = '';
     // generate list
-    $.each(data, function(index, episode) {
-      data = {
+    for (var key in data) {
+      episode = data[key];
+      props = {
         episodeNumber : episode.episodeNumber,
         seasonNumber : episode.seasonNumber,
         title : episode.title,
@@ -563,11 +576,11 @@ var getWantedEpisodes = {
       }
 
       if(episode.hasFile){
-        data.status = "downloaded"; 
+        props.status = "downloaded"; 
       }
 
-      wantedList += create.episode(data)
-    });
+      wantedList += create.episode(props)
+    }
     // set num items in button
     $('.calendar.wanted  .calendar-date .num').html("<span>" + totalRecords.toString() + "<span>");
 

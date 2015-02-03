@@ -38,7 +38,7 @@ var sonarr = {
     url = url.replace("{calendarEndDate}", formatDate(new Date(), app.settings.numberOfDaysCalendar));
 
     url = url.replace("{seriesId}", id);
-    url = url.replace("\{episodeId\}", id);
+    url = url.replace("{episodeId}", id);
 
     url = app.settings.url + url;
 
@@ -307,6 +307,7 @@ var getCalendar = {
     // generate lists
     for (var key in data) {
       episode = data[key];
+
       props = {
         episodeNumber : episode.episodeNumber,
         seasonNumber : episode.seasonNumber,
@@ -318,17 +319,20 @@ var getCalendar = {
         id : episode.id,
         seriesId : episode.series.id,
       }
-
+      //today
       if (new Date(episode.airDateUtc).valueOf() >= new Date().setHours(0, 0, 0, 0).valueOf() && new Date(episode.airDateUtc).valueOf() <= tomorrow.valueOf()) {
         if(episode.hasFile){
           props.status = "downloaded"; 
         } else { 
           props.status = "missing"; 
         }
-
         todayList += create.episode(props, history);
+
+      // tomorrow
       } else if (new Date(episode.airDateUtc).valueOf() >= tomorrow.valueOf() && new Date(episode.airDateUtc).valueOf() <= dayAfterTomorrow.valueOf()) {
         tomorrowList += create.episode(props, history);
+
+      //later
       } else {
         laterList += create.episode(props, history);
       }
@@ -610,18 +614,18 @@ var getWantedEpisodes = {
 // @param callback : function
 function getOptions(callBack) {
   chrome.storage.sync.get(function(items) {
+    console.log('get options from chrome storage');
     app.settings.apiKey = items.apiKey;
     app.settings.url = items.url;
-    app.settings.mode = "calendar";
     app.settings.numberOfDaysCalendar = items.numberOfDaysCalendar;
     app.settings.wantedItems = items.wantedItems;
     app.settings.historyItems = items.historyItems;
     app.settings.calendarEndDate = items.calendarEndDate;
     app.settings.sonarrConfig = items.sonarrConfig;
     app.settings.backgroundInterval = items.backgroundInterval;
+    app.settings.mode = "calendar";
 
     callBack(items);
-    console.log('get options from chrome storage');
   });
 }
 

@@ -24,10 +24,8 @@ var background = {
   }
 }
 
-$(document).ready(function(){
-  prepLocalStorage();
-  getOptions(background.setTimer);
-});
+prepLocalStorage();
+getOptions(background.setTimer);
 
 
 

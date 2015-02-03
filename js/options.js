@@ -109,6 +109,8 @@ function restore_options() {
     document.getElementById('historyItems').value = items.historyItems;
     document.getElementById('backgroundInterval').value = items.backgroundInterval;
   });
+  
+  	document.getElementById('versionNumber').appendChild(document.createTextNode(chrome.runtime.getManifest().version));
 }
 
 // add listeners to buttons

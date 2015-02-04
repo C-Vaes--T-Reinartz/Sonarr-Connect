@@ -29,9 +29,14 @@ function formatDate(date, positiveOffset) {
 }
 
 function getImageUrl(data) {
+  if(typeof data == "object"){
     var start = data.url.indexOf('MediaCover')
     var newUrl = app.settings.url + "api/" +  data.url.substring(start) + "&apikey=" + app.settings.apiKey;
     return newUrl;
+  } else {
+    var noimg = "";
+   return  noimg;
+  }
 }
 
 //format episodenumbers to match scene formatting

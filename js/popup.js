@@ -144,7 +144,7 @@ var create = {
     episode.find(".episode-info .date").html(aired);
     // quality
     if (data.episodeQuality !== undefined) {
-      episode.find(".episode-info .status").prepend("<span class='label secondary'> " + data.episodeQuality + "</span>");
+      episode.find(".episode-info .episode-info ").prepend("<span class='label secondary'> " + data.episodeQuality + "</span>");
     }
     // change classes
     episode.find(".episode-info .status").attr('class', classes[data.status]);

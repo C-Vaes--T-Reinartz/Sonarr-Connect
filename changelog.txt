@@ -1,15 +1,16 @@
 Version log
-1.3.1
+1.4.0
 Season 0 is called Specials now
 Options page will open automatically when extension is not configured
+Check if image url is set
 
-1.3
+1.3.0
 Updated badge behavior + added interval time in settings
 Fix images on protected environment
 Technical updates to better handle large amounts of data
 
 
-1.2
+1.2.0
 Change name to Sonarr Connect
 Added extra checks for url in config page.
 

@@ -103,7 +103,7 @@ var create = {
       "downloadFolderImported" : 'label success',
       "downloaded" : 'label success',
       "grabbed" : 'label secondary',
-      "episodeFileDeleted" : 'label alert',
+      "episodeFileDeleted" : 'label warning',
       "hide" : 'hide',
       "missing" : 'label secondary',
       "toBeAired" : 'tba',

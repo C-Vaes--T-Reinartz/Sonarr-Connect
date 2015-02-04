@@ -26,7 +26,7 @@ var sonarr = {
 
     // check for local data and return the data when possible.
     if (localStorage.getItem(mode) != "undefined" && mode != 'episode' && mode != 'episodes') {
-      //callback($.parseJSON(localStorage.getItem(mode)));
+      callback($.parseJSON(localStorage.getItem(mode)));
     }
 
     var  url = sonarr.settings[mode];
@@ -41,13 +41,6 @@ var sonarr = {
     url = url.replace("{episodeId}", id);
 
     url = app.settings.url + url;
-
-    if(mode == "series"){
-      $.getJSON("/series.json", function(remoteData) {
-          callback(remoteData);
-      });
-      return; 
-    }
 
     $.getJSON(url, function(remoteData) {
       localStorage.setItem(mode, JSON.stringify(remoteData));
@@ -452,7 +445,7 @@ var getSeries = {
     template.find('.serie-general #title').html(serie.title);
     template.find('.serie-general #network').html(serie.network);
     template.find('.serie-general #status').html(serie.status).attr('class', status[serie.status]);
-    //template.find(".serie-general #poster").attr('src', getImageUrl(serie.images[2]));
+    template.find(".serie-general #poster").attr('src', getImageUrl(serie.images[2]));
     template.find(".serie-general #episodesCount").html(serie.episodeFileCount + "/" + serie.episodeCount).attr('class', calculateEpisodeQuoteColor(serie.episodeFileCount, serie.episodeCount, serie.monitored, serie.status));
 
     // add identifier to toggle season panel
@@ -642,7 +635,16 @@ var getWantedEpisodes = {
 // stored in chrome.storage.
 // @param callback : function
 function getOptions(callBack) {
-  chrome.storage.sync.get(function(items) {
+  chrome.storage.sync.get({
+    apiKey: '',
+    url: 'http://localhost:8989',
+    numberOfDaysCalendar : 7,
+    wantedItems: 15,
+    historyItems: 15,
+    calendarEndDate: 7,
+    backgroundInterval : 5,
+    sonarrConfig : {}
+  }, function(items) {
     console.log('get options from chrome storage');
     app.settings.apiKey = items.apiKey;
     app.settings.url = items.url;
@@ -672,9 +674,11 @@ var bottomMenu = {
     });
   },
   openSonarrUrl : function() {
-    chrome.tabs.create({
-      url : app.settings.url
-    });
+    if(!(app.settings.url == "" || app.settings.url.length < 9)){
+      chrome.tabs.create({
+        url : app.settings.url
+      });
+    }
   },
   refreshList : function() {
     app.run();
@@ -731,13 +735,22 @@ var app = {
     // prepare local storage
     prepLocalStorage();
 
+    // bind actions to the menu
+    menu.bind();
+    // bind bottom menu
+    bottomMenu.bind();
+
     if (app.settings.mode == 'getOptions') {
       getOptions(app.run);
       return false;
     }
 
-    if(app.settings.apiKey.length < 10 || app.settings.url == ""){
-      $(".list").html("<h1>Missing apikey or url please setup config</h1>");
+    //show incase apikey and/or url is not set
+    if(app.settings.apiKey.length < 10 || (app.settings.url == "" || app.settings.url.length < 9)){
+      $(".list").html("<h1>Missing apikey or url please setup config by clicking \"Options\" below</h1>");
+      chrome.tabs.create({
+        url : "options.html"
+      });
       return false;      
     }
 
@@ -752,10 +765,7 @@ var app = {
       } else if (app.settings.mode === "history") {
         getHistory.connect();
       }
-      // bind actions to the menu
-      menu.bind();
-      // bind bottom menu
-      bottomMenu.bind();
+
     }
   },
   cleanList : function() {

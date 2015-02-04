@@ -28,9 +28,9 @@ function formatDate(date, positiveOffset) {
  return (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + (date.getDate()));
 }
 
-function getImageUrl(url) {
-    var start = url.url.indexOf('MediaCover')
-    var newUrl = app.settings.url + "api/" +  url.url.substring(start) + "&apikey=" + app.settings.apiKey;
+function getImageUrl(data) {
+    var start = data.url.indexOf('MediaCover')
+    var newUrl = app.settings.url + "api/" +  data.url.substring(start) + "&apikey=" + app.settings.apiKey;
     return newUrl;
 }
 

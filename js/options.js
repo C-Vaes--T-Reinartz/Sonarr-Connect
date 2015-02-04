@@ -9,7 +9,7 @@
 */
 function checkUrl(url) {
 
-  if(url.substr(-1) !== '/')
+  if(url.substr(-1) !== '/' && url.length > 7)
     url = url + '/';
 
   if(url.indexOf("http://") == -1 && url.indexOf("https://") == -1)

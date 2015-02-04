@@ -26,7 +26,7 @@ var sonarr = {
 
     // check for local data and return the data when possible.
     if (localStorage.getItem(mode) != "undefined" && mode != 'episode' && mode != 'episodes') {
-      callback($.parseJSON(localStorage.getItem(mode)));
+      //callback($.parseJSON(localStorage.getItem(mode)));
     }
 
     var  url = sonarr.settings[mode];
@@ -41,6 +41,13 @@ var sonarr = {
     url = url.replace("{episodeId}", id);
 
     url = app.settings.url + url;
+
+    if(mode == "series"){
+      $.getJSON("series.json", function(remoteData) {
+        callback(remoteData);
+      });
+      return;
+    }
 
     $.getJSON(url, function(remoteData) {
       localStorage.setItem(mode, JSON.stringify(remoteData));

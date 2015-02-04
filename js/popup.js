@@ -548,7 +548,10 @@ var getEpisodes = {
 
     for (var key in seasons) {
       season = seasons[key];
-      $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Season ' + season.seasonNumber + '</option>');
+	  if(season.seasonNumber != 0)
+		  $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Season ' + season.seasonNumber + '</option>');
+	  else
+		  $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Specials</option>');
     }
 
     $('.list .row.episodes').append(episodes);

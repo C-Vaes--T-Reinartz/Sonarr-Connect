@@ -1,63 +1,66 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+  <head>
     <title>Sonarr Connect Options</title>
     <script src="js/vendor/jquery.js"></script>
     <link rel="stylesheet" href="css/foundation.min.css">
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="row">
-        <h1>Sonarr Configuration</h1>
-        <div>
-            Url:
-            <input type="text" id="url">
-        </div>
-        <div>
-            Api key:
-            <input type="text" id="apiKey">
-        </div>
-        <div>
-            Number of days to show in calendar:
-            <input id="numberOfDaysCalendar" type="number"></input>
-        </div>
-        <div>
-            Wanted Items:
-            <input id="wantedItems" type="number"></input>
-        </div>
-        <div>
-            History Items:
-            <input id="historyItems" type="number"></input>
-        </div>
-        <div>
-            Background interval: time in minutes
-            <input id="backgroundInterval" type="number"></input>
-        </div>
-        <div>
+      <h1>Sonarr Configuration</h1>
+      <div>
+        Url:
+        <input type="text" id="url">
+      </div>
+      <div>
+        Api key:
+        <input type="text" id="apiKey">
+      </div>
+      <div>
+        Number of days to show in calendar:
+        <input id="numberOfDaysCalendar" type="number"/>
+      </div>
+      <div>
+        Wanted Items:
+        <input id="wantedItems" type="number"/>
+      </div>
+      <div>
+        History Items:
+        <input id="historyItems" type="number"/>
+      </div>
+      <div>
+        Background interval: time in minutes
+        <input id="backgroundInterval" type="number"/>
+      </div>
+      <div>
+        <input id="show-badge" value="true" type="checkbox">
+        <label for="show-badge">Show badge if you have more than 1 wanted item</label>
+      </div>
 
 
-            <div id="connectionStatus"></div>
-            <div>
-                Version: <span id="version"></span>
-            </div>
-            <div>
-                Branch: <span id="branch"></span>
-            </div>
+      <div id="connectionStatus"></div>
+      <div>
+        Version: <span id="version"></span>
+      </div>
+      <div>
+        Branch: <span id="branch"></span>
+      </div>
 
-            <button class="button" id="testConnection">Test connection</button>
-            <button class="button" id="save">Save</button>
-            <span id="status"></span>
+      <button class="button" id="testConnection">Test connection</button>
+      <button class="button" id="save">Save</button>
+      <span id="status"></span>
 
 
 
-            <div>
-                SonarrConnect chrome extension <span id="versionNumber"></span> is created by T. Reinartz(tomreinartz) and C. Vaes(Killer8)
-                <br />Copyright 2015
-            </div>
-        </div>
-        <script src="js/options.js"></script>
+      <div>
+        SonarrConnect chrome extension <span id="versionNumber"></span> is created by T. Reinartz(tomreinartz) and C. Vaes(Killer8)
+        <br />Copyright 2015
+      </div>
     </div>
-</body>
+    <script src="js/options.js"></script>
+    </div>
+  </body>
 
 </html>

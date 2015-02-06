@@ -20,6 +20,21 @@ function calculateEpisodeQuoteColor(episodeFileCount, totalEpisodeCount, monitor
     return label;
 }
 
+
+function setBadge(num){
+  if(app.settings.showBadge && !(num == '0' || num == 0 || num == '')){
+    if(typeof num == "number"){
+      num = num.toString();
+    }
+    console.log(typeof(num))
+    chrome.browserAction.setBadgeText({text: num});
+  } else { 
+    badge = new Object();
+    badge.text = '';
+    chrome.browserAction.setBadgeText(badge);
+  }
+}
+
 //format date to be used in api
 //TODO improve
 function formatDate(date, positiveOffset) {

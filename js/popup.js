@@ -70,6 +70,21 @@ var sonarr = {
       }
     });
   },
+  searchEpisode : function(episodeId) {
+    if (episodeId < 1) {
+      return false;
+    }
+    var url = app.settings.url + "api/Command?apikey=" + app.settings.apiKey;
+    console.log(url);
+    $.ajax({
+      type : "get",
+      url : url,
+      data : {
+        name : "episodesearch",
+        episodeIds : episodeId
+      }
+    });
+  },
   setEpisodeData: function (episodeData, callback){ 
     sonarr.setData('episode', episodeData, callback);
   }, 
@@ -122,7 +137,7 @@ var create = {
 
     episode.find('.episode').addClass('season-' + data.seasonNumber);
     episode.find('.episode').addClass('episode-' + data.episodeNumber);
-    episode.find('.episode, .watched-indicator').attr('data-episode-id', data.id);
+    episode.find('.episode, .watched-indicator, .auto-search').attr('data-episode-id', data.id);
 
     // episode title
     episode.find(".episodenum").html(formatEpisodeNumer(data.seasonNumber, data.episodeNumber));
@@ -170,6 +185,13 @@ var create = {
       var episodeId = $(this).data('episode-id');
       episodeMonitored.set(episodeId);
     });
+    $('.auto-search').unbind('click').on('click', function(){
+      var episodeId = $(this).data('episode-id');
+      sonarr.searchEpisode(episodeId);
+      $(this).css({'opacity': '.2'});
+    });
+
+
   },
   season : function(data) {
     var html = '';
@@ -548,10 +570,10 @@ var getEpisodes = {
 
     for (var key in seasons) {
       season = seasons[key];
-	  if(season.seasonNumber != 0)
-		  $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Season ' + season.seasonNumber + '</option>');
-	  else
-		  $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Specials</option>');
+      if(season.seasonNumber != 0)
+        $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Season ' + season.seasonNumber + '</option>');
+      else
+        $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Specials</option>');
     }
 
     $('.list .row.episodes').append(episodes);

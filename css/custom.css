@@ -324,6 +324,11 @@ p {
   margin-right: .5rem;
   margin-left: 0;
 }
+.episode .episode-info .auto-search {
+  float: right;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
 
 .list .series { 
 

@@ -11,7 +11,7 @@ var sonarr = {
     episode : "api/episode/\{episodeId}?apikey={apikey}",
     episodes : "api/episode?seriesId={seriesId}&apikey={apikey}",
     history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}",
-    manualDownload : "/api/release?episodeId={episodeId}&sort_by=releaseWeight&order=asc&apikey={apikey}"
+    manualDownload : "api/release?episodeId={episodeId}&sort_by=releaseWeight&order=asc&apikey={apikey}"
   },
   getData : function(mode, callback, id) {
 
@@ -26,7 +26,7 @@ var sonarr = {
     }
 
     // check for local data and return the data when possible.
-    if (localStorage.getItem(mode) != "undefined" && mode != "episode" && mode != "episodes") {
+    if (localStorage.getItem(mode) != "undefined" && mode != "episode" && mode != "episodes" && mode != "manualDownload") {
       callback($.parseJSON(localStorage.getItem(mode)));
     }
 
@@ -45,8 +45,10 @@ var sonarr = {
 
     $.getJSON(url, function(remoteData) {
       localStorage.setItem(mode, JSON.stringify(remoteData));
-      if(app.settings.mode == mode || mode == "episode" || mode == "episodes"){
+      if(app.settings.mode == mode || mode == "episode" || mode == "episodes" ){
         callback(remoteData);
+      } else if (mode == "manualDownload"){ 
+        callback(remoteData, id)
       }
     });
   },
@@ -163,7 +165,7 @@ var create = {
 
     episode.find(".episode").addClass("season-" + data.seasonNumber);
     episode.find(".episode").addClass("episode-" + data.episodeNumber);
-    episode.find(".episode, .watched-indicator, .auto-search").attr("data-episode-id", data.id);
+    episode.find(".episode, .watched-indicator, .auto-search, .manual-search").attr("data-episode-id", data.id);
 
     // episode title
     episode.find(".episodenum").html(formatEpisodeNumer(data.seasonNumber, data.episodeNumber));
@@ -215,6 +217,11 @@ var create = {
       var episodeId = $(this).data("episode-id");
       sonarr.searchEpisode(episodeId);
       $(this).css({"opacity": ".2"});
+    });    
+    $(".manual-search").unbind("click").on("click", function(){
+      var episodeId = $(this).data("episode-id");
+      sonarr.getDownloadData(manualDownload.showModal, episodeId);
+      $(this).css({"opacity": ".2"});
     });
 
 
@@ -261,6 +268,25 @@ var create = {
     return html;
   }
 
+}
+
+var manualDownload = { 
+  showModal : function (data, episodeId) { 
+    console.log(data);
+    console.log(episodeId);
+    $('div.episode[data-episode-id="'+episodeId+'"]').append("<div class='downloads clearfix small-12'></div>");
+    for (var key in data.sort(seedComparator)) {
+      value = data[key];
+      $('div.episode[data-episode-id="'+episodeId+'"] .downloads').append("<div class='download clearfix' data-download='"+
+        JSON.stringify(value)+"'><span class='label success'>"+
+        value.downloadProtocol+ "</span>" + 
+        value.quality.quality.name+ ", " + 
+        ((value.size/1024)/1024).toFixed(0) + "mb,"+ 
+        "<span class='label'>" + value.seeders +"/"+ value.leechers + 
+        "</span><span class='button tiny right' style='margin-bottom: .3rem !important'><i class='fi-download'></i></span></div>");
+    }
+
+  }
 }
 
 

@@ -43,7 +43,7 @@ function test_connection() {
     },
     complete : function(data){
       if(typeof(data.responseJSON) != "undefined"){
-        status.textContent = 'Connection succesfull!';
+        status.textContent = 'Connection successful!';
         getInstallationInformation(data.responseJSON);
         sonarrConfig = data.responseJSON;
       } else { 

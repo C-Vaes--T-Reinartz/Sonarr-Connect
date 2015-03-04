@@ -71,19 +71,19 @@ function seasonComparator(a, b) {
 
 
 //comparator to sort downloads by seed/leach ratio
-function seedComparator(a, b) {
+function downloadComparator(a, b) {
   //group by download quality name
-  if (a.quality.quality.name != b.quality.quality.name) {
-    if (a.quality.quality.name < b.quality.quality.name)
+  if (a.qualityWeight != b.qualityWeight) {
+    if (a.qualityWeight > b.qualityWeight)
       return -1;
-    if (a.quality.quality.name > b.quality.quality.name)
+    if (a.qualityWeight < b.qualityWeight)
       return 1;
     return 0;
   }
   //order by seeds
-  if (a.seeders > b.seeders)
+  if (a.ageMinutes > b.ageMinutes)
     return -1;
-  if (a.seeders < b.seeders)
+  if (a.ageMinutes < b.ageMinutes)
     return 1;
   return 0;
 }

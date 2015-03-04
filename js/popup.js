@@ -113,6 +113,21 @@ var sonarr = {
       }
     });
   },
+  downloadEpisode : function (data, callback) { 
+    var url = app.settings.url + "api/release?apikey=" + app.settings.apiKey;
+
+    $.ajax({
+      data: data,
+      type: "POST",
+      url: url,
+    }).done(function( data ) {
+      console.log(data);
+
+      if (callback !== undefined && typeof (callback) === "function") {
+        callback(data);
+      }
+    });
+  },
   setEpisodeData: function (episodeData, callback){ 
     sonarr.setData("episode", episodeData, callback);
   }, 
@@ -220,6 +235,9 @@ var create = {
     });    
     $(".manual-search").unbind("click").on("click", function(){
       var episodeId = $(this).data("episode-id");
+      $('div.episode[data-episode-id="'+episodeId+'"] .downloads').show();
+      $('div.episode[data-episode-id="'+episodeId+'"] .downloads .download').html('loading downloads');
+
       sonarr.getDownloadData(manualDownload.showModal, episodeId);
       $(this).css({"opacity": ".2"});
     });
@@ -272,20 +290,22 @@ var create = {
 
 var manualDownload = { 
   showModal : function (data, episodeId) { 
-    console.log(data);
-    console.log(episodeId);
-    $('div.episode[data-episode-id="'+episodeId+'"]').append("<div class='downloads clearfix small-12'></div>");
-    for (var key in data.sort(seedComparator)) {
+    $('div.episode[data-episode-id="'+episodeId+'"] .downloads .download').remove();
+    var downloadTemplate = $('#episode .downloads')
+    for (var key in data.sort(downloadComparator)) {
       value = data[key];
-      $('div.episode[data-episode-id="'+episodeId+'"] .downloads').append("<div class='download clearfix' data-download='"+
-        JSON.stringify(value)+"'><span class='label success'>"+
-        value.downloadProtocol+ "</span>" + 
-        value.quality.quality.name+ ", " + 
-        ((value.size/1024)/1024).toFixed(0) + "mb,"+ 
-        "<span class='label'>" + value.seeders +"/"+ value.leechers + 
-        "</span><span class='button tiny right' style='margin-bottom: .3rem !important'><i class='fi-download'></i></span></div>");
+      downloadTemplate.find('.download-type').html(value.downloadProtocol);
+      downloadTemplate.find('.quality').html('').append(value.quality.quality.name + " ");
+      downloadTemplate.find('.size').append(((value.size/1024)/1024).toFixed(0) + "mb")
+      downloadTemplate.find('.seeds').html(value.seeders +"/"+ value.leechers);
+      downloadTemplate.find('.button').html();
+      downloadTemplate.find('.download-type').attr('data-download',  JSON.stringify(value));
+      $('div.episode[data-episode-id="'+episodeId+'"] .downloads').append(downloadTemplate.html());
     }
 
+    $('div.episode .download .button').on('click', function(event){
+      sonarr.downloadEpisode($(this).data('download'), function(){console.log('downloaded')});
+    })
   }
 }
 

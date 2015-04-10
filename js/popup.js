@@ -274,16 +274,11 @@ var manualDownload = {
   showModal : function (data, episodeId) { 
     console.log(data);
     console.log(episodeId);
-    $('div.episode[data-episode-id="'+episodeId+'"]').append("<div class='downloads clearfix small-12'></div>");
-    for (var key in data.sort(seedComparator)) {
+
+    for (var key in data) {
       value = data[key];
-      $('div.episode[data-episode-id="'+episodeId+'"] .downloads').append("<div class='download clearfix' data-download='"+
-        JSON.stringify(value)+"'><span class='label success'>"+
-        value.downloadProtocol+ "</span>" + 
-        value.quality.quality.name+ ", " + 
-        ((value.size/1024)/1024).toFixed(0) + "mb,"+ 
-        "<span class='label'>" + value.seeders +"/"+ value.leechers + 
-        "</span><span class='button tiny right' style='margin-bottom: .3rem !important'><i class='fi-download'></i></span></div>");
+      $('div.episode[data-episode-id="'+episodeId+'"]').append("<div data-download='"+JSON.stringify(value)+"'>"+value.title+"</div>");
+      console.log(value);
     }
 
   }

@@ -70,6 +70,12 @@ function save_options() {
   var wantedItems = document.getElementById('wantedItems').value;
   var historyItems = document.getElementById('historyItems').value;
   var backgroundInterval = document.getElementById('backgroundInterval').value;
+  var showBadge = $('#show-badge:checked').val();
+  if(showBadge == undefined)
+    showBadge = false;
+  
+  console.log(showBadge)
+
   chrome.storage.sync.set({
     apiKey: apiKey,
     url: url,
@@ -78,6 +84,7 @@ function save_options() {
     historyItems : historyItems,
     backgroundInterval : backgroundInterval,
     sonarrConfig : sonarrConfig,
+    showBadge : showBadge,
   }, function() {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
@@ -99,7 +106,8 @@ function restore_options() {
     numberOfDaysCalendar : 7,
     wantedItems: 15,
     historyItems: 15,
-    backgroundInterval : 5
+    backgroundInterval : 5,
+    showBadge: true
   }, function(items) {
     document.getElementById('apiKey').value = items.apiKey;
     document.getElementById('url').value = items.url;
@@ -108,9 +116,13 @@ function restore_options() {
     document.getElementById('wantedItems').value = items.wantedItems;
     document.getElementById('historyItems').value = items.historyItems;
     document.getElementById('backgroundInterval').value = items.backgroundInterval;
+    console.log(items);
+    if(items.showBadge){ 
+      $("#show-badge").attr("checked",true);
+    }
   });
-  
-  	document.getElementById('versionNumber').appendChild(document.createTextNode(chrome.runtime.getManifest().version));
+
+  document.getElementById('versionNumber').appendChild(document.createTextNode(chrome.runtime.getManifest().version));
 }
 
 // add listeners to buttons

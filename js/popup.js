@@ -548,10 +548,10 @@ var getEpisodes = {
 
     for (var key in seasons) {
       season = seasons[key];
-	  if(season.seasonNumber != 0)
-		  $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Season ' + season.seasonNumber + '</option>');
-	  else
-		  $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Specials</option>');
+      if(season.seasonNumber != 0)
+        $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Season ' + season.seasonNumber + '</option>');
+      else
+        $('.list .row.episodes #selected-season').prepend('<option value="season-' + season.seasonNumber + '">Specials</option>');
     }
 
     $('.list .row.episodes').append(episodes);
@@ -579,7 +579,8 @@ var getWantedEpisodes = {
       // return;
     }
     var totalRecords = data.totalRecords.toString();
-    chrome.browserAction.setBadgeText({text: totalRecords});
+    background.setBadge(totalRecords)
+
     data = data.records;
 
     // remove wanted items
@@ -646,7 +647,8 @@ function getOptions(callBack) {
     historyItems: 15,
     calendarEndDate: 7,
     backgroundInterval : 5,
-    sonarrConfig : {}
+    sonarrConfig : {},
+    showBadge : true
   }, function(items) {
     console.log('get options from chrome storage');
     app.settings.apiKey = items.apiKey;
@@ -657,6 +659,7 @@ function getOptions(callBack) {
     app.settings.calendarEndDate = items.calendarEndDate;
     app.settings.sonarrConfig = items.sonarrConfig;
     app.settings.backgroundInterval = items.backgroundInterval;
+    app.settings.showBadge = items.showBadge;
     app.settings.mode = "calendar";
 
     callBack(items);

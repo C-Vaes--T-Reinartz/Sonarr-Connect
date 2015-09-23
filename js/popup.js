@@ -648,7 +648,7 @@ function getOptions(callBack) {
     calendarEndDate: 7,
     backgroundInterval : 5,
     sonarrConfig : {},
-    showBadge : true
+    showBadge : false
   }, function(items) {
     console.log('get options from chrome storage');
     app.settings.apiKey = items.apiKey;

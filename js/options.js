@@ -107,7 +107,7 @@ function restore_options() {
     wantedItems: 15,
     historyItems: 15,
     backgroundInterval : 5,
-    showBadge: true
+    showBadge: false
   }, function(items) {
     document.getElementById('apiKey').value = items.apiKey;
     document.getElementById('url').value = items.url;

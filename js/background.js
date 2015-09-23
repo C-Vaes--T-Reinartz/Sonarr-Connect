@@ -11,7 +11,7 @@ var background = {
   },
   setBadge : function (num) {
     console.log(num);
-    if (background.options.showBadge == "true" && num > 0)
+    if (background.options.showBadge == "true" || num > 0)
       chrome.browserAction.setBadgeText({text: num});
     else 
       chrome.browserAction.setBadgeText({text: ''});

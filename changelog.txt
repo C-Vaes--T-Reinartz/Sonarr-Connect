@@ -1,4 +1,10 @@
 Version log
+1.4.2
+Resolved issue where options are not visible on smaller resolution screens
+
+1.4.1
+Added option to hide the badge if there are no wanted items available
+
 1.4.0
 Season 0 is called Specials now
 Options page will open automatically when extension is not configured

@@ -1,4 +1,7 @@
 Version log
+1.5.0
+Resolve issue: unable to select season in show view, if you have any issues please update to at least 2.0.0.3732
+
 1.4.2
 Resolved issue where options are not visible on smaller resolution screens
 

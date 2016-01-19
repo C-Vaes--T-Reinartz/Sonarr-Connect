@@ -49,7 +49,7 @@ var sonarr = {
       }
     });
   },
-  setData : function (mode, data, callback){ 
+  setData : function (mode, data, callback){
     var url = sonarr.settings[mode];
     url = url.replace("{seriesId}", data.id);
     url = url.replace("{episodeId}", "" );
@@ -70,9 +70,9 @@ var sonarr = {
       }
     });
   },
-  setEpisodeData: function (episodeData, callback){ 
+  setEpisodeData: function (episodeData, callback){
     sonarr.setData('episode', episodeData, callback);
-  }, 
+  },
   setSeasonData : function (seasonData){
     sonarr.setData('season', seasonData, callback);
   }
@@ -81,10 +81,10 @@ var sonarr = {
 
 var create = {
   /*
-     * * @param data: json {episodeNumber, seasonNumber, title, airDateUtc,
-     * monitored, status, episodeQuality, seriesTitle, episodeId, seriesId} * @param mode: string
-     * 'app-mode'
-     */
+   * * @param data: json {episodeNumber, seasonNumber, title, airDateUtc,
+   * monitored, status, episodeQuality, seriesTitle, episodeId, seriesId} * @param mode: string
+   * 'app-mode'
+   */
   episode : function(data, mode) {
     var html = '';
     // short copy
@@ -97,7 +97,7 @@ var create = {
       "missing" : 'Missing ',
       "toBeAired" : '',
       "downloadFailed" : 'Failed'
-    }
+    };
     // add class depening on current status
     var classes = {
       "downloadFolderImported" : 'label success',
@@ -108,7 +108,7 @@ var create = {
       "missing" : 'label secondary',
       "toBeAired" : 'tba',
       "downloadFailed" : 'label alert'
-    }
+    };
 
     var episode = $('.templates #episode').clone();
 
@@ -176,8 +176,8 @@ var create = {
     return html;
   },
   /*
-     * *generate show * @param showdata json {}
-     */
+   * *generate show * @param showdata json {}
+   */
   show : function(showdata) {
     // monitor status
     var episodeQuote = {
@@ -230,16 +230,16 @@ var episodeMonitored = {
     console.log('setdata');
     if(data.monitored){
       data.monitored = false;
-    } else { 
+    } else {
       data.monitored = true;
     }
     sonarr.setEpisodeData(data, episodeMonitored.updateEpisode);
-  }, 
-  updateEpisode : function(data){ 
+  },
+  updateEpisode : function(data){
     console.log(data);
     if(data.monitored == false){
       $('div.watched-indicator[data-episode-id="'+data.id+'"]').addClass('icon-negative');
-    } else { 
+    } else {
       $('div.watched-indicator[data-episode-id="'+data.id+'"]').removeClass('icon-negative');
     }
   }
@@ -325,9 +325,9 @@ var getCalendar = {
       //today
       if (new Date(episode.airDateUtc).valueOf() >= new Date().setHours(0, 0, 0, 0).valueOf() && new Date(episode.airDateUtc).valueOf() <= tomorrow.valueOf()) {
         if(episode.hasFile){
-          props.status = "downloaded"; 
-        } else { 
-          props.status = "missing"; 
+          props.status = "downloaded";
+        } else {
+          props.status = "missing";
         }
         todayList += create.episode(props, history);
 
@@ -397,7 +397,7 @@ var getCalendar = {
 // get list of all series and seasons
 var getSeries = {
   data : {},
-  setData: function (data) { 
+  setData: function (data) {
     getSeries.data = data;
   },
   connect : function() {
@@ -487,22 +487,22 @@ var getSeries = {
       $(this).parent().find(".serie-seasons").toggle();
     });
     getSeries.filter();
-  }, 
-  filter : function() { 
+  },
+  filter : function() {
     /*add filter option*/
-    var filter = '<input id="series-filter" type="text" placeholder="filter by name">' 
+    var filter = '<input id="series-filter" type="text" placeholder="filter by name">'
     $('.list').prepend(filter);
     $('.row.series').show();
     $( "#series-filter" ).focus();
     $( "#series-filter" ).on('input',function(){
       var title = $(this).val();
-      if (title == ""){ 
+      if (title == ""){
         title = "undefinedseriestitle";
       }
       if($('.row.series[serie-title*='+title+']').length){
         $('.row.series').hide();
         $('.row.series[serie-title*='+title+']').show();
-      } else { 
+      } else {
         $('.row.series').show();
       }
     });
@@ -534,11 +534,13 @@ var getEpisodes = {
         monitored : episode.monitored,
         status : 'missing',
         id : episode.id
-      }
+      };
+
       if(episode.hasFile){
-        props.status = "downloaded"; 
+        props.status = "downloaded";
       }
-      seasons = episode.series.seasons;
+
+      seasons[episode.seasonNumber] = { seasonNumber: episode.seasonNumber };
       // reverse order
       episodes = create.episode(props) + episodes;
     }
@@ -604,7 +606,7 @@ var getWantedEpisodes = {
       }
 
       if(episode.hasFile){
-        props.status = "downloaded"; 
+        props.status = "downloaded";
       }
 
       wantedList += create.episode(props)
@@ -719,7 +721,7 @@ function prepLocalStorage() {
   }
   if (localStorage.getItem('history') === null) {
     localStorage.setItem('history', undefined);
-  }  
+  }
   if (localStorage.getItem('series') === null) {
     localStorage.setItem('series', undefined);
   }
@@ -757,7 +759,7 @@ var app = {
       chrome.tabs.create({
         url : "options.html"
       });
-      return false;      
+      return false;
     }
 
     //if we are in the popup view

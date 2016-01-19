@@ -1,0 +1,20 @@
+<div class="row">
+    <form>
+        <div class="row">
+            <div class="small-12 columns">
+                <label>Domoticz Url
+                    <input type="url" placeholder="http://192.168.1.192" [(ngModel)]="model.url"
+                           ngControl="url">
+                </label>
+            </div>
+            <div class="small-12 columns">
+                <label>User Name
+                    <input type="text" placeholder="ApiKey" [(ngModel)]="model.apikey"
+                           ngControl="username">
+                </label>
+            </div>
+        </div>
+        {{status.update}}
+        <div class="button expanded" (click)="storeSettings()">Test and save</div>
+    </form>
+</div>

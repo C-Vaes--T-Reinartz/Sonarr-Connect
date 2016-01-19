@@ -1,0 +1,16 @@
+<div class="row">
+    <div *ngFor="#episode of episodes" class="small-12 columns device">
+
+        <div class="episodes row calendar-show">
+            <div class="episode season-{{episode.season}} episode-{{episode.episode}}">
+                <div class="small-10 columns episode-info">
+                    <div class="series-title" data-series-id="4">{{episode.series.title}}</div>
+                    <div class="episode-title"><span class="episodenum">S08E03</span><span class="episodename">{{episode.overview}}</span></div>
+                    <div class="episode-info "><span class="label success">downloaded|missing</span><span class="date">{{episode.airDateUtc}}</span></div>
+                </div>
+                <div class="small-2 columns watched-indicator fi-bookmark">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+.header {
+  background-color: $primary-color;
+  color: $white;
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+
+.page-content {
+  padding-top: 2.5rem;
+}
+
+
+//.menu.vertical,
+.menu.horizontal {
+  background-color: $primary-color;
+  overflow: auto;
+
+  .button {
+    opacity: 1;
+    margin-right: 0;
+    border-bottom: .125rem solid #fff;
+
+    &:not(.disabled){
+      border-bottom: .125rem solid $primary-color;
+    }
+  }
+}

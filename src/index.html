@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>domoticz Application</title>
+  <script>document.write('<base href="' + document.location + '" />');</script>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Simple Domoticz app build with Angular2 and Foundation">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script src="angular2/bundles/angular2-polyfills.min.js"></script>
+  <script src="systemjs/dist/system.js"></script>
+  <script src="rxjs/bundles/Rx.min.js"></script>
+  <script src="angular2/bundles/angular2.min.js"></script>
+  <script src="angular2/bundles/router.min.js"></script>
+  <script src="angular2/bundles/http.min.js"></script>
+
+
+  <script>
+    System.config({
+      transpiler: 'typescript',
+      typescriptOptions: { emitDecoratorMetadata: true },
+      packages: {
+        'app': {defaultExtension: 'ts'},
+        'components': {defaultExtension: 'js'},
+        'filters': {defaultExtension: 'js'},
+        'routes': {defaultExtension: 'js'},
+        'services': {defaultExtension: 'js'}
+      }
+    });
+    System.import('sonarr.js')
+            .then(null, console.error.bind(console));
+  </script>
+</head>
+<body>
+<sonarr-connect></sonarr-connect>
+
+
+</body>
+</html>

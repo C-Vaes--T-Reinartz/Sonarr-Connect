@@ -1,0 +1,23 @@
+{
+  "name": "Domoticz-connect",
+  "version": "0.0.1",
+  "description": "Simple angular2 Domoticz app",
+  "author": "T.Reinartz tomreinartz90@gmail.com",
+  "repository": "https://github.com/tomreinartz90/Domoticz-connect.git",
+  "license": "MIT",
+  "dependencies": {
+    "angular2": ">=2.0.0-alpha.46",
+    "systemjs": ">=0.19.6"
+  },
+  "devDependencies": {
+    "gulp": ">=3.9.0",
+    "gulp-typescript": ">=2.9.2",
+    "gulp-sourcemaps": ">=1.6.0",
+    "gulp-live-server": ">=0.0.29",
+    "gulp-angular-embed-templates": ">=0.1.6",
+    "gulp-sass": ">=2.1.0",
+    "merge2": ">=0.3.6",
+    "gulp-clean": ">=0.3.1",
+    "foundation-sites":">=6.1.0"
+  }
+}

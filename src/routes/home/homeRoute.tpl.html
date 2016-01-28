@@ -1,4 +1,11 @@
 <h3>Wanted {{wantedEpisodes.length}}</h3>
 <episode-list [list]="wantedEpisodes"></episode-list>
-<h3>Calendar {{calendarEpisodes.length}}</h3>
-<episode-list [list]="calendarEpisodes"></episode-list>
+
+<h3>Today {{calendarEpisodesToday.length}}</h3>
+<episode-list [list]="calendarEpisodesToday"></episode-list>
+
+<h3>Tomorrow {{calendarEpisodesTomorrow.length}}</h3>
+<episode-list [list]="calendarEpisodesTomorrow"></episode-list>
+
+<h3>Later {{calendarEpisodesLater.length}}</h3>
+<episode-list [list]="calendarEpisodesLater"></episode-list>

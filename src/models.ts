@@ -4,7 +4,7 @@ import ArrayContaining = jasmine.ArrayContaining;
  */
 export class Episode {
     airDate:string;
-    airDateUtc: string;
+    airDateUtc: any;
     episodeFileId: number;
     episodeNumber: number;
     hasFile: boolean;
@@ -68,7 +68,7 @@ export class Show {
 
 /**
  * Created by Tom on 19-1-2016.
- * show, simple object without episodes or seasons objects
+ * show, simple object without series or seasons objects
  */
 
 export class ShowInformation {

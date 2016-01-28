@@ -1,0 +1,27 @@
+<div class="row">
+    <div *ngFor="#item of episodes" class="small-12 columns device">
+
+        <div class="history row calendar-show">
+            <div class="episode season-{{item.season}} item-{{item.episode}}">
+                <!--<div class="small-2 columns poster-icon " [ngStyle]="{'background-image' : 'url(' +  getPoster(item.series.images) + ')' }">-->
+                <!--</div>-->
+                <div class="small-12 columns episode-info">
+                    <div class="series-title" data-series-id="4">{{item.series.title}}</div>
+                    <div class="episode-title">
+                        <span class="episodenum">S{{item.episode.seasonNumber}}E{{item.episode.episodeNumber}} </span>&nbsp;
+                        <span class="episodename">{{item.episode.title}}</span>
+                    </div>
+                    <div class="episode-info ">
+                        <span class="label secondary ">{{item.quality.quality.name}}</span>
+
+                        <span class="label secondary" *ngIf="item.eventType == 'downloadFolderImported'">Imported</span>
+                        <span class="label warning" *ngIf="item.eventType == 'episodeFileDeleted'">Deleted</span>
+                        <span class="label success" *ngIf="item.eventType == 'grabbed'">Grabbed</span>
+                        on
+                        <span class="date">{{ getDate(item.date) | date:'MMMdHm' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,10 +3,7 @@
 
         <div class="episodes row calendar-show">
             <div class="episode season-{{episode.season}} episode-{{episode.episode}}">
-                <div class="small-2 columns poster-icon " [ngStyle]="{'background-image' : 'url(' +  getPoster(episode.series.images) + ')' }">
-                </div>
                 <div class="small-8 columns episode-info">
-                    <div class="series-title" data-series-id="4">{{episode.series.title}}</div>
                     <div class="episode-title"><span class="episodenum">{{ formatEpisodeNumer( episode.seasonNumber, episode.episodeNumber ) }} </span>&nbsp;<span class="episodename">{{episode.title}}</span></div>
                     <div class="episode-info ">
                         <span class="label success" *ngIf="episode.hasFile">downloaded</span>

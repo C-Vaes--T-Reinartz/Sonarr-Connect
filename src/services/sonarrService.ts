@@ -18,23 +18,15 @@ export class SonarrService {
     getSettingsFromLocalStorage () {
         var settings = JSON.parse( localStorage.getItem('settings') );
         if(settings !== null) {
-            //this.apikey = settings.apikey;
-            //this.url = settings.url;
+            this.apikey = settings.apikey;
+            this.url = settings.url;
         }
     }
 
     setUrlAndApiKey (url:string, apikey:string) {
-        //this.url = url;
-        //this.apikey = apikey;
+        this.url = url;
+        this.apikey = apikey;
     }
-
-    //wanted : "api/wanted/missing?page=1&pageSize={wantedItems}&sortKey=airDateUtc&sortDir=desc&apikey={apikey}",
-    //calendar : "api/calendar?page=1&sortKey=airDateUtc&sortDir=desc&start={calendarStartDate}&end={calendarEndDate}&apikey={apikey}",
-    //series : "api/series?page=1&sortKey=title&sortDir=desc&apikey={apikey}",
-    //episode : "api/episode/\{episodeId}?apikey={apikey}",
-    //episodes : "api/episode?seriesId={seriesId}&apikey={apikey}",
-    //history : "api/history?page=1&pageSize={historyItems}&sortKey=date&sortDir=desc&apikey={apikey}",
-    //manualDownload : "/api/release?episodeId={episodeId}&sort_by=releaseWeight&order=asc&apikey={apikey}"
 
     getWantedEpisodes () {
         return this.http.get(this.url + 'api/wanted/missing?page=1&pageSize=30&sortKey=airDateUtc&sortDir=desc&apikey=' + this.apikey );
@@ -60,7 +52,7 @@ export class SonarrService {
     }
 
     getHistory(){
-        return this.http.get(this.url + 'api/history?apikey=' + this.apikey );
+        return this.http.get(this.url + 'api/history?page=1&pageSize=10&sortKey=date&sortDir=desc&apikey=' + this.apikey );
     }
 
     manualDownloadEpisode(episodeId:number){
@@ -68,7 +60,27 @@ export class SonarrService {
     }
 
     getVersion():any {
-
+        return this.http.get(this.url + 'api/system/status?apikey=' + this.apikey );
     }
 
+    getPoster(images){
+        var poster:string = null;
+        var _this = this;
+        images.forEach(function(image){
+            if(image.coverType == "poster") {
+                if(image.url.indexOf('http') == -1) {
+                    poster = _this.url + image.url + '&apikey=' + _this.apikey;
+                    poster = poster.replace('sonarr', 'api');
+                    poster = poster.replace('poster', 'poster-250');
+                } else {
+                    poster = image.url;
+                }
+
+            }
+        });
+
+        if(poster != null)
+            return poster;
+
+    }
 }

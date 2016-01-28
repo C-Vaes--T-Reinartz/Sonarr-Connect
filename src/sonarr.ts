@@ -2,15 +2,19 @@ import {Component, View, provide} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
 import {HTTP_PROVIDERS} from "angular2/http";
 import {Http} from "angular2/http";
-import {RouteConfig, ROUTER_PROVIDERS, ROUTER_DIRECTIVES, LocationStrategy, HashLocationStrategy} from "angular2/router";
+import {RouteConfig, ROUTER_PROVIDERS, ROUTER_DIRECTIVES, LocationStrategy, HashLocationStrategy, Router} from "angular2/router";
 import {HomeRoute} from "./routes/home/homeRoute";
 import {SettingsRoute} from "./routes/settings/settingsRoute";
 import {DevicesRoute} from "./routes/calendar/calendarRoute";
 import {SonarrService} from "./services/sonarrService"
 import {StorageService} from "./services/storageService";
+import {SeriesRoute} from "./routes/series/seriesRoute";
+import {HistoryRoute} from "./routes/history/historyRoute";
+import {ShowRoute} from "./routes/show/showRoute";
 
 @Component({
-    selector: 'sonarr-connect'
+    selector: 'sonarr-connect',
+    providers: [StorageService]
 })
 
 @View({
@@ -19,19 +23,25 @@ import {StorageService} from "./services/storageService";
 })
 
 @RouteConfig([
-    {path: '/', name: 'Calendar', component: HomeRoute, useAsDefault: true},
-    {path: '/series', name: 'Shows', component: DevicesRoute},
-    {path: '/series/show', name: 'Show', component: DevicesRoute},
-    {path: '/history', name: 'History', component: DevicesRoute},
+    {path: '/', name: 'Calendar', component: HomeRoute},
+    {path: '/series', name: 'Shows', component: SeriesRoute},
+    {path: '/series/:name', name: 'Show', component: ShowRoute},
+    {path: '/history', name: 'History', component: HistoryRoute},
     {path: '/settings', name: 'Settings', component: SettingsRoute},
 ])
 
-class Domoticz {
+class Sonarr {
     offCanvasLeftOpen:boolean = false;
 
-    constructor() {
+    constructor(router:Router) {
         console.log('app loading');
         var storage = new StorageService();
+        if(storage.getSettings().url == undefined){
+            window.setTimeout(function(){
+                console.log('no settings found, go to settings route');
+                router.navigate(['/Settings', {}])
+            }, 100);
+        }
     }
 
     toggleoffCanvasLeft() {
@@ -39,7 +49,7 @@ class Domoticz {
     }
 }
 
-bootstrap(Domoticz, [
+bootstrap(Sonarr, [
     HTTP_PROVIDERS,
     ROUTER_PROVIDERS,
     SonarrService,

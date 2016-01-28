@@ -12,7 +12,7 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
   directives: [ROUTER_DIRECTIVES],
   pipes: [DeviceNameToMDIcon]
 })
-export class EpisodeList implements OnChanges {
+export class EpisodeListShow implements OnChanges {
   @Input() list:any[];
   public episodes:any[];
 

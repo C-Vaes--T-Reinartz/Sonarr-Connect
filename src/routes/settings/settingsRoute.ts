@@ -1,36 +1,44 @@
+///<reference path="../../services/sonarrService.ts"/>
 import {Component, View} from 'angular2/core';
+import {NgForm}    from 'angular2/common';
 import {SonarrService} from "../../services/sonarrService";
+import {StorageService} from "../../services/storageService";
 
 @Component({
   selector: 'settings-route'
 })
+
 @View({
   templateUrl: 'settingsRoute.tpl.html'
 })
-export class SettingsRoute{
-  url: string;
-  apikey: string;
-  model:any;
-  status:any = {};
 
-  constructor (private sonarrService:SonarrService) {
-    this.model = {
-      url: null,
-      apikey: null,
-    };
+export class SettingsRoute {
+  public url: string = '';
+  public apikey: string = '';
+  public model:any = {  url: '', apikey: '', name: '' };
+  public status:any = '';
 
-    if(this.getSettings() !== null)
-      this.model = this.getSettings();
+  constructor (private sonarrService:SonarrService, private storage:StorageService) {
+    if(storage.getSettings().url != undefined)
+      this.model = storage.getSettings();
+
+    console.log(this.model);
   }
 
-  getSettings() {
-    return JSON.parse( localStorage.getItem('settings') );
+  checkSettings (url:string, apiKey:string) {
+    return (url.length > 3 && apiKey.length > 10);
   }
 
   storeSettings() {
     console.log(this.model);
     this.status.update = 'Checking connection....';
     var _this = this;
+
+    //check input
+    if(!this.checkSettings(this.model.url, this.model.apikey)){
+      return this.status = 'url or apikey are invalid';
+    }
+
     //update username and password
     this.sonarrService.setUrlAndApiKey(this.model.url, this.model.apikey);
 

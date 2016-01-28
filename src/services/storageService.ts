@@ -18,6 +18,9 @@ export class StorageService {
         if(this.getWanted() == null)
             this.setWanted([]);
 
+        if(this.getSeries() == null)
+            this.setSeries([]);
+
     }
 
     public getSettings():any{
@@ -52,4 +55,12 @@ export class StorageService {
         localStorage.setItem('history', JSON.stringify(history) );
     }
 
+    public getSeries():Array<any> {
+        return JSON.parse( localStorage.getItem('series') );
+    }
+
+    public setSeries(series):void {
+        localStorage.setItem('series', JSON.stringify(series) );
+
+    }
 }

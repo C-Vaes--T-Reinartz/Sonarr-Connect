@@ -1,0 +1,27 @@
+<div class="show">
+    <div class="row banner" style="background-image: url(&quot; http://192.168.1.100:8989/api/MediaCover/44/banner.jpg?lastWrite=635700685340000000&amp;apikey=7936875896514603891816219d4daaf0&quot;);"></div>
+    <div class="row show-information">
+        <div class="small-4 poster"><img src="http://192.168.1.100:8989/api/MediaCover/44/poster.jpg?lastWrite=635700685340000000&amp;apikey=7936875896514603891816219d4daaf0" style="width: 100%; height: auto;"></div>
+    </div>
+    <div class="small-7 small-offset-5 show-info">
+        <h2><span id="title">{{show.title}}</span></h2>
+        <h6 id="start-year"><i class="fi-social-picasa"></i>Started {{show.yeer}}</h6>
+        <h6 id="show-status"><i class="fi-play"></i>{{show.status}}</h6>
+        <h6><i class="fi-book"></i><span id="seasons">Seasons {{show.seasons.length}}</span><span id="episodes" class="label regular">{{show.episodeFileCount}}/{{show.episodeCount}}</span></h6>
+        <h6><i class="fi-calendar"></i><span id="air-time">{{show.airTime}}</span> on <span id="network" class="network label secondary round">{{show.network}}</span></h6>
+    </div>
+    <div class="small-12">
+        <p id="summary" class="summary">{{show.overview}}</p>
+    </div>
+    <div class="row episodes">
+        <div class="season-selector">
+            <div class="small-8 columns">
+                <select id="selected-season">
+                    <option *ngFor="#season of seasons" value="season-{{season}}">{{season}}</option>
+                </select>
+            </div>
+            <div class="small-4 columns" id="watched"> </div>
+        </div>
+        <episode-list [list]="episodes | filterBySeason:seasonNumber "></episode-list>
+    </div>
+</div>

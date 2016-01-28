@@ -1,0 +1,19 @@
+<div class="row">
+    <div *ngFor="#serie of series" class="small-12 columns device" [routerLink]="['/Show', { name: serie.titleSlug }]">
+<!--test-->
+        <div class="series row calendar-show">
+            <div class="serie season-{{serie.season}} serie-{{serie.serie}}">
+                <div class="small-2 columns large-1">
+                    <img src="{{ getPoster(serie.images) }}">
+                </div>
+                <div class="small-10 large-11 columns serie-info">
+                    <div class="series-title" data-series-id="4">{{serie.title}}</div>
+                    <div class="serie-info ">
+                        <span class="label success">{{serie.status}}</span>
+                        <span class="date">{{serie.episodeCount}}/{{serie.episodeFileCount}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

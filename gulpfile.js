@@ -26,6 +26,7 @@ gulp.task('compile-typescript', [], function(){
   return merge([
     result.dts.pipe(gulp.dest('www')),
     result.js.pipe(embedTemplates()).pipe(sourcemaps.write('.', {sourceRoot: '/src'})).pipe(gulp.dest('www'))
+    //result.js.pipe(sourcemaps.write('.', {sourceRoot: '/src'})).pipe(gulp.dest('www'))
   ]);
 });
 
@@ -42,7 +43,7 @@ gulp.task('compile-assets', [], function() {
 });
 
 gulp.task('compile-html', [], function(){
-  return gulp.src('src/index.html').pipe(gulp.dest('www'));
+  return gulp.src('src/**/*.html').pipe(gulp.dest('www'));
 });
 
 gulp.task('compile-package', [], function() {

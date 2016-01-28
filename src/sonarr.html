@@ -1,9 +1,9 @@
 <!--top menu-->
 <div class="row">
     <ul class="menu">
-        <li><a href="#"><i class="fi-list"></i> <span>Calendar</span></a></li>
-        <li><a href="#"><i class="fi-list"></i> <span>Series</span></a></li>
-        <li><a href="#"><i class="fi-list"></i> <span>History</span></a></li>
+        <li><a  [routerLink]="['Calendar']"><i class="fi-list"></i> <span>Calendar</span></a></li>
+        <li><a  [routerLink]="['Shows']"><i class="fi-list"></i> <span>Series</span></a></li>
+        <li><a  [routerLink]="['History']"><i class="fi-list"></i> <span>History</span></a></li>
     </ul>
 </div>
 <!--end top menu-->
@@ -18,7 +18,7 @@
 <div class="row">
     <ul class="menu">
         <li><a href="#"><i class="fi-list"></i> <span>Sonarr</span></a></li>
-        <li><a href="#"><i class="fi-list"></i> <span>Options</span></a></li>
+        <li><a  [routerLink]="['/Settings']"><i class="fi-list"></i> <span>Options</span></a></li>
         <li><a href="#"><i class="fi-list"></i> <span>Refresh</span></a></li>
     </ul>
 </div>
